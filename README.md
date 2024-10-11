@@ -1,4 +1,4 @@
-# iw2024-2025-CarterUCA
+# CarterUCA
 
 Bienvenido a nuestro proyecto de la asignatura de Ingeniería Web(IW) del curso 24/25. Desarrollo de un sistema web para la gestión anual de la cartera de proyectos TI en la Universidad de Cádiz.
 
@@ -7,8 +7,8 @@ Bienvenido a nuestro proyecto de la asignatura de Ingeniería Web(IW) del curso 
 
 ### Componentes del equipo y sus respectivos roles
 
-- Celia García Gutiérrez
+- Celia García Gutiérrez:
 
-- Alejandro Parada Espinosa
+- Alejandro Parada Espinosa:
 
-- Iván Guillén Márquez
+- Iván Guillén Márquez:
