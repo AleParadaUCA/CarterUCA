@@ -7,8 +7,8 @@ Bienvenido a nuestro proyecto de la asignatura de Ingeniería Web(IW) del curso 
 
 ### Componentes del equipo y sus respectivos roles
 
-- Celia García Gutiérrez:
+- Celia García Gutiérrez: Diseñadora, Product Owner, Scrum Master, Programadora, Documentación(principal).
 
-- Alejandro Parada Espinosa:
+- Alejandro Parada Espinosa: Programador, Tester, DevOps, Seguiridad.
 
-- Iván Guillén Márquez:
+- Iván Guillén Márquez: Programador, Tester, Analista, Administrador de Base de Datos.
