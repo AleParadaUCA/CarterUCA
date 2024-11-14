@@ -84,6 +84,7 @@ public class RegistroView extends Composite<VerticalLayout> {
 
         nombre.setLabel("Nombre");
         apellidos.setLabel("Apellidos");
+        usuario.setLabel("Usuario");
         email.setLabel("Email");
         contraseña.setLabel("Contraseña");
         repetir_contraseña.setLabel("Repetir Contraseña");
@@ -111,6 +112,21 @@ public class RegistroView extends Composite<VerticalLayout> {
 
         // Agregar campos al formulario
         formLayout2Col.add(nombre, apellidos, usuario, email, centro, contraseña, repetir_contraseña);
+
+        formLayout2Col.setResponsiveSteps(
+                new FormLayout.ResponsiveStep("0", 1),
+                new FormLayout.ResponsiveStep("500px", 2),
+                new FormLayout.ResponsiveStep("800px", 4) // Aquí establece la cantidad de columnas necesarias
+        );
+
+        formLayout2Col.setColspan(nombre, 1);
+        formLayout2Col.setColspan(apellidos, 1);
+        formLayout2Col.setColspan(usuario, 1);
+        formLayout2Col.setColspan(email, 1);
+        formLayout2Col.setColspan(centro, 2); // Centro ocupa toda la fila en este caso
+        formLayout2Col.setColspan(contraseña, 1);
+        formLayout2Col.setColspan(repetir_contraseña, 1);
+
 
 
         // Layout para botones
