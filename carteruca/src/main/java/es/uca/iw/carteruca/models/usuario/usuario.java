@@ -3,6 +3,7 @@ package es.uca.iw.carteruca.models.usuario;
 import jakarta.persistence.*;
 
 @Entity
+@Table
 public class usuario {
 
     @Id
@@ -10,7 +11,7 @@ public class usuario {
     private Long id;
 
     @Column(length = 25,nullable = false)
-    private String user;
+    private String username;
 
     @Column(length = 25,nullable = false)
     private String password;
@@ -31,12 +32,13 @@ public class usuario {
     @Column
     private Rol rol;
 
-    // Getters y setters
+// Getters y setters
+
     public Long getId() {return id;}
     public void setId(Long id) {this.id = id;}
 
-    public String getUser() {return user;}
-    public void setUser(String user) {this.user = user;}
+    public String getUsername() {return username;}
+    public void setUsername(String username) {this.username = username;}
 
     public String getPassword() {return password;}
     public void setPassword(String password) {this.password = password;}
