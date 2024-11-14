@@ -4,56 +4,53 @@ import jakarta.persistence.*;
 
 @Entity
 @Table
-public class usuario {
+public class Usuario {
 
         @Id
-        @GeneratedValue(strategy = GenerationType.AUTO)
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long id;
 
         @Column(length = 25,nullable = false)
-        private String username;
+        private String usuario;
 
         @Column(length = 25,nullable = false)
         private String password;
 
         @Column(length = 25,nullable = false)
-        private String name;
+        private String nombre;
 
         @Column(length = 50,nullable = false)
-        private String lastname;
+        private String apellidos;
 
         @Column(length = 25,nullable = false)
         private String email;
 
-        @Column
-        private String unidad;//Centro o unidad a la que pertenece el usuario
-        //puede que se tenga que poner en la solicitud y no en el usuario
+        /*@Column
+        @OneToOne
+        Centro centro;*/
 
         @Column
-        private Rol rol;
+        @Enumerated(EnumType.STRING)
+        private Rol rol; //cambiar a set
 
 // Getters y setters
 
         public Long getId() {return id;}
-        public void setId(Long id) {this.id = id;}
 
-        public String getUsername() {return username;}
-        public void setUsername(String username) {this.username = username;}
+        public String getUsuario() {return usuario;}
+        public void setUsuario(String usuario) {this.usuario = usuario;}
 
         public String getPassword() {return password;}
         public void setPassword(String password) {this.password = password;}
 
-        public String getName() {return name;}
-        public void setName(String name) {this.name = name;}
+        public String getNombre() {return nombre;}
+        public void setNombre(String nombre) {this.nombre = nombre;}
 
-        public String getLastname() {return lastname;}
-        public void setLastname(String lastname) {this.lastname = lastname;}
+        public String getApellidos() {return apellidos;}
+        public void setApellidos(String apellidos) {this.apellidos = apellidos;}
 
         public String getEmail() {return email;}
         public void setEmail(String email) {this.email = email;}
-
-        public String getUnidad() {return unidad;}
-        public void setUnidad(String unidad) {this.unidad = unidad;}
 
         public Rol getRol() {return rol;}
         public void setRol(Rol rol) {this.rol = rol;}
