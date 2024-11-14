@@ -36,29 +36,12 @@ public class LoginView extends LoginOverlay implements BeforeEnterObserver {
         // Configuración de traducciones para el formulario
         LoginI18n loginI18n = LoginI18n.createDefault();
         loginI18n.setHeader(new LoginI18n.Header());
-        loginI18n.getForm().setTitle("Iniciar sesión");
-        loginI18n.getForm().setUsername("Usuario");
-        loginI18n.getForm().setPassword("Contraseña");
-        loginI18n.getForm().setSubmit("Iniciar sesión");
-        loginI18n.getForm().setForgotPassword("¿Olvidó su contraseña?");
+        loginI18n.getHeader().setTitle("CarterUCA");
+        setI18n(loginI18n);
         loginForm.setI18n(loginI18n);
-
-        // Crear botón de registro
-        Button registerButton = new Button("Registrarse");
-
-        VerticalLayout mainContainer = new VerticalLayout(loginForm, registerButton); // Añade el botón aquí
-        mainContainer.setAlignItems(FlexComponent.Alignment.CENTER); // Centra ambos elementos
-        mainContainer.setSpacing(true); // Añade espacio entre el formulario y el botón
 
         setForgotPasswordButtonVisible(false);
         setOpened(true);
-
-        // Acción del botón de registro
-        registerButton.addClickListener(e -> UI.getCurrent().navigate(RegistroView.class)); // Navega a la vista de registro
-
-        //Anidar los botones
-
-        registerButton.addClickListener( e -> UI.getCurrent().navigate(RegistroView.class)); // Navega a la vista de registro
     }
 
     @Override
