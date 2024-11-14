@@ -25,13 +25,13 @@ import com.vaadin.flow.server.auth.AnonymousAllowed;
 public class LoginView extends LoginOverlay implements BeforeEnterObserver {
 
     private final AuthenticatedUser authenticatedUser;
+    private LoginForm loginForm = new LoginForm();
 
     public LoginView(AuthenticatedUser authenticatedUser) {
 
         this.authenticatedUser = authenticatedUser;
         setAction(RouteUtil.getRoutePath(VaadinService.getCurrent().getContext(), getClass()));
         // Crear el formulario de login
-        LoginForm loginForm = new LoginForm();
 
         // Configuración de traducciones para el formulario
         LoginI18n loginI18n = LoginI18n.createDefault();
@@ -47,6 +47,8 @@ public class LoginView extends LoginOverlay implements BeforeEnterObserver {
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
         /*
+
+        //funcion no terminada
         if (authenticatedUser.get().isPresent()) {
             setOpened(false);
             event.forwardTo(HomeRegistradoView.class);
