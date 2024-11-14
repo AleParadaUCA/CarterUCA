@@ -35,6 +35,7 @@ public class Usuario {
 
 // Getters y setters
 
+        
         public Long getId() {return id;}
 
         public String getUsuario() {return usuario;}
