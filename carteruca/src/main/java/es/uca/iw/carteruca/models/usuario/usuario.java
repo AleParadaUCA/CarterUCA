@@ -1,27 +1,35 @@
 package es.uca.iw.carteruca.models.usuario;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class usuario {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    @Column(length = 25,nullable = false)
     private String user;
+
+    @Column(length = 25,nullable = false)
     private String password;
-    private String nombre;
-    private String apellido;
+
+    @Column(length = 25,nullable = false)
+    private String name;
+
+    @Column(length = 50,nullable = false)
+    private String lastname;
+
+    @Column(length = 25,nullable = false)
     private String email;
+
+    @Column
     private String unidad;//Centro o unidad a la que pertenece el usuario
     //puede que se tenga que poner en la solicitud y no en el usuario
-    private boolean es_CIO;
-    private boolean es_OTP;
-    private boolean es_Promotor;
-    private boolean es_admin;
+
+    @Column
+    private Rol rol;
 
     // Getters y setters
     public Long getId() {return id;}
@@ -33,11 +41,11 @@ public class usuario {
     public String getPassword() {return password;}
     public void setPassword(String password) {this.password = password;}
 
-    public String getNombre() {return nombre;}
-    public void setNombre(String nombre) {this.nombre = nombre;}
+    public String getName() {return name;}
+    public void setName(String name) {this.name = name;}
 
-    public String getApellido() {return apellido;}
-    public void setApellido(String apellido) {this.apellido = apellido;}
+    public String getLastname() {return lastname;}
+    public void setLastname(String lastname) {this.lastname = lastname;}
 
     public String getEmail() {return email;}
     public void setEmail(String email) {this.email = email;}
@@ -45,32 +53,6 @@ public class usuario {
     public String getUnidad() {return unidad;}
     public void setUnidad(String unidad) {this.unidad = unidad;}
 
-    public boolean isEs_CIO() {
-        return es_CIO;
-    }
-    public void setEs_CIO(boolean es_CIO) {
-        this.es_CIO = es_CIO;
-    }
-
-    public boolean isEs_OTP() {
-        return es_OTP;
-    }
-    public void setEs_OTP(boolean es_OTP) {
-        this.es_OTP = es_OTP;
-    }
-
-    public boolean isEs_Promotor() {
-        return es_Promotor;
-    }
-    public void setEs_Promotor(boolean es_Promotor) {
-        this.es_Promotor = es_Promotor;
-    }
-
-    public boolean isEs_admin() {
-        return es_admin;
-    }
-    public void setEs_admin(boolean es_admin) {
-        this.es_admin = es_admin;
-    }
-
+    public Rol getRol() {return rol;}
+    public void setRol(Rol rol) {this.rol = rol;}
 }
