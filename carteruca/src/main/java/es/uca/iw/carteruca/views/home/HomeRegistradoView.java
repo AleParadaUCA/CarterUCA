@@ -22,6 +22,7 @@ public class HomeRegistradoView extends Composite<VerticalLayout>{
         // Añadir los cuadros usando funciones
         Div solicitudes = createSquare("Solicitudes", VaadinIcon.FILE_O);
 
+        //Poner logica
         Div avalar = createSquare("Avalar Solicitudes", VaadinIcon.BOOK);
 
         getContent().add(solicitudes);
