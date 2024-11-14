@@ -8,17 +8,24 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.router.Route;
 
-@Route("")
-public class HomeView extends Composite<VerticalLayout> {
+public class HomeRegistradoView extends Composite<VerticalLayout>{
 
-    public HomeView(){
+    Span mensaje_bienvenido = new Span();
 
+    public HomeRegistradoView() {
 
-        Div proyectos = createSquare("Proyectos", VaadinIcon.FILE_O);
+        mensaje_bienvenido.setText("Bienvenido, usuario");
+        mensaje_bienvenido.getStyle().set("color", "blue");
+        getContent().add(mensaje_bienvenido);
 
-        getContent().add(proyectos);
+        // Añadir los cuadros usando funciones
+        Div solicitudes = createSquare("Solicitudes", VaadinIcon.FILE_O);
+
+        Div avalar = createSquare("Avalar Solicitudes", VaadinIcon.BOOK);
+
+        getContent().add(solicitudes);
+        getContent().add(avalar);
     }
 
     private Div createSquare(String text, VaadinIcon iconType) {
@@ -55,4 +62,5 @@ public class HomeView extends Composite<VerticalLayout> {
 
         return square;
     }
+
 }
