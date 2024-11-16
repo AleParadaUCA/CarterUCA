@@ -9,8 +9,9 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
+import es.uca.iw.carteruca.views.layout.MainLayout;
 
-@Route("")
+@Route(value = "", layout = MainLayout.class)
 public class HomeView extends Composite<VerticalLayout> {
 
     public HomeView(){

@@ -20,13 +20,14 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import es.uca.iw.carteruca.views.home.HomeView;
+import es.uca.iw.carteruca.views.layout.MainLayout;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @AnonymousAllowed
 @PageTitle("Registro")
-@Route("/registro")
+@Route(value = "/registro", layout = MainLayout.class)
 public class RegistroView extends Composite<VerticalLayout> {
 
 

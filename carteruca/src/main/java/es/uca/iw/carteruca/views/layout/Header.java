@@ -1,11 +1,11 @@
 package es.uca.iw.carteruca.views.layout;
 
 import com.vaadin.flow.component.Composite;
-import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+
 public class Header extends Composite<HorizontalLayout> {
 
     public Header() {
@@ -31,8 +31,6 @@ public class Header extends Composite<HorizontalLayout> {
         searchIcon.getStyle().set("color", "white");
         searchField.setSuffixComponent(searchIcon);
 
-
         header.add(searchField);
-        header.add(new Span("header"));
     }
 }

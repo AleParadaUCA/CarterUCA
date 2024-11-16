@@ -8,7 +8,10 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.router.Route;
+import es.uca.iw.carteruca.views.layout.MainLayout;
 
+@Route(value = "/home", layout = MainLayout.class)
 public class HomeRegistradoView extends Composite<VerticalLayout>{
 
     Span mensaje_bienvenido = new Span();

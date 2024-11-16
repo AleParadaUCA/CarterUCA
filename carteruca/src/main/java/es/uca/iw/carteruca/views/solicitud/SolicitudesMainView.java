@@ -15,10 +15,11 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import es.uca.iw.carteruca.views.home.HomeRegistradoView;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import es.uca.iw.carteruca.views.layout.MainLayout;
 
 
 @PageTitle("Solicitudes")
-@Route("/solicitudes")
+@Route(value = "/solicitudes", layout = MainLayout.class)
 public class SolicitudesMainView extends Composite<VerticalLayout> {
 
     public SolicitudesMainView() {
