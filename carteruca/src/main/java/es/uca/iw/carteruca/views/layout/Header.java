@@ -5,7 +5,6 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.contextmenu.SubMenu;
 import com.vaadin.flow.component.html.Anchor;
-import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -30,7 +29,7 @@ public class Header extends Composite<VerticalLayout> {
         topLayout.setWidthFull();
         topLayout.setAlignItems(FlexComponent.Alignment.CENTER);
         topLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.BETWEEN); // Para separar el logo de los íconos
-        //topLayout.getStyle().set("margin-bottom", "5px");
+        //topLayout.getStyle().set("border-bottom", "1px solid #ccc");
 
         // **Parte superior izquierda: Logo**
         Anchor homeLink = new Anchor("https://www.uca.es", new Image("images/Universidad_de_cadiz_2.0.png", "Foto UCA"));
@@ -87,7 +86,7 @@ public class Header extends Composite<VerticalLayout> {
         }
         topLayout.add(iconsLayout);
 
-        // **Parte inferior: Layout vertical**
+        // **Parte inferior: Layout horizontal**
         HorizontalLayout bottomLayout = new HorizontalLayout();
         bottomLayout.setWidthFull();
         bottomLayout.setAlignItems(FlexComponent.Alignment.CENTER);
@@ -95,6 +94,7 @@ public class Header extends Composite<VerticalLayout> {
 
         // **Parte inferior izquierda: Menú**
         MenuBar menuBar = new MenuBar();
+        menuBar.addClassName("rounded-menu-bar");
         setMenuItems(menuBar);
         bottomLayout.add(menuBar);
 
@@ -102,33 +102,32 @@ public class Header extends Composite<VerticalLayout> {
         TextField searchField = new TextField();
         searchField.setPlaceholder("Buscar...");
         searchField.setWidth("20%");
-        searchField.getStyle()
-                .set("--vaadin-input-field-placeholder-color", "white")
-                .setBackground("#455a64")
-                .set("margin-right", "1%")
-                .set("color", "white");
+        searchField.addClassName("search-color");
 
         // Añadir ícono de búsqueda
         Icon searchIcon = VaadinIcon.SEARCH.create();
-        searchIcon.getStyle().set("color", "white");
+        searchIcon.getStyle().set("color", "#384850");
         searchField.setSuffixComponent(searchIcon);
 
         bottomLayout.add(searchField);
 
-        // **Línea separadora entre la parte superior e inferior**
-        Div separator = new Div();
-        separator.getStyle()
-                .set("border-top", "1px solid #ccc")
-                .set("width", "99%")
-                .set("margin-top", "5px");
-
         // Añadir las dos partes al layout principal
-        header.add(topLayout, separator, bottomLayout);
+        header.add(topLayout, bottomLayout);
+
     }
 
     private void setMenuItems(MenuBar menuBar) {
-        menuBar.addItem("Home", e -> {/* Navegación */}).getElement().getClassList().add("menu-item");
-        menuBar.addItem("Proyectos", e -> {/* Navegación */}).getElement().getClassList().add("menu-item");
+menuBar.addItem("Proyectos", e -> {
+            // Redirigir a "/"
+            UI.getCurrent().navigate("/");
+        }).getElement().getClassList().add("menu-item");
+
+        if (isUserLoggedIn()) {
+            menuBar.addItem("Home", e -> {
+                // Redirigir a "/home"
+                UI.getCurrent().navigate("/home");
+            }).getElement().getClassList().add("menu-item");
+        }
     }
 
     private boolean isUserLoggedIn() {

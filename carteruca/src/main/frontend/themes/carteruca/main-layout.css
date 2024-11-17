@@ -1,0 +1,11 @@
+.menu-item{
+  color: #384850;
+  background-color: rgb(223, 223, 223);
+  cursor: pointer;
+}
+
+.search-color::part(input-field) {
+  color: #384850;
+  background-color: rgb(223, 223, 223);
+  --vaadin-input-field-placeholder-color: #384850;
+}
