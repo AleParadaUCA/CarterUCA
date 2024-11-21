@@ -33,12 +33,12 @@ public class Solicitud {
     private String alcance; // Cantidad y grupo de personas a las que beneficiará el proyecto
 
     @Column
-    private String normativa;//Codigo y/o descripcion de la normativade aplicación obligatoria
+    private String normativa;//Codigo y/o descripcion de la normativa de aplicación obligatoria
 
     @Column
     private String memoria; //Por ahora usaremos una URL
     // *hasta aqui lo rellena el solicitante
-
+    //hasta aqui solicitud
     @Column
     private Integer importancia_promotor; // si el promotor tiene varios proyectos avalados el promotor tiene que indicar importancia de cada proyecto que avale
 
