@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table
-public class usuario {
+public class Usuario {
 
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,16 +25,14 @@ public class usuario {
         @Column(length = 25,nullable = false)
         private String email;
 
-        /*@Column
         @OneToOne
-        Centro centro;*/
+        private Centro centro;
 
         @Column
         @Enumerated(EnumType.STRING)
         private Rol rol; //cambiar a set
 
 // Getters y setters
-
         
         public Long getId() {return id;}
 
@@ -55,4 +53,8 @@ public class usuario {
 
         public Rol getRol() {return rol;}
         public void setRol(Rol rol) {this.rol = rol;}
+
+        public Centro getCentro() {return centro;}
+        public void setCentro(Centro centro) {this.centro = centro;}
+
 }

@@ -1,9 +1,7 @@
 package es.uca.iw.carteruca.models.cartera;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -12,15 +10,28 @@ public class Cartera {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
+    private String nombre;
+
+    @Column(nullable = false)
     private LocalDateTime fecha_inicio;
+
+    @Column(nullable = false)
     private LocalDateTime fecha_fin;
+
+    @Column(nullable = false)
     private LocalDateTime fecha_apertura_solicitud;
+
+    @Column(nullable = false)
     private LocalDateTime fecha_cierre_solicitud;
 
 
-    //GETTERS Y SETTERS
+//GETTERS Y SETTERS
     public Long getId() {return id;}
-    public void setId(Long id) {this.id = id;}
+
+    public String getNombre() {return nombre;}
+    public void setNombre(String nombre) {this.nombre = nombre;}
 
     public LocalDateTime getFecha_inicio() {return fecha_inicio;}
     public void setFecha_inicio(LocalDateTime fecha_inicio) {this.fecha_inicio = fecha_inicio;}
@@ -33,5 +44,6 @@ public class Cartera {
 
     public LocalDateTime getFecha_cierre_solicitude() {return fecha_cierre_solicitud;}
     public void setFecha_cierre_solicitud(LocalDateTime fecha_cierre_solicitud){this.fecha_cierre_solicitud = fecha_cierre_solicitud;}
+
 
 }

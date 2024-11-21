@@ -1,5 +1,7 @@
 package es.uca.iw.carteruca.models.solicitud;
 
+import es.uca.iw.carteruca.models.cartera.Cartera;
+import es.uca.iw.carteruca.models.usuario.Usuario;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -57,12 +59,17 @@ public class Solicitud {
     private Estado estado;
     // *hasta aqui lo rellena CIO y OTP
 
-    private Long id_solicitante; // referencia al solicitante
-    private Long id_promotor; // referencia al promotor
-    private Long id_cartera; // referencia a la cartera a la que pertenece
+    @ManyToOne
+    @JoinColumn(name = "solicitante_id")
+    private Usuario solicitante;// referencia al solicitante
 
+    @OneToOne
+    private Usuario avalador;// referencia al promotor
 
-    //GETTERS Y SETTERS
+    @OneToOne
+    private Cartera cartera;// referencia a la cartera a la que pertenece
+
+//GETTERS Y SETTERS
     public Long getId() {return id;}
 
     public String getTitulo() {return titulo;}
@@ -104,13 +111,13 @@ public class Solicitud {
     public String getEspecificacion_tecnica() {return especificacion_tecnica;}
     public void setEspecificacion_tecnica(String especificacion_tecnica) {this.especificacion_tecnica = especificacion_tecnica;}
 
-    public Long getId_solicitante() {return id_solicitante;}
-    public void setId_solicitante(Long id_solicitante) {this.id_solicitante = id_solicitante;}
+    public Usuario getSolicitante() {return solicitante;}
+    public void setSolicitante(Usuario solicitante) {this.solicitante = solicitante;}
 
-    public Long getId_promotor() {return id_promotor;}
-    public void setId_promotor(Long id_promotor) {this.id_promotor = id_promotor;}
+    //Hay que comprobar que sea avalador
+    public Usuario getAvalador() {return avalador;}
+    public void setAvalador(Usuario avalador) {this.avalador = avalador;}
 
-    public Long getId_cartera() {return id_cartera;}
-    public void setid_cartera(Long id_cartera) {this.id_cartera = id_cartera;}
-
+    public Cartera getCartera() {return cartera;}
+    public void setCartera(Cartera cartera) {this.cartera = cartera;}
 }

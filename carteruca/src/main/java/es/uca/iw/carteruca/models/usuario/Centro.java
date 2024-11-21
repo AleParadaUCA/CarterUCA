@@ -1,4 +1,4 @@
-package es.uca.iw.carteruca.models.centro;
+package es.uca.iw.carteruca.models.usuario;
 
 
 import jakarta.persistence.Column;
@@ -16,9 +16,10 @@ public class Centro {
     @Column(nullable = false)
     private String nombre;
 
-    //GETTERS Y SETTERS
+//GETTERS Y SETTERS
 
     public Long getId() {return id;}
 
     public String getNombre() {return nombre;}
+    public void setNombre(String nombre) {this.nombre = nombre;}
 }
