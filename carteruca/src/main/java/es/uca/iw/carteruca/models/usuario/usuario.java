@@ -1,6 +1,9 @@
 package es.uca.iw.carteruca.models.usuario;
 
+import es.uca.iw.carteruca.models.solicitud.Solicitud;
 import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 @Table
@@ -25,8 +28,11 @@ public class Usuario {
         @Column(length = 25,nullable = false)
         private String email;
 
-        @OneToOne
+        @ManyToOne
         private Centro centro;
+
+        @OneToMany
+        private List<Solicitud> solicitudes;
 
         @Column
         @Enumerated(EnumType.STRING)
@@ -57,4 +63,6 @@ public class Usuario {
         public Centro getCentro() {return centro;}
         public void setCentro(Centro centro) {this.centro = centro;}
 
+        public List<Solicitud> getSolicitudes() {return solicitudes;}
+        public void setSolicitudes(List<Solicitud> solicitudes) {this.solicitudes = solicitudes;}
 }
