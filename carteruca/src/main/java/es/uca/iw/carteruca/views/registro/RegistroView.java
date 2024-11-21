@@ -7,7 +7,7 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
-import com.vaadin.flow.component.html.H3;
+import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -61,8 +61,8 @@ public class RegistroView extends Composite<VerticalLayout> {
         layoutColumn2.setHeight("min-content");
 
         // Título
-        H3 h3 = new H3("Registro");
-        h3.setWidth("100%");
+        H2 h2 = new H2("Registro");
+        h2.setWidth("100%");
 
         // Formulario
         FormLayout formLayout2Col = new FormLayout();
@@ -180,7 +180,7 @@ public class RegistroView extends Composite<VerticalLayout> {
         layoutRow.add(buttonRow);
 
         // Agregar componentes al layout principal
-        layoutColumn2.add(h3, formLayout2Col, checkbox, layoutRow);
+        layoutColumn2.add(h2, formLayout2Col, checkbox, layoutRow);
         getContent().add(layoutColumn2);
     }
 

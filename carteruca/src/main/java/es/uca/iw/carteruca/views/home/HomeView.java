@@ -8,9 +8,11 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import es.uca.iw.carteruca.views.layout.MainLayout;
 
+@PageTitle("CarterUCA")
 @Route(value = "", layout = MainLayout.class)
 public class HomeView extends Composite<VerticalLayout> {
 

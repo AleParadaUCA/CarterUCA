@@ -12,3 +12,10 @@ html {
     --lumo-border-radius-m: calc(var(--lumo-size-m) / 2);
     --lumo-border-radius-l: var(--lumo-size-m);
 }
+
+.boton-avalar {
+    position: fixed;   /* Fija el botón en relación a la ventana */
+    bottom: 195px;      /* Distancia desde la parte inferior */
+    right: 20px;       /* Distancia desde el lado derecho */
+    z-index: 1000;     /* Asegura que esté por encima de otros elementos */
+}
