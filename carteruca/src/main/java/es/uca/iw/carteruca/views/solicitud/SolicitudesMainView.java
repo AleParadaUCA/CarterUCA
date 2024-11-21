@@ -11,7 +11,7 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-
+import es.uca.iw.carteruca.views.solicitud.SolicitudAddView;
 import es.uca.iw.carteruca.views.home.HomeSolicitanteView;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
@@ -28,10 +28,8 @@ public class SolicitudesMainView extends Composite<VerticalLayout> {
 
         Div añadir = createSquare("Añadir Solicitud", VaadinIcon.PLUS);
 
-        /*// Agregar el ClickListener para navegar a SolicitudesMainView
-        añadir.addClickListener(event -> {
-            UI.getCurrent().navigate(SolicitudesMainView.class); // Navega a la vista de destino
-        });*/
+        añadir.addClickListener(e ->
+                UI.getCurrent().navigate(SolicitudAddView.class));
 
         getContent().add(añadir);
 
