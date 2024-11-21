@@ -7,6 +7,7 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.combobox.MultiSelectComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.notification.Notification;
@@ -88,6 +89,7 @@ public class SolicitudAddView extends Composite<VerticalLayout> {
         fecha_puesta.setLabel("Fecha");
         fecha_puesta.setPlaceholder("Seleccione Fecha");
         fecha_puesta.setAutoOpen(false);
+        fecha_puesta.setHelperText("Fecha limite de puesta en marcha");
 
         Upload upload = new Upload(memoria);
         upload.setAcceptedFileTypes("application/pdf");
@@ -118,7 +120,7 @@ public class SolicitudAddView extends Composite<VerticalLayout> {
         );
 
         //Guardar
-        Button guardar = new Button("Guardar", e -> add());
+        Button guardar = new Button("Guardar", e -> showConfirmDialog());
         guardar.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
         HorizontalLayout guardarLayout = new HorizontalLayout();
@@ -146,8 +148,38 @@ public class SolicitudAddView extends Composite<VerticalLayout> {
         getContent().add(principal,guardar,footer);
     }
 
-    private void add(){}
+    private void showConfirmDialog() {
+        // Crear el cuadro de diálogo de confirmación
+        Dialog confirmDialog = new Dialog();
+        confirmDialog.setHeaderTitle("Confirmación");
+        confirmDialog.setWidth("400px");
 
+        // Mensaje de confirmación
+        VerticalLayout content = new VerticalLayout();
+        content.add("¿Estás seguro de que deseas guardar esta solicitud?");
+        confirmDialog.add(content);
 
+        // Botón "Aceptar"
+        Button acceptButton = new Button("Aceptar", event -> {
+            add();  // Llamar al método add() si el usuario acepta
+            confirmDialog.close();  // Cerrar el diálogo
+        });
+
+        // Botón "Cancelar"
+        Button cancelButton = new Button("Cancelar", event -> {
+            confirmDialog.close();  // Solo cierra el diálogo sin realizar ninguna acción
+        });
+
+        // Agregar botones al pie del diálogo
+        confirmDialog.getFooter().add(acceptButton, cancelButton);
+
+        // Mostrar el diálogo
+        confirmDialog.open();
+    }
+
+    private void add(){
+
+        Notification.show("Solicitud guardada exitosamente.");
+    }
 
 }
