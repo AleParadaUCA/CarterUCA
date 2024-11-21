@@ -12,7 +12,7 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
-import es.uca.iw.carteruca.views.home.HomeRegistradoView;
+import es.uca.iw.carteruca.views.home.HomeSolicitanteView;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import es.uca.iw.carteruca.views.layout.MainLayout;
@@ -58,6 +58,10 @@ public class SolicitudesMainView extends Composite<VerticalLayout> {
 
         getContent().add(cancelar);
 
+        Div solicitudes = createSquare("Ver Solicitudes", VaadinIcon.SEARCH);
+
+        getContent().add(solicitudes);
+
         Button volver = new Button("Volver");
         volver.setWidth("min-content");
         volver.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
@@ -69,10 +73,10 @@ public class SolicitudesMainView extends Composite<VerticalLayout> {
         footer.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
 
         // Evento al hacer clic en "Volver"
-        volver.addClickListener(e -> UI.getCurrent().navigate(HomeRegistradoView.class));
+        volver.addClickListener(e -> UI.getCurrent().navigate(HomeSolicitanteView.class));
 
         // Añadir componentes a la vista
-        getContent().add(añadir, modificar, cancelar, footer);
+        getContent().add(añadir, modificar, cancelar,solicitudes, footer);
 
     }
 

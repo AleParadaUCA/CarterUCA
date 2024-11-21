@@ -13,7 +13,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import es.uca.iw.carteruca.views.home.HomeRegistradoView;
+import es.uca.iw.carteruca.views.home.HomeSolicitanteView;
 import es.uca.iw.carteruca.views.layout.MainLayout;
 
 
@@ -63,7 +63,7 @@ public class AvalarMainView extends Composite<VerticalLayout> {
         footer.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
 
         // Evento al hacer clic en "Volver"
-        volver.addClickListener(e -> UI.getCurrent().navigate(HomeRegistradoView.class));
+        volver.addClickListener(e -> UI.getCurrent().navigate(HomeSolicitanteView.class));
 
         // Añadir componentes a la vista
         getContent().add(avalar, footer);
