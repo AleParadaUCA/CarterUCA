@@ -65,7 +65,7 @@ public class Header extends Composite<VerticalLayout> {
             bellIcon.getStyle()
                     .set("cursor", "pointer")
                     .set("margin-bottom", "3px");
-            //bellIcon.addClickListener(e -> UI.getCurrent().navigate("/notificaciones"));
+            bellIcon.addClickListener(e -> UI.getCurrent().navigate("/notificaciones"));
 
             // Ícono de usuario
             Icon userIcon = new Icon(VaadinIcon.USER);

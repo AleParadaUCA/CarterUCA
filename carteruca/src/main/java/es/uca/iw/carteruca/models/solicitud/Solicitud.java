@@ -114,4 +114,11 @@ public class Solicitud {
     public Long getId_cartera() {return id_cartera;}
     public void setid_cartera(Long id_cartera) {this.id_cartera = id_cartera;}
 
+    public Estado getEstado() {
+        return estado;
+    }
+
+    public void setEstado(Estado estado) {
+        this.estado = estado;
+    }
 }
