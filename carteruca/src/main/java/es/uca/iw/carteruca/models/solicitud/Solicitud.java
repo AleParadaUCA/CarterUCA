@@ -118,7 +118,16 @@ public class Solicitud {
     //Hay que comprobar que sea avalador
     public usuario getAvalador() {return avalador;}
     public void setAvalador(usuario avalador) {this.avalador = avalador;}
-
+    
     public Cartera getCartera() {return cartera;}
     public void setCartera(Cartera cartera) {this.cartera = cartera;}
+
+    public Estado getEstado() {
+        return estado;
+    }
+
+    public void setEstado(Estado estado) {
+        this.estado = estado;
+    }
+
 }

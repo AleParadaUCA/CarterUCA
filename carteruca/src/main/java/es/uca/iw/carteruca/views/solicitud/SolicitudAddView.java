@@ -1,6 +1,8 @@
 package es.uca.iw.carteruca.views.solicitud;
 
+import com.vaadin.flow.component.AbstractField;
 import com.vaadin.flow.component.Composite;
+import com.vaadin.flow.component.HasValue;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -106,6 +108,10 @@ public class SolicitudAddView extends Composite<VerticalLayout> {
             }
         });
 
+        submitButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        submitButton.setWidth("100px");
+        submitButton.setHeight("min-content");
+
 
         // Componentes del formulario
         form.add(titulo, nombre, interesados, objetivos, alcance, normativa, avalador, fecha_puesta,normativa, submitButton);
@@ -122,6 +128,30 @@ public class SolicitudAddView extends Composite<VerticalLayout> {
         //Guardar
         Button guardar = new Button("Guardar", e -> showConfirmDialog());
         guardar.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        guardar.setEnabled(false); // Comenzamos con el botón deshabilitado
+
+        // Verificar si todos los campos están llenos
+        HasValue.ValueChangeListener<AbstractField.ComponentValueChangeEvent<?, ?>> changeListener = event -> {
+            boolean allFilled = !titulo.isEmpty() &&
+                    !nombre.isEmpty() &&
+                    !interesados.isEmpty() &&
+                    !objetivos.isEmpty() &&
+                    !alcance.isEmpty() &&
+                    normativa.getValue() != null &&
+                    avalador.getValue() != null &&
+                    fecha_puesta.getValue() != null;
+            guardar.setEnabled(allFilled);
+        };
+
+        // Agregar el listener a cada campo
+        titulo.addValueChangeListener(changeListener);
+        nombre.addValueChangeListener(changeListener);
+        interesados.addValueChangeListener(changeListener);
+        objetivos.addValueChangeListener(changeListener);
+        alcance.addValueChangeListener(changeListener);
+        normativa.addValueChangeListener(changeListener);
+        avalador.addValueChangeListener(changeListener);
+        fecha_puesta.addValueChangeListener(changeListener);
 
         HorizontalLayout guardarLayout = new HorizontalLayout();
         guardarLayout.setWidth("min-content");
