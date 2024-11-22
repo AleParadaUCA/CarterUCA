@@ -17,7 +17,7 @@ import jakarta.annotation.security.RolesAllowed;
 
 @PageTitle("Home")
 @Route(value = "/home", layout = MainLayout.class)
-@RolesAllowed("Solicitante")
+@RolesAllowed({"Solicitante", "CIO", "OTP", "Promotor"})
 public class HomeSolicitanteView extends Composite<VerticalLayout>{
 
     Span mensaje_bienvenido = new Span();
@@ -35,7 +35,11 @@ public class HomeSolicitanteView extends Composite<VerticalLayout>{
 
         getContent().add(solicitudes);
 
-
+        String rol;
+        if("Promotor".equals(rol = "promotor")){
+            Div avalar = createSquare("Avalar Solicitudes", VaadinIcon.BOOK);
+            getContent().add(avalar);
+        }
     }
 
     private Div createSquare(String text, VaadinIcon iconType) {

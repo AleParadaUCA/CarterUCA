@@ -16,10 +16,12 @@ import es.uca.iw.carteruca.views.home.HomeSolicitanteView;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import es.uca.iw.carteruca.views.layout.MainLayout;
+import jakarta.annotation.security.RolesAllowed;
 
 
 @PageTitle("Solicitudes")
 @Route(value = "/solicitudes", layout = MainLayout.class)
+@RolesAllowed({"Promotor","CIO","Solicitante"})
 public class SolicitudesMainView extends Composite<VerticalLayout> {
 
     public SolicitudesMainView() {
