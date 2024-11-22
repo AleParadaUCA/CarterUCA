@@ -1,6 +1,6 @@
 package es.uca.iw.carteruca.views.home;
 
-import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
@@ -10,36 +10,18 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import es.uca.iw.carteruca.views.avalar.AvalarMainView;
-import es.uca.iw.carteruca.views.layout.MainLayout;
-import es.uca.iw.carteruca.views.solicitud.SolicitudesMainView;
 import jakarta.annotation.security.RolesAllowed;
+
+@Route("/home-admin")
 @PageTitle("Home")
-@Route(value = "/home-promotor", layout = MainLayout.class)
-@RolesAllowed("Promotor")
-public class HomePromotorView extends VerticalLayout {
+@RolesAllowed("Admin")
+public class HomeAdminVIew extends Composite<VerticalLayout> {
 
-    Span mensaje_solicitante = new Span();
+    public HomeAdminVIew() {
 
-    public HomePromotorView() {
+        Div usuario = createSquare("Usuarios", VaadinIcon.USER);
 
-        mensaje_solicitante.setText("Bienvenido, usuario");
-        mensaje_solicitante.getStyle().set("color", "blue");
-
-        add(mensaje_solicitante);
-
-        // Añadir los cuadros usando funciones
-        Div solicitudes = createSquare("Solicitudes", VaadinIcon.FILE_O);
-
-        solicitudes.addClickListener(event -> UI.getCurrent().navigate(SolicitudesMainView.class));
-
-        //Poner logica
-        Div avalar = createSquare("Avalar Solicitudes", VaadinIcon.BOOK);
-
-        avalar.addClickListener(event -> UI.getCurrent().navigate(AvalarMainView.class));
-        add(solicitudes);
-        add(avalar);
-
+        getContent().add(usuario);
 
     }
 

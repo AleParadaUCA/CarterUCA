@@ -12,19 +12,28 @@ import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.upload.Upload;
-import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
+import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer;
+
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
+import es.uca.iw.carteruca.models.solicitud.Normativa;
 import es.uca.iw.carteruca.views.layout.MainLayout;
 import jakarta.annotation.security.RolesAllowed;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.List;
 
 @PageTitle("Agregar Solicitud")
 @Route(value = "/solicitudes/agregar-solicitud", layout = MainLayout.class)
@@ -37,9 +46,9 @@ public class SolicitudAddView extends Composite<VerticalLayout> {
     private final TextField objetivos = new TextField();
     private final TextField alcance = new TextField();
     //private final MultiSelectComboBox<String> normativa = new MultiSelectComboBox<>("Normativa");  //multiple hay que disponerlo
-    private final ComboBox<String> normativa = new ComboBox<>();
+    private final ComboBox<Normativa> normativa = new ComboBox<>();
     private final DatePicker fecha_puesta = new DatePicker();
-    private final MemoryBuffer memoria = new MemoryBuffer();
+    private final MultiFileMemoryBuffer buffer = new MultiFileMemoryBuffer();
     private final ComboBox<String> avalador = new ComboBox<>();
 
     public SolicitudAddView() {
@@ -83,6 +92,17 @@ public class SolicitudAddView extends Composite<VerticalLayout> {
         normativa.setPlaceholder("Seleccione Normativa:");
         //funcion para todos los roles
 
+        /*
+        List<Normativa> normativas = List.of(
+                new Normativa("CLOFMFJOVO"),
+                new Normativa("KMCKSCLKCM")
+        );
+        //Para que salga el nombre
+        normativa.setItems(normativas);
+        normativa.setItemLabelGenerator(Normativa::getNombre);
+
+         */
+
         avalador.setLabel("Avalador");
         avalador.setPlaceholder("Seleccione Avalador:");
         //funcion que tenga todos los avaladores que hay por su rol
@@ -93,31 +113,40 @@ public class SolicitudAddView extends Composite<VerticalLayout> {
         fecha_puesta.setAutoOpen(false);
         fecha_puesta.setHelperText("Fecha limite de puesta en marcha");
 
-        Upload upload = new Upload(memoria);
-        upload.setAcceptedFileTypes("application/pdf");
+        Span memoria = new Span("Memoria");
+        memoria.getStyle()
+                .set("font-size", "14px") // Tamaño de fuente
+                .set("font-weight", "600") // Negrita
+                .set("color", "grey") // Color del texto
+                .set("margin-bottom", "8px"); // Espaciado inferior
 
+        Upload upload = new Upload(buffer);
+        upload.setDropLabel(new com.vaadin.flow.component.html.Span("Arrastra tus archivos aquí o haz clic para cargar"));
+        upload.setMaxFiles(1); // Límite opcional del número de archivos
+        upload.setAcceptedFileTypes(".pdf", ".word"); // Acepta archivos específicos opcionalmente
+
+        // Listener para manejar el evento de subida exitosa
         upload.addSucceededListener(event -> {
-            Notification.show("Archivo cargado: " + event.getFileName());
+            String fileName = event.getFileName();
+            InputStream inputStream = buffer.getInputStream(fileName);
+
+            // Procesar el archivo
+            processFile(inputStream, fileName);
         });
 
-        // Botón para iniciar el proceso
-        Button submitButton = new Button("Enviar archivo", e -> {
-            if (memoria.getFileData() != null) {
-                // Aquí se pueden manejar los archivos cargados (por ejemplo, guardarlos en el servidor)
-                Notification.show("Archivo cargado exitosamente.");
-            }
+        upload.addFileRejectedListener(event -> {
+            String errorMessage = event.getErrorMessage();
+
+            Notification notification = Notification.show(errorMessage, 5000,
+                    Notification.Position.MIDDLE);
+            notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
         });
-
-        submitButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        submitButton.setWidth("100px");
-        submitButton.setHeight("min-content");
-
 
         // Componentes del formulario
-        form.add(titulo, nombre, interesados, objetivos, alcance, normativa, avalador, fecha_puesta,normativa, submitButton);
+        form.add(titulo, nombre, interesados, objetivos, alcance, normativa, avalador, fecha_puesta,normativa, memoria, upload);
 
-        form.setColspan(submitButton,2);
-
+        form.setColspan(memoria,2);
+        form.setColspan(upload,2);
         // Ajustar la cantidad de columnas para que se vea bien en diferentes tamaños
         form.setResponsiveSteps(
                 new FormLayout.ResponsiveStep("0", 1),
@@ -210,6 +239,18 @@ public class SolicitudAddView extends Composite<VerticalLayout> {
     private void add(){
 
         Notification.show("Solicitud guardada exitosamente.");
+    }
+
+    private void processFile(InputStream inputStream, String fileName) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
+            System.out.println("Contenido del archivo " + fileName + ":");
+            String line;
+            while ((line = reader.readLine()) != null) {
+                System.out.println(line); // Procesamiento o impresión de las líneas
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }
