@@ -4,7 +4,7 @@
 }
 
 html {
-    --lumo-primary-color: "#384850";
+    --lumo-primary-color: #384850 ;
     --lumo-primary-color-50pct: hsl(0, 0%, 100%);
     --lumo-primary-color-10pct: hsla(214, 33%, 38%, 0.1);
     --lumo-primary-text-color: hsl(214, 34%, 44%);

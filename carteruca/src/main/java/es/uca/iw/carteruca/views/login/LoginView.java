@@ -1,14 +1,14 @@
 package es.uca.iw.carteruca.views.login;
 
-import es.uca.iw.carteruca.models.usuario.security.AuthenticatedUser;
-import es.uca.iw.carteruca.views.home.HomeRegistradoView;
-import es.uca.iw.carteruca.views.registro.RegistroView;
-import com.vaadin.flow.component.UI;
-import com.vaadin.flow.component.button.Button;
+import es.uca.iw.carteruca.security.AuthenticatedUser;
+// import es.uca.iw.carteruca.views.home.HomeRegistradoView;
+// import es.uca.iw.carteruca.views.registro.RegistroView;
+// import com.vaadin.flow.component.UI;
+// import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.login.LoginForm;
 import com.vaadin.flow.component.login.LoginI18n;
-import com.vaadin.flow.component.orderedlayout.FlexComponent;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+// import com.vaadin.flow.component.orderedlayout.FlexComponent;
+// import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.login.LoginOverlay;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
