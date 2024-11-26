@@ -13,6 +13,7 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import es.uca.iw.carteruca.security.AuthenticatedUser;
 import es.uca.iw.carteruca.views.login.LoginView;
 import es.uca.iw.carteruca.views.registro.RegistroView;
 
