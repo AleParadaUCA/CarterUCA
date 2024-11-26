@@ -15,9 +15,9 @@ import jakarta.annotation.security.RolesAllowed;
 @Route("/home-admin")
 @PageTitle("Home")
 @RolesAllowed("Admin")
-public class HomeAdminVIew extends Composite<VerticalLayout> {
+public class HomeAdminView extends Composite<VerticalLayout> {
 
-    public HomeAdminVIew() {
+    public HomeAdminView() {
 
         Div usuario = createSquare("Usuarios", VaadinIcon.USER);
 
