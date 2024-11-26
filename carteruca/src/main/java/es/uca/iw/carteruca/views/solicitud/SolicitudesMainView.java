@@ -26,58 +26,55 @@ public class SolicitudesMainView extends Composite<VerticalLayout> {
 
     public SolicitudesMainView() {
 
-        //Añadir Solicitud
+        VerticalLayout mainLayout = getContent();
+        mainLayout.setDefaultHorizontalComponentAlignment(FlexComponent.Alignment.CENTER);
 
+        // Contenedor para dos columnas
+        HorizontalLayout twoColumnsLayout = new HorizontalLayout();
+        twoColumnsLayout.setWidthFull();
+        twoColumnsLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER); // Opcional para centrar las columnas
+        twoColumnsLayout.setSpacing(true); // Espaciado entre columnas
+
+        // Añadir Solicitud
         Div añadir = createSquare("Añadir Solicitud", VaadinIcon.PLUS);
+        añadir.addClickListener(e -> UI.getCurrent().navigate(SolicitudAddView.class));
 
-        añadir.addClickListener(e ->
-                UI.getCurrent().navigate(SolicitudAddView.class));
+        // Modificar Solicitud
+        Div modificar = createSquare("Modificar Solicitud", VaadinIcon.EDIT);
 
-        getContent().add(añadir);
+        // Cancelar Solicitud
+        Div cancelar = createSquare("Cancelar Solicitud", VaadinIcon.CLOSE);
 
-        //Modificar Solicitud
-
-        Div modificar = createSquare("Modificar Solicitud",VaadinIcon.EDIT);
-
-        /*// Agregar el ClickListener para navegar a SolicitudesMainView
-        modificar.addClickListener(event -> {
-            UI.getCurrent().navigate(SolicitudesMainView.class); // Navega a la vista de destino
-        });*/
-
-        getContent().add(modificar);
-
-
-        //Cancelar Solicitud
-
-        Div cancelar = createSquare("Cancelar Solicitud",VaadinIcon.CLOSE);
-
-        /*// Agregar el ClickListener para navegar a SolicitudesMainView
-        modificar.addClickListener(event -> {
-            UI.getCurrent().navigate(SolicitudesMainView.class); // Navega a la vista de destino
-        });*/
-
-        getContent().add(cancelar);
-
+        // Ver Solicitudes
         Div solicitudes = createSquare("Ver Solicitudes", VaadinIcon.SEARCH);
 
-        getContent().add(solicitudes);
+        // Agregar elementos a las dos columnas
+        VerticalLayout column1 = new VerticalLayout(añadir, modificar);
+        column1.setSpacing(false);
+        column1.setPadding(false);
+        column1.setDefaultHorizontalComponentAlignment(FlexComponent.Alignment.CENTER);
+
+        VerticalLayout column2 = new VerticalLayout(cancelar, solicitudes);
+        column2.setSpacing(false);
+        column2.setPadding(false);
+        column2.setDefaultHorizontalComponentAlignment(FlexComponent.Alignment.CENTER);
+
+        // Agregar columnas al contenedor
+        twoColumnsLayout.add(column1, column2);
 
         Button volver = new Button("Volver");
         volver.setWidth("min-content");
         volver.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-
-        // Layout para el botón en el footer
-        HorizontalLayout footer = new HorizontalLayout(volver);
-        footer.setWidthFull();
-        footer.add(volver);
-        footer.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
-
-        // Evento al hacer clic en "Volver"
         volver.addClickListener(e -> UI.getCurrent().navigate(HomeSolicitanteView.class));
 
-        // Añadir componentes a la vista
-        getContent().add(añadir, modificar, cancelar,solicitudes, footer);
+        // Footer layout con margen superior
+        HorizontalLayout footer = new HorizontalLayout(volver);
+        footer.setWidthFull();
+        footer.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
+        footer.getStyle().set("margin-top", "50px");
 
+        // Añadir todo al layout principal
+        mainLayout.add(twoColumnsLayout, footer);
     }
 
     private Div createSquare(String text, VaadinIcon iconType) {
