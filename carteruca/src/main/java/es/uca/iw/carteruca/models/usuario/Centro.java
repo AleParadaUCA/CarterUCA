@@ -16,7 +16,15 @@ public class Centro {
     @Column(nullable = false)
     private String nombre;
 
-//GETTERS Y SETTERS
+    //Constructor
+
+    public Centro() {}
+
+    public Centro(String nombre) {
+        this.nombre = nombre;
+    }
+
+    //GETTERS Y SETTERS
 
     public Long getId() {return id;}
 
