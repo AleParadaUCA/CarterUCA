@@ -34,7 +34,7 @@ public class Solicitud {
     @Column
     private String alcance; // Cantidad y grupo de personas a las que beneficiará el proyecto
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "normativa_id", nullable = false)  // Crea una columna normativa_id en la tabla Solicitud
     private Normativa normativa;//Codigo y/o descripcion de la normativa de aplicación obligatoria
 
