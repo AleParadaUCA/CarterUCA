@@ -32,7 +32,8 @@ public class Header extends Composite<VerticalLayout> {
         //topLayout.getStyle().set("border-bottom", "1px solid #ccc");
 
         // **Parte superior izquierda: Logo**
-        Anchor homeLink = new Anchor("https://www.uca.es", new Image("images/Universidad_de_cadiz_2.0.png", "Foto UCA"));
+    //    Anchor homeLink = new Anchor("https://www.uca.es", new Image("images/Universidad_de_cadiz_2.0.png", "Foto UCA"));
+        Anchor homeLink = new Anchor("https://www.uca.es", new Image("layout/Universidad_de_cadiz_2.0.png", "Foto UCA"));
         homeLink.getElement().getStyle()
             .set("width", "100px") // Ajustado el ancho del logo
             .set("height", "auto")
