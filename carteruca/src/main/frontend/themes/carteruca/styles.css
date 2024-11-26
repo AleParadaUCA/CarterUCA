@@ -4,11 +4,18 @@
 }
 
 html {
-    --lumo-primary-color: #384850 ;
+    --lumo-primary-color: hsl(214, 33%,38%);
     --lumo-primary-color-50pct: hsl(0, 0%, 100%);
     --lumo-primary-color-10pct: hsla(214, 33%, 38%, 0.1);
     --lumo-primary-text-color: hsl(214, 34%, 44%);
     --lumo-border-radius-s: calc(var(--lumo-size-m) / 6);
     --lumo-border-radius-m: calc(var(--lumo-size-m) / 2);
     --lumo-border-radius-l: var(--lumo-size-m);
+}
+
+.boton-avalar {
+    position: fixed;   /* Fija el botón en relación a la ventana */
+    bottom: 195px;      /* Distancia desde la parte inferior */
+    right: 20px;       /* Distancia desde el lado derecho */
+    z-index: 1000;     /* Asegura que esté por encima de otros elementos */
 }

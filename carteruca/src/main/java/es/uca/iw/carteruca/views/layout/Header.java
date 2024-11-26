@@ -13,7 +13,8 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
-import es.uca.iw.carteruca.security.AuthenticatedUser;
+import es.uca.iw.carteruca.views.login.LoginView;
+import es.uca.iw.carteruca.views.registro.RegistroView;
 
 public class Header extends Composite<VerticalLayout> {
 
@@ -65,7 +66,7 @@ public class Header extends Composite<VerticalLayout> {
             bellIcon.getStyle()
                     .set("cursor", "pointer")
                     .set("margin-bottom", "3px");
-            //bellIcon.addClickListener(e -> UI.getCurrent().navigate("/notificaciones"));
+            bellIcon.addClickListener(e -> UI.getCurrent().navigate("/notificaciones"));
 
             // Ícono de usuario
             Icon userIcon = new Icon(VaadinIcon.USER);
@@ -119,10 +120,17 @@ public class Header extends Composite<VerticalLayout> {
     }
 
     private void setMenuItems(MenuBar menuBar) {
-menuBar.addItem("Proyectos", e -> {
+        menuBar.addItem("Proyectos", e -> {
             // Redirigir a "/"
             UI.getCurrent().navigate("/");
         }).getElement().getClassList().add("menu-item");
+
+
+        menuBar.addItem("Iniciar Session", e -> UI.getCurrent().navigate(LoginView.class))
+                .getElement().getClassList().add("menu-item");
+
+        menuBar.addItem("Registrarse", e -> UI.getCurrent().navigate(RegistroView.class))
+                .getElement().getClassList().add("menu-item");
 
         if (isUserLoggedIn()) {
             menuBar.addItem("Home", e -> {

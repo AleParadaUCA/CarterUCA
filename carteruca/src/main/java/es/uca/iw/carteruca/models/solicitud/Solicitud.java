@@ -1,9 +1,9 @@
 package es.uca.iw.carteruca.models.solicitud;
 
 import es.uca.iw.carteruca.models.cartera.Cartera;
-import es.uca.iw.carteruca.models.usuario.Usuario;
+import es.uca.iw.carteruca.models.usuario.usuario;
 import jakarta.persistence.*;
-
+import es.uca.iw.carteruca.models.solicitud.Normativa;
 import java.time.LocalDateTime;
 
 @Entity
@@ -34,19 +34,20 @@ public class Solicitud {
     @Column
     private String alcance; // Cantidad y grupo de personas a las que beneficiará el proyecto
 
-    @Column
-    private String normativa;//Codigo y/o descripcion de la normativade aplicación obligatoria
+    @ManyToOne
+    @JoinColumn(name = "normativa_id", nullable = false)  // Crea una columna normativa_id en la tabla Solicitud
+    private Normativa normativa;//Codigo y/o descripcion de la normativa de aplicación obligatoria
 
     @Column
     private String memoria; //Por ahora usaremos una URL
     // *hasta aqui lo rellena el solicitante
-
+    //hasta aqui solicitud
     @Column
     private Integer importancia_promotor; // si el promotor tiene varios proyectos avalados el promotor tiene que indicar importancia de cada proyecto que avale
 
     @Column
-    private Boolean avalado;// True si esta avalado, False si no lo esta.
-    // *hasta aqui lo rellena el promotor
+    private String avalado;// True si esta avalado, False si no lo esta.
+
 
     @Column
     private String presupuesto; // es un documento especificando la financiacion aportada
@@ -61,10 +62,10 @@ public class Solicitud {
 
     @ManyToOne
     @JoinColumn(name = "solicitante_id")
-    private Usuario solicitante;// referencia al solicitante
+    private usuario solicitante;// referencia al solicitante
 
     @OneToOne
-    private Usuario avalador;// referencia al promotor
+    private usuario avalador;// referencia al promotor
 
     @OneToOne
     private Cartera cartera;// referencia a la cartera a la que pertenece
@@ -93,8 +94,8 @@ public class Solicitud {
     public String getAlcance() {return alcance;}
     public void setAlcance(String alcance) {this.alcance = alcance;}
 
-    public String getNormativa() {return normativa;}
-    public void setNormativa(String normativa) {this.normativa = normativa;}
+    public Normativa getNormativa() {return normativa;}
+    public void setNormativa(Normativa normativa) {this.normativa = normativa;}
 
     public String getMemoria() {return memoria;}
     public void setMemoria(String memoria) {this.memoria = memoria;}
@@ -102,8 +103,8 @@ public class Solicitud {
     public Integer getImportancia_promotor() {return importancia_promotor;}
     public void setImportancia_promotor(Integer importancia_promotor) {this.importancia_promotor = importancia_promotor;}
 
-    public Boolean getAvalado() {return avalado;}
-    public void setAvalado(Boolean avalado) {this.avalado = avalado;}
+    public String getAvalado() {return avalado;}
+    public void setAvalado(String avalado) {this.avalado = avalado;}
 
     public String getPresupuesto() {return presupuesto;}
     public void setPresupuesto(String presupuesto) {this.presupuesto = presupuesto;}
@@ -111,13 +112,22 @@ public class Solicitud {
     public String getEspecificacion_tecnica() {return especificacion_tecnica;}
     public void setEspecificacion_tecnica(String especificacion_tecnica) {this.especificacion_tecnica = especificacion_tecnica;}
 
-    public Usuario getSolicitante() {return solicitante;}
-    public void setSolicitante(Usuario solicitante) {this.solicitante = solicitante;}
+    public usuario getSolicitante() {return solicitante;}
+    public void setSolicitante(usuario solicitante) {this.solicitante = solicitante;}
 
     //Hay que comprobar que sea avalador
-    public Usuario getAvalador() {return avalador;}
-    public void setAvalador(Usuario avalador) {this.avalador = avalador;}
-
+    public usuario getAvalador() {return avalador;}
+    public void setAvalador(usuario avalador) {this.avalador = avalador;}
+    
     public Cartera getCartera() {return cartera;}
     public void setCartera(Cartera cartera) {this.cartera = cartera;}
+
+    public Estado getEstado() {
+        return estado;
+    }
+
+    public void setEstado(Estado estado) {
+        this.estado = estado;
+    }
+
 }

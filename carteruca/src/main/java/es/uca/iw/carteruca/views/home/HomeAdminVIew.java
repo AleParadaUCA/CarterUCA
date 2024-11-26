@@ -8,30 +8,21 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import es.uca.iw.carteruca.views.layout.MainLayout;
-import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 
-@Route(value = "/home", layout = MainLayout.class)
-@PermitAll
-public class HomeRegistradoView extends Composite<VerticalLayout>{
+@Route("/home-admin")
+@PageTitle("Home")
+@RolesAllowed("Admin")
+public class HomeAdminVIew extends Composite<VerticalLayout> {
 
-    Span mensaje_bienvenido = new Span();
+    public HomeAdminVIew() {
 
-    public HomeRegistradoView() {
+        Div usuario = createSquare("Usuarios", VaadinIcon.USER);
 
-        mensaje_bienvenido.setText("Bienvenido, usuario");
-        mensaje_bienvenido.getStyle().set("color", "blue");
-        getContent().add(mensaje_bienvenido);
+        getContent().add(usuario);
 
-        // Añadir los cuadros usando funciones
-        Div solicitudes = createSquare("Solicitudes", VaadinIcon.FILE_O);
-
-        //Poner logica
-        Div avalar = createSquare("Avalar Solicitudes", VaadinIcon.BOOK);
-
-        getContent().add(solicitudes);
-        getContent().add(avalar);
     }
 
     private Div createSquare(String text, VaadinIcon iconType) {
@@ -68,5 +59,4 @@ public class HomeRegistradoView extends Composite<VerticalLayout>{
 
         return square;
     }
-
 }

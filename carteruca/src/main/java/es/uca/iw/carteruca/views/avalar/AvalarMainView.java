@@ -13,7 +13,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import es.uca.iw.carteruca.views.home.HomeRegistradoView;
+import es.uca.iw.carteruca.views.home.HomeSolicitanteView;
 import es.uca.iw.carteruca.views.layout.MainLayout;
 
 
@@ -22,40 +22,15 @@ import es.uca.iw.carteruca.views.layout.MainLayout;
 public class AvalarMainView extends Composite<VerticalLayout> {
 
     public AvalarMainView() {
-        Div avalar = new Div();
+        Div avalar = createSquare("Avalar", VaadinIcon.CHECK);
 
-        HorizontalLayout content = new HorizontalLayout();
-        content.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
-
-        Icon approveIcon = VaadinIcon.CHECK.create();
-        approveIcon.setSize("40px");
-        approveIcon.getStyle().set("color", "hsl(214, 33%, 38%)");
-
-        Span title = new Span("Avalar");
-        title.getStyle().set("font-size", "24px");
-
-        content.add(approveIcon, title);
-        content.getStyle().set("align-items", "center");
-        content.getStyle().set("justify-content", "flex-start");
-
-        avalar.getStyle().set("width", "400px");
-        avalar.getStyle().set("height", "100px");
-        avalar.getStyle().set("background-color", "#ffffff");
-        avalar.getStyle().set("border", "1px solid #000");
-        avalar.getStyle().set("display", "flex");
-        avalar.getStyle().set("align-items", "center");
-        avalar.getStyle().set("justify-content", "center");
-        avalar.getStyle().set("cursor", "pointer");
-        avalar.getStyle().set("margin-left", "50px");
-        avalar.getStyle().set("margin-top", "20px");
-
-        avalar.add(content);
+        avalar.addClickListener(e -> UI.getCurrent().navigate(AvalarAllView.class));
 
         // Botón "Volver"
         Button volver = new Button("Volver");
         volver.setWidth("min-content");
         volver.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-
+        volver.addClassName("boton-avalar");
         // Footer layout para el botón
         HorizontalLayout footer = new HorizontalLayout();
         footer.setWidthFull();
@@ -63,9 +38,45 @@ public class AvalarMainView extends Composite<VerticalLayout> {
         footer.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
 
         // Evento al hacer clic en "Volver"
-        volver.addClickListener(e -> UI.getCurrent().navigate(HomeRegistradoView.class));
+        volver.addClickListener(e -> UI.getCurrent().navigate(HomeSolicitanteView.class));
 
         // Añadir componentes a la vista
         getContent().add(avalar, footer);
+    }
+
+    private Div createSquare(String text, VaadinIcon iconType) {
+
+        Div square = new Div();
+
+        HorizontalLayout content = new HorizontalLayout();
+        content.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
+
+        Icon icon = iconType.create();
+        icon.setSize("40px");
+        icon.getStyle().set("color", "hsl(214, 33%, 38%)");
+
+        Span label = new Span(text);
+        label.getStyle().set("color","black");
+        label.getStyle().set("font-size", "24px");
+
+        content.add(icon, label);
+        content.getStyle().set("align-items", "center");
+        content.getStyle().set("justify-content", "flex-start");
+
+        // Estilos del cuadrado
+        square.getStyle().set("width", "400px");
+        square.getStyle().set("height", "100px");
+        square.getStyle().set("background-color", "#ffffff");
+        square.getStyle().set("border", "1px solid #000");
+        square.getStyle().set("display", "flex");
+        square.getStyle().set("align-items", "center");
+        square.getStyle().set("justify-content", "center");
+        square.getStyle().set("cursor", "pointer");
+        square.getStyle().set("margin-left", "50px");
+        square.getStyle().set("margin-top", "20px");
+
+        square.add(content);
+
+        return square;
     }
 }

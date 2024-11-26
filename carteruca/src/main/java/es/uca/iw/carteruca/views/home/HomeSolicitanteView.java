@@ -1,6 +1,7 @@
 package es.uca.iw.carteruca.views.home;
 
 import com.vaadin.flow.component.Composite;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
@@ -10,19 +11,35 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.server.auth.AnonymousAllowed;
 import es.uca.iw.carteruca.views.layout.MainLayout;
+import es.uca.iw.carteruca.views.solicitud.SolicitudesMainView;
+import jakarta.annotation.security.RolesAllowed;
 
-@PageTitle("CarterUCA")
-@Route(value = "", layout = MainLayout.class)
-@AnonymousAllowed
-public class HomeView extends Composite<VerticalLayout> {
+@PageTitle("Home")
+@Route(value = "/home", layout = MainLayout.class)
+@RolesAllowed({"Solicitante", "CIO", "OTP", "Promotor"})
+public class HomeSolicitanteView extends Composite<VerticalLayout>{
 
-    public HomeView(){
+    Span mensaje_bienvenido = new Span();
 
-        Div proyectos = createSquare("Proyectos", VaadinIcon.FILE_O);
+    public HomeSolicitanteView() {
 
-        getContent().add(proyectos);
+        mensaje_bienvenido.setText("Bienvenido, usuario");
+        mensaje_bienvenido.getStyle().set("color", "blue");
+        getContent().add(mensaje_bienvenido);
+
+        // Añadir los cuadros usando funciones
+        Div solicitudes = createSquare("Solicitudes", VaadinIcon.FILE_O);
+
+        solicitudes.addClickListener(event -> UI.getCurrent().navigate(SolicitudesMainView.class));
+
+        getContent().add(solicitudes);
+
+        String rol;
+        if("Promotor".equals(rol = "promotor")){
+            Div avalar = createSquare("Avalar Solicitudes", VaadinIcon.BOOK);
+            getContent().add(avalar);
+        }
     }
 
     private Div createSquare(String text, VaadinIcon iconType) {
@@ -59,4 +76,5 @@ public class HomeView extends Composite<VerticalLayout> {
 
         return square;
     }
+
 }
