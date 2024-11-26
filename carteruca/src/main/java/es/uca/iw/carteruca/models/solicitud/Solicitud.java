@@ -1,7 +1,7 @@
 package es.uca.iw.carteruca.models.solicitud;
 
 import es.uca.iw.carteruca.models.cartera.Cartera;
-import es.uca.iw.carteruca.models.usuario.usuario;
+import es.uca.iw.carteruca.models.usuario.Usuario;
 import jakarta.persistence.*;
 import es.uca.iw.carteruca.models.solicitud.Normativa;
 import java.time.LocalDateTime;
@@ -62,10 +62,10 @@ public class Solicitud {
 
     @ManyToOne
     @JoinColumn(name = "solicitante_id")
-    private usuario solicitante;// referencia al solicitante
+    private Usuario solicitante;// referencia al solicitante
 
     @OneToOne
-    private usuario avalador;// referencia al promotor
+    private Usuario avalador;// referencia al promotor
 
     @OneToOne
     private Cartera cartera;// referencia a la cartera a la que pertenece
@@ -112,12 +112,12 @@ public class Solicitud {
     public String getEspecificacion_tecnica() {return especificacion_tecnica;}
     public void setEspecificacion_tecnica(String especificacion_tecnica) {this.especificacion_tecnica = especificacion_tecnica;}
 
-    public usuario getSolicitante() {return solicitante;}
-    public void setSolicitante(usuario solicitante) {this.solicitante = solicitante;}
+    public Usuario getSolicitante() {return solicitante;}
+    public void setSolicitante(Usuario solicitante) {this.solicitante = solicitante;}
 
     //Hay que comprobar que sea avalador
-    public usuario getAvalador() {return avalador;}
-    public void setAvalador(usuario avalador) {this.avalador = avalador;}
+    public Usuario getAvalador() {return avalador;}
+    public void setAvalador(Usuario avalador) {this.avalador = avalador;}
     
     public Cartera getCartera() {return cartera;}
     public void setCartera(Cartera cartera) {this.cartera = cartera;}

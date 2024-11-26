@@ -13,12 +13,13 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import es.uca.iw.carteruca.security.AuthenticatedUser;
 import es.uca.iw.carteruca.views.login.LoginView;
 import es.uca.iw.carteruca.views.registro.RegistroView;
 
 public class Header extends Composite<VerticalLayout> {
 
-    public Header() {
+    public Header(AuthenticatedUser authenticatedUser) {
         VerticalLayout header = getContent();
         header.setWidthFull();
         header.getStyle()
@@ -34,7 +35,8 @@ public class Header extends Composite<VerticalLayout> {
         //topLayout.getStyle().set("border-bottom", "1px solid #ccc");
 
         // **Parte superior izquierda: Logo**
-        Anchor homeLink = new Anchor("https://www.uca.es", new Image("images/Universidad_de_cadiz_2.0.png", "Foto UCA"));
+    //    Anchor homeLink = new Anchor("https://www.uca.es", new Image("images/Universidad_de_cadiz_2.0.png", "Foto UCA"));
+        Anchor homeLink = new Anchor("https://www.uca.es", new Image("layout/Universidad_de_cadiz_2.0.png", "Foto UCA"));
         homeLink.getElement().getStyle()
             .set("width", "100px") // Ajustado el ancho del logo
             .set("height", "auto")
@@ -81,7 +83,7 @@ public class Header extends Composite<VerticalLayout> {
             SubMenu userSubMenu = userMenuItem.getSubMenu();
             //userSubMenu.addItem("Ver Perfil", e -> UI.getCurrent().navigate("/profile"));
             userSubMenu.addItem("Cerrar Sesión", e -> {
-                // Lógica de cierre de sesión
+                authenticatedUser.logout();
             });
 
             iconsLayout.add(bellIcon, userMenuBar);

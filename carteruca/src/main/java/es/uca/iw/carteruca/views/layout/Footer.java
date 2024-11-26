@@ -26,7 +26,7 @@ public class Footer extends Composite<HorizontalLayout> {
                 .set("padding", "10px 0");
 
         // 1ª Columna: Logo con icono
-        Image footerLogo = new Image("images/logoFooterUCA_05.png", "Logo UCA");
+        Image footerLogo = new Image("layout/logoFooterUCA_05.png", "Logo UCA");
         footerLogo.setHeight("90px");
         Div logoContainer = new Div(footerLogo);
         logoContainer.getStyle()
@@ -85,7 +85,7 @@ public class Footer extends Composite<HorizontalLayout> {
         HorizontalLayout socialLinks = new HorizontalLayout(
                 createSocialIcon("https://www.facebook.com/universidaddecadiz/", VaadinIcon.FACEBOOK, "Facebook"),
                 createSocialIcon("https://twitter.com/univcadiz", VaadinIcon.TWITTER, "Twitter"),
-                createSocialIcon("https://www.instagram.com/univcadiz/", "/icons/instagram.svg", "Instagram"),
+                createSocialIcon("https://www.instagram.com/univcadiz/", "/layout/instagram.svg", "Instagram"),
                 createSocialIcon("http://www.youtube.com/user/videosUCA", VaadinIcon.YOUTUBE, "YouTube")
         );
         socialLinks.getStyle()
