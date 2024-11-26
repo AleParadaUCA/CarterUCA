@@ -1,25 +1,35 @@
 package es.uca.iw.carteruca.security;
 
-import es.uca.iw.carteruca.models.usuario.usuario;
+import com.vaadin.flow.spring.security.AuthenticationContext;
+import es.uca.iw.carteruca.models.usuario.UsuarioRepository;
+import es.uca.iw.carteruca.models.usuario.Usuario;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @Component
 public class AuthenticatedUser {
 
-    public Optional<usuario> get() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
-            return Optional.empty();
-        }
-        return Optional.of((usuario) authentication.getPrincipal());
+    private final UsuarioRepository userRepository;
+    private final AuthenticationContext authenticationContext;
+
+    public AuthenticatedUser(AuthenticationContext authenticationContext, UsuarioRepository userRepository) {
+        this.userRepository = userRepository;
+        this.authenticationContext = authenticationContext;
+    }
+
+    @Transactional
+    public Optional<Usuario> get() {
+        return authenticationContext.getAuthenticatedUser(UserDetails.class)
+                .map(userDetails -> userRepository.findByUsuario(userDetails.getUsername()));
     }
 
     public void logout() {
-        SecurityContextHolder.clearContext();
+        authenticationContext.logout();
     }
 }

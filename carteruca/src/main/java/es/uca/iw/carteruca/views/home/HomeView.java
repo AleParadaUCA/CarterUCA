@@ -9,9 +9,11 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.auth.AnonymousAllowed;
 import es.uca.iw.carteruca.views.layout.MainLayout;
 
 @Route(value = "", layout = MainLayout.class)
+@AnonymousAllowed
 public class HomeView extends Composite<VerticalLayout> {
 
     public HomeView(){

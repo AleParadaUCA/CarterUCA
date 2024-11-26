@@ -13,10 +13,11 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import es.uca.iw.carteruca.security.AuthenticatedUser;
 
 public class Header extends Composite<VerticalLayout> {
 
-    public Header() {
+    public Header(AuthenticatedUser authenticatedUser) {
         VerticalLayout header = getContent();
         header.setWidthFull();
         header.getStyle()
@@ -80,7 +81,7 @@ public class Header extends Composite<VerticalLayout> {
             SubMenu userSubMenu = userMenuItem.getSubMenu();
             //userSubMenu.addItem("Ver Perfil", e -> UI.getCurrent().navigate("/profile"));
             userSubMenu.addItem("Cerrar Sesión", e -> {
-                // Lógica de cierre de sesión
+                authenticatedUser.logout();
             });
 
             iconsLayout.add(bellIcon, userMenuBar);
