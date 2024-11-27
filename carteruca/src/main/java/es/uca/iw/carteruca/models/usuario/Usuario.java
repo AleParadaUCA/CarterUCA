@@ -2,18 +2,20 @@ package es.uca.iw.carteruca.models.usuario;
 
 import es.uca.iw.carteruca.models.solicitud.Solicitud;
 import jakarta.persistence.*;
+import org.checkerframework.common.aliasing.qual.Unique;
 
 import java.util.List;
 
 @Entity
 @Table
-public class Usuario {
+public class usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(length = 25, nullable = false)
+    @Unique
     private String usuario;
 
     @Column(length = 25, nullable = false)
@@ -26,6 +28,7 @@ public class Usuario {
     private String apellidos;
 
     @Column(length = 25, nullable = false)
+    @Unique
     private String email;
 
     @ManyToOne

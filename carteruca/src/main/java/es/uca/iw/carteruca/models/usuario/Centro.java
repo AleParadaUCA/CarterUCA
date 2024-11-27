@@ -1,12 +1,11 @@
 package es.uca.iw.carteruca.models.usuario;
 
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import org.checkerframework.common.aliasing.qual.Unique;
 
 @Entity
+@Table
 public class Centro {
 
     @Id
@@ -14,6 +13,7 @@ public class Centro {
     private Long id;
 
     @Column(nullable = false)
+    @Unique
     private String nombre;
 
     //Constructor

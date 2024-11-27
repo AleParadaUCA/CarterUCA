@@ -1,12 +1,12 @@
 package es.uca.iw.carteruca.models.solicitud;
 
 import es.uca.iw.carteruca.models.cartera.Cartera;
-import es.uca.iw.carteruca.models.usuario.Usuario;
+import es.uca.iw.carteruca.models.usuario.usuario;
 import jakarta.persistence.*;
-import es.uca.iw.carteruca.models.solicitud.Normativa;
 import java.time.LocalDateTime;
 
 @Entity
+@Table
 public class Solicitud {
 
     @Id
@@ -42,11 +42,11 @@ public class Solicitud {
     private String memoria; //Por ahora usaremos una URL
     // *hasta aqui lo rellena el solicitante
     //hasta aqui solicitud
-    @Column
-    private Integer importancia_promotor; // si el promotor tiene varios proyectos avalados el promotor tiene que indicar importancia de cada proyecto que avale
+
 
     @Column
-    private String avalado;// True si esta avalado, False si no lo esta.
+    private Integer importancia_promotor; // si el promotor tiene varios proyectos avalados el promotor tiene que indicar importancia de cada proyecto que avale
+    //* hasta aqui rellena el avalador
 
 
     @Column
@@ -61,13 +61,15 @@ public class Solicitud {
     // *hasta aqui lo rellena CIO y OTP
 
     @ManyToOne
-    @JoinColumn(name = "solicitante_id")
-    private Usuario solicitante;// referencia al solicitante
+    @JoinColumn(name = "solicitante_id") //FK hacia usuario solicitante
+    private usuario solicitante;
 
     @OneToOne
-    private Usuario avalador;// referencia al promotor
+    @JoinColumn(name = "promotor_id")// FK hacia usuario promotor
+    private usuario promotor;
 
     @OneToOne
+    @JoinColumn(name = "cartera_id")// FK hacia cartera
     private Cartera cartera;// referencia a la cartera a la que pertenece
 
 //GETTERS Y SETTERS
@@ -103,21 +105,18 @@ public class Solicitud {
     public Integer getImportancia_promotor() {return importancia_promotor;}
     public void setImportancia_promotor(Integer importancia_promotor) {this.importancia_promotor = importancia_promotor;}
 
-    public String getAvalado() {return avalado;}
-    public void setAvalado(String avalado) {this.avalado = avalado;}
-
     public String getPresupuesto() {return presupuesto;}
     public void setPresupuesto(String presupuesto) {this.presupuesto = presupuesto;}
 
     public String getEspecificacion_tecnica() {return especificacion_tecnica;}
     public void setEspecificacion_tecnica(String especificacion_tecnica) {this.especificacion_tecnica = especificacion_tecnica;}
 
-    public Usuario getSolicitante() {return solicitante;}
-    public void setSolicitante(Usuario solicitante) {this.solicitante = solicitante;}
+    public usuario getSolicitante() {return solicitante;}
+    public void setSolicitante(usuario solicitante) {this.solicitante = solicitante;}
 
     //Hay que comprobar que sea avalador
-    public Usuario getAvalador() {return avalador;}
-    public void setAvalador(Usuario avalador) {this.avalador = avalador;}
+    public usuario getAvalador() {return promotor;}
+    public void setAvalador(usuario promotor) {this.promotor = this.promotor;}
     
     public Cartera getCartera() {return cartera;}
     public void setCartera(Cartera cartera) {this.cartera = cartera;}

@@ -2,10 +2,7 @@ package es.uca.iw.carteruca.security;
 
 import com.vaadin.flow.spring.security.AuthenticationContext;
 import es.uca.iw.carteruca.models.usuario.UsuarioRepository;
-import es.uca.iw.carteruca.models.usuario.Usuario;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import es.uca.iw.carteruca.models.usuario.usuario;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +21,7 @@ public class AuthenticatedUser {
     }
 
     @Transactional
-    public Optional<Usuario> get() {
+    public Optional<usuario> get() {
         return authenticationContext.getAuthenticatedUser(UserDetails.class)
                 .map(userDetails -> userRepository.findByUsuario(userDetails.getUsername()));
     }
