@@ -15,6 +15,7 @@ import es.uca.iw.carteruca.views.admin.CentroAllView;
 import es.uca.iw.carteruca.views.admin.UsuarioAllView;
 import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
+import es.uca.iw.carteruca.views.common.common;
 
 @Route("/home-admin")
 @PageTitle("Home")
@@ -24,13 +25,13 @@ public class HomeAdminView extends Composite<VerticalLayout> {
 
     public HomeAdminView() {
 
-        Div usuario = createSquare("Usuarios", VaadinIcon.USER);
+        Div usuario = common.createSquare("Usuarios", VaadinIcon.USER);
 
         usuario.addClickListener(e-> UI.getCurrent().navigate(UsuarioAllView.class));
 
         getContent().add(usuario);
 
-        Div centro = createSquare("Centros", VaadinIcon.ACADEMY_CAP);
+        Div centro = common.createSquare("Centros", VaadinIcon.ACADEMY_CAP);
 
         centro.addClickListener(e-> UI.getCurrent().navigate(CentroAllView.class));
 
@@ -38,38 +39,4 @@ public class HomeAdminView extends Composite<VerticalLayout> {
 
     }
 
-    private Div createSquare(String text, VaadinIcon iconType) {
-        Div square = new Div();
-
-        HorizontalLayout content = new HorizontalLayout();
-        content.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
-
-        Icon icon = iconType.create();
-        icon.setSize("40px");
-        icon.getStyle().set("color", "hsl(214, 33%, 38%)");
-
-        Span label = new Span(text);
-        label.getStyle().set("color","black");
-        label.getStyle().set("font-size", "24px");
-
-        content.add(icon, label);
-        content.getStyle().set("align-items", "center");
-        content.getStyle().set("justify-content", "flex-start");
-
-        // Estilos del cuadrado
-        square.getStyle().set("width", "400px");
-        square.getStyle().set("height", "100px");
-        square.getStyle().set("background-color", "#ffffff");
-        square.getStyle().set("border", "1px solid #000");
-        square.getStyle().set("display", "flex");
-        square.getStyle().set("align-items", "center");
-        square.getStyle().set("justify-content", "center");
-        square.getStyle().set("cursor", "pointer");
-        square.getStyle().set("margin-left", "50px");
-        square.getStyle().set("margin-top", "20px");
-
-        square.add(content);
-
-        return square;
-    }
 }
