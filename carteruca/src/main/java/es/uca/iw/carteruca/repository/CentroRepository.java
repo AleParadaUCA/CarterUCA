@@ -6,4 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface CentroRepository extends JpaRepository<Centro, Long>{
 
     Centro findByNombre(String nombre);
+
+    void deleteById(Long id);
+
+
 }

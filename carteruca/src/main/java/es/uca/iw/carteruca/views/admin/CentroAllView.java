@@ -1,15 +1,14 @@
 package es.uca.iw.carteruca.views.admin;
 
-import com.vaadin.flow.component.UI;
-import com.vaadin.flow.server.auth.AnonymousAllowed;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import es.uca.iw.carteruca.models.usuario.Centro;
+import es.uca.iw.carteruca.services.CentroService;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -17,42 +16,41 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.html.H2;
-import es.uca.iw.carteruca.views.home.HomeAdminView;
-import es.uca.iw.carteruca.views.home.HomeSolicitanteView;
-import es.uca.iw.carteruca.views.layout.MainLayout;
-import jakarta.annotation.security.PermitAll;
-import jakarta.annotation.security.RolesAllowed;
 
-import java.util.ArrayList;
+import jakarta.annotation.security.PermitAll;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import java.util.List;
 
-@PermitAll
 @PageTitle("Centros")
-@Route(value = "/centro", layout = MainLayout.class)
+@Route("/centro") // Ruta para la página
+@PermitAll
 public class CentroAllView extends Composite<VerticalLayout> {
-    private List<Centro> centros = new ArrayList<>();
+
+    @Autowired
+    private final CentroService centroService;
+
     private Grid<Centro> grid = new Grid<>(Centro.class);
 
-    public CentroAllView() {
+    public CentroAllView(CentroService centroService) {
+        this.centroService = centroService;
         createTitle(); // Crear el título
         configureGrid(); // Configurar la tabla
-        getContent().add(grid); // Añadir la tabla
-        createButtons(); // Crear los botones
+        createLayout(); // Crear el layout general con la tabla y el botón
     }
 
     private void createTitle() {
-        H2 title = new H2("Centros"); // Crear un título H2
-        getContent().add(title); // Añadir el título al contenido
+        H2 title = new H2("Centros");
+        getContent().add(title);
     }
 
     private void configureGrid() {
-        grid.removeAllColumns(); // Eliminar todas las columnas para personalizar
-        grid.addColumn(Centro::getNombre).setHeader("Nombre").setSortable(true); // Solo mostrar el nombre
+        grid.removeAllColumns();
+        grid.addColumn(Centro::getNombre).setHeader("Nombre").setSortable(true);
+        grid.addColumn(Centro::getAcronimo).setHeader("Acrónimo").setSortable(true);
 
-        // Botón de editar
         grid.addComponentColumn(centro -> {
             Icon editIcon = VaadinIcon.EDIT.create();
             Button editButton = new Button(editIcon, click -> openEditDialog(centro));
@@ -60,11 +58,10 @@ public class CentroAllView extends Composite<VerticalLayout> {
             return editButton;
         }).setHeader("Editar");
 
-        // Botón de eliminar
         grid.addComponentColumn(centro -> {
             Icon deleteIcon = VaadinIcon.TRASH.create();
             Button deleteButton = new Button(deleteIcon, click -> {
-                centros.remove(centro);
+                centroService.deleteCentro(centro.getId());
                 updateGrid();
                 showSuccessNotification("Centro eliminado con éxito");
             });
@@ -72,59 +69,51 @@ public class CentroAllView extends Composite<VerticalLayout> {
             return deleteButton;
         }).setHeader("Eliminar");
 
-        grid.setItems(centros);
+        updateGrid();
     }
 
-    private void createButtons() {
-        // Botón "Agregar Centro"
+    private void createLayout() {
+        VerticalLayout layout = new VerticalLayout();
+        layout.setWidthFull();
+        layout.setAlignItems(FlexComponent.Alignment.CENTER);
+
+        Button addButton = createAddButton();
+        layout.add(grid, addButton);
+        layout.setSpacing(true);
+
+        getContent().add(layout);
+    }
+
+    private Button createAddButton() {
         Button addButton = new Button("Agregar Centro", event -> openAddDialog());
         addButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-
-        // Botón "Volver" redirigiendo a HomeAdminView
-        RouterLink backLink = new RouterLink();
-        Button volver = new Button("Volver");
-        volver.addClickListener(e -> UI.getCurrent().navigate(HomeAdminView.class));
-        volver.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        backLink.add(volver);
-
-        backLink.getElement().getStyle().set("margin-top", "8px");
-        backLink.getElement().getStyle().set("text-decoration", "none");
-
-        // Layout para el botón de "Agregar Centro"
-        HorizontalLayout addButtonLayout = new HorizontalLayout(addButton);
-        addButtonLayout.setWidthFull(); // Usar todo el ancho disponible
-        addButtonLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER); // Alinear el botón al inicio
-
-        // Layout para el botón de "Volver"
-        HorizontalLayout backButtonLayout = new HorizontalLayout(backLink);
-        backButtonLayout.setWidthFull(); // Usar todo el ancho disponible
-        backButtonLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.END); // Alinear el botón al final
-
-        // Añadir ambos botones al contenido
-        getContent().add(addButtonLayout, backButtonLayout);
+        return addButton;
     }
 
     private void openAddDialog() {
         Dialog dialog = new Dialog();
         TextField nombreField = new TextField("Nombre del Centro");
+        TextField acronimoField = new TextField("Acrónimo del Centro"); // Campo para el acronimo
 
         Button saveButton = new Button("Guardar", event -> {
-            if (!nombreField.getValue().trim().isEmpty()) {
-                centros.add(new Centro(nombreField.getValue().trim()));
-                updateGrid();
+            if (!nombreField.getValue().trim().isEmpty() && !acronimoField.getValue().trim().isEmpty()) {
+                Centro nuevoCentro = new Centro();
+                nuevoCentro.setNombre(nombreField.getValue().trim());
+                nuevoCentro.setAcronimo(acronimoField.getValue().trim()); // Setear el acronimo
+                centroService.addCentro(nuevoCentro); // Guardar a través del servicio
+                updateGrid(); // Refrescar la tabla
                 dialog.close();
                 showSuccessNotification("Centro añadido con éxito");
             } else {
-                Notification.show("El nombre no puede estar vacío", 2000, Notification.Position.BOTTOM_START);
+                Notification.show("Todos los campos son obligatorios", 2000, Notification.Position.BOTTOM_START);
             }
         });
         saveButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
         Button cancelButton = new Button("Cancelar", event -> dialog.close());
-        cancelButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
 
         HorizontalLayout buttons = new HorizontalLayout(saveButton, cancelButton);
-        VerticalLayout dialogLayout = new VerticalLayout(nombreField, buttons);
+        VerticalLayout dialogLayout = new VerticalLayout(nombreField, acronimoField, buttons);
         dialogLayout.setAlignItems(FlexComponent.Alignment.CENTER);
 
         dialog.add(dialogLayout);
@@ -134,24 +123,26 @@ public class CentroAllView extends Composite<VerticalLayout> {
     private void openEditDialog(Centro centro) {
         Dialog dialog = new Dialog();
         TextField nombreField = new TextField("Nombre del Centro", centro.getNombre());
+        TextField acronimoField = new TextField("Acrónimo del Centro", centro.getAcronimo()); // Campo para editar acronimo
 
         Button saveButton = new Button("Guardar", event -> {
-            if (!nombreField.getValue().trim().isEmpty()) {
+            if (!nombreField.getValue().trim().isEmpty() && !acronimoField.getValue().trim().isEmpty()) {
                 centro.setNombre(nombreField.getValue().trim());
+                centro.setAcronimo(acronimoField.getValue().trim()); // Actualizar el acronimo
+                centroService.updateCentro(centro);
                 updateGrid();
                 dialog.close();
                 showSuccessNotification("Centro modificado con éxito");
             } else {
-                Notification.show("El nombre no puede estar vacío", 2000, Notification.Position.BOTTOM_START);
+                Notification.show("Todos los campos son obligatorios", 2000, Notification.Position.BOTTOM_START);
             }
         });
         saveButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
         Button cancelButton = new Button("Cancelar", event -> dialog.close());
-        cancelButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
 
         HorizontalLayout buttons = new HorizontalLayout(saveButton, cancelButton);
-        VerticalLayout dialogLayout = new VerticalLayout(nombreField, buttons);
+        VerticalLayout dialogLayout = new VerticalLayout(nombreField, acronimoField, buttons);
         dialogLayout.setAlignItems(FlexComponent.Alignment.CENTER);
 
         dialog.add(dialogLayout);
@@ -159,6 +150,7 @@ public class CentroAllView extends Composite<VerticalLayout> {
     }
 
     private void updateGrid() {
+        List<Centro> centros = centroService.getAllCentros();
         grid.setItems(centros);
     }
 
