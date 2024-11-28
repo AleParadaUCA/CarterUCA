@@ -57,7 +57,7 @@ public class UsuarioAllView extends Composite<VerticalLayout> {
     private void configureGrid() {
         // Configurar la tabla (Grid)
         grid.removeAllColumns(); // Limpiar las columnas previas
-        grid.addColumn(Usuario::getUsuario).setHeader("Usuario").setSortable(true); // Columna de Usuario
+        grid.addColumn(Usuario::getUsername).setHeader("Usuario").setSortable(true); // Columna de Usuario
         grid.addColumn(Usuario::getNombre).setHeader("Nombre").setSortable(true); // Columna de Nombre
         grid.addColumn(Usuario::getEmail).setHeader("Email").setSortable(true); // Columna de Email
 
@@ -107,7 +107,7 @@ public class UsuarioAllView extends Composite<VerticalLayout> {
     private void saveUser() {
         // Crear un nuevo usuario con los datos proporcionados
         Usuario newUser = new Usuario();
-        newUser.setUsuario(usuarioField.getValue());
+        newUser.setUsername(usuarioField.getValue());
         newUser.setNombre(nombreField.getValue());
         newUser.setEmail(emailField.getValue());
         newUser.setRol(Rol.Solicitante); // Asignar el rol por defecto de Solicitante

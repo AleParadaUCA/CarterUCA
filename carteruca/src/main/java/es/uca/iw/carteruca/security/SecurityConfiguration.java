@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
@@ -14,6 +16,11 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableWebSecurity
 @Configuration
 public class SecurityConfiguration extends VaadinWebSecurity {
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -25,15 +32,5 @@ public class SecurityConfiguration extends VaadinWebSecurity {
 
         super.configure(http);
         setLoginView(http, LoginView.class);
-    }
-
-    @Bean
-    UserDetailsManager userDetaiIsManager() {
-        return new InMemoryUserDetailsManager(
-                User.withUsername("admin")
-                        .password("{noop}admin")
-                        .roles("Admin").build()
-        ); //Aqui se linkea con la BD.
-
     }
 }

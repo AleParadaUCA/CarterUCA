@@ -23,7 +23,7 @@ public class AuthenticatedUser {
     @Transactional
     public Optional<Usuario> get() {
         return authenticationContext.getAuthenticatedUser(UserDetails.class)
-                .map(userDetails -> userRepository.findByUsuario(userDetails.getUsername()));
+                .map(userDetails -> userRepository.findByUsuario(userDetails.getUsername()).get());
     }
 
     public void logout() {
