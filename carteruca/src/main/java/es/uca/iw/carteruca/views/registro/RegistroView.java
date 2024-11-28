@@ -25,8 +25,6 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 
-import es.uca.iw.carteruca.models.usuario.Rol;
-import es.uca.iw.carteruca.models.usuario.Usuario;
 import es.uca.iw.carteruca.services.UsuarioService;
 import es.uca.iw.carteruca.views.home.HomeView;
 import es.uca.iw.carteruca.views.layout.MainLayout;
