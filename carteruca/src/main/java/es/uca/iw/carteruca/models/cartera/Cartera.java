@@ -1,10 +1,13 @@
 package es.uca.iw.carteruca.models.cartera;
 
 import jakarta.persistence.*;
-
+import org.checkerframework.common.aliasing.qual.Unique;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(
+        uniqueConstraints = @UniqueConstraint(columnNames = {"fecha_inicio", "fecha_fin"})//indica que la tupla es única
+)
 public class Cartera {
 
     @Id

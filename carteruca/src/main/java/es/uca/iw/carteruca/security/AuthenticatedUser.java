@@ -1,11 +1,8 @@
 package es.uca.iw.carteruca.security;
 
 import com.vaadin.flow.spring.security.AuthenticationContext;
-import es.uca.iw.carteruca.models.usuario.UsuarioRepository;
 import es.uca.iw.carteruca.models.usuario.Usuario;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import es.uca.iw.carteruca.models.usuario.UsuarioRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
