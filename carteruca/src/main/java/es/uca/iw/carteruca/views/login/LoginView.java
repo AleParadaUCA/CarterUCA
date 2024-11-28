@@ -62,6 +62,9 @@ package es.uca.iw.carteruca.views.login;
 
 //login temporal
 
+import com.vaadin.flow.component.UI;
+import es.uca.iw.carteruca.models.usuario.Rol;
+import es.uca.iw.carteruca.models.usuario.Usuario;
 import es.uca.iw.carteruca.security.AuthenticatedUser;
 import com.vaadin.flow.component.login.LoginI18n;
 import com.vaadin.flow.component.login.LoginOverlay;
@@ -72,6 +75,8 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.internal.RouteUtil;
 import com.vaadin.flow.server.VaadinService;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
+
+import java.util.Optional;
 
 @AnonymousAllowed
 @PageTitle("Login")
@@ -97,13 +102,24 @@ public class LoginView extends LoginOverlay implements BeforeEnterObserver {
 
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
-        if (authenticatedUser.get().isPresent()) {
-            // Already logged in
+        Optional<Usuario> optionalUser = authenticatedUser.get();
+        System.out.println("beforeEnter");
+
+        if (optionalUser.isPresent()) {
+            Rol userRole = optionalUser.get().getRol();
+
+            if (userRole == Rol.Admin) {
+                UI.getCurrent().navigate("home-admin");
+            } else {
+                UI.getCurrent().navigate("home");
+            }
             setOpened(false);
-            event.forwardTo("");
+        } else {
+            System.out.println("No authenticated user found");
         }
 
         setError(event.getLocation().getQueryParameters().getParameters().containsKey("error"));
     }
+
 }
 
