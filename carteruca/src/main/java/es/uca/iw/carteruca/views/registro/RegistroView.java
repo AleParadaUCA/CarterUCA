@@ -150,9 +150,11 @@ public class RegistroView extends Composite<VerticalLayout> {
         guardar.setWidth("min-content");
         guardar.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         guardar.setEnabled(false);
+        guardar.getElement().setAttribute("aria-label", "Guardar");
 
         volver.setWidth("min-content");
         volver.addClickListener(e -> UI.getCurrent().navigate(HomeView.class));
+        volver.getElement().setAttribute("aria-label", "Volver");
 
         Runnable actualizarEstadoBoton = () -> {
             boolean contraseñasCoinciden = contraseña.getValue().equals(repetir_contraseña.getValue());
