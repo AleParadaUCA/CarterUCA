@@ -16,12 +16,15 @@ import es.uca.iw.carteruca.views.home.HomeSolicitanteView;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import es.uca.iw.carteruca.views.layout.MainLayout;
+import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
+import es.uca.iw.carteruca.views.common.common;
 
 
 @PageTitle("Solicitudes")
 @Route(value = "/solicitudes", layout = MainLayout.class)
-@RolesAllowed({"Promotor","CIO","Solicitante"})
+//@RolesAllowed({"Promotor","CIO","Solicitante"})
+@PermitAll
 public class SolicitudesMainView extends Composite<VerticalLayout> {
 
     public SolicitudesMainView() {
@@ -36,17 +39,17 @@ public class SolicitudesMainView extends Composite<VerticalLayout> {
         twoColumnsLayout.setSpacing(true); // Espaciado entre columnas
 
         // Añadir Solicitud
-        Div añadir = createSquare("Añadir Solicitud", VaadinIcon.PLUS);
+        Div añadir = common.createSquare("Añadir Solicitud", VaadinIcon.PLUS);
         añadir.addClickListener(e -> UI.getCurrent().navigate(SolicitudAddView.class));
 
         // Modificar Solicitud
-        Div modificar = createSquare("Modificar Solicitud", VaadinIcon.EDIT);
+        Div modificar = common.createSquare("Modificar Solicitud", VaadinIcon.EDIT);
 
         // Cancelar Solicitud
-        Div cancelar = createSquare("Cancelar Solicitud", VaadinIcon.CLOSE);
+        Div cancelar = common.createSquare("Cancelar Solicitud", VaadinIcon.CLOSE);
 
         // Ver Solicitudes
-        Div solicitudes = createSquare("Ver Solicitudes", VaadinIcon.SEARCH);
+        Div solicitudes = common.createSquare("Ver Solicitudes", VaadinIcon.SEARCH);
 
         // Agregar elementos a las dos columnas
         VerticalLayout column1 = new VerticalLayout(añadir, modificar);
@@ -75,42 +78,6 @@ public class SolicitudesMainView extends Composite<VerticalLayout> {
 
         // Añadir todo al layout principal
         mainLayout.add(twoColumnsLayout, footer);
-    }
-
-    private Div createSquare(String text, VaadinIcon iconType) {
-
-        Div square = new Div();
-
-        HorizontalLayout content = new HorizontalLayout();
-        content.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
-
-        Icon icon = iconType.create();
-        icon.setSize("40px");
-        icon.getStyle().set("color", "hsl(214, 33%, 38%)");
-
-        Span label = new Span(text);
-        label.getStyle().set("color","black");
-        label.getStyle().set("font-size", "24px");
-
-        content.add(icon, label);
-        content.getStyle().set("align-items", "center");
-        content.getStyle().set("justify-content", "flex-start");
-
-        // Estilos del cuadrado
-        square.getStyle().set("width", "400px");
-        square.getStyle().set("height", "100px");
-        square.getStyle().set("background-color", "#ffffff");
-        square.getStyle().set("border", "1px solid #000");
-        square.getStyle().set("display", "flex");
-        square.getStyle().set("align-items", "center");
-        square.getStyle().set("justify-content", "center");
-        square.getStyle().set("cursor", "pointer");
-        square.getStyle().set("margin-left", "50px");
-        square.getStyle().set("margin-top", "20px");
-
-        square.add(content);
-
-        return square;
     }
 }
 
