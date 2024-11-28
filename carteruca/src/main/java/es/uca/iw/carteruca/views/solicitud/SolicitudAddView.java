@@ -7,7 +7,6 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
-import com.vaadin.flow.component.combobox.MultiSelectComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
@@ -17,7 +16,6 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.upload.Upload;
@@ -25,19 +23,18 @@ import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer;
 
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-
-import es.uca.iw.carteruca.models.solicitud.Normativa;
 import es.uca.iw.carteruca.views.layout.MainLayout;
+import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.List;
 
 @PageTitle("Agregar Solicitud")
 @Route(value = "/solicitudes/agregar-solicitud", layout = MainLayout.class)
 @RolesAllowed({"Promotor","CIO","Solicitante"})
+//@PermitAll
 public class SolicitudAddView extends Composite<VerticalLayout> {
 
     private final TextField titulo = new TextField();
@@ -45,8 +42,7 @@ public class SolicitudAddView extends Composite<VerticalLayout> {
     private final TextField interesados = new TextField();
     private final TextField objetivos = new TextField();
     private final TextField alcance = new TextField();
-    //private final MultiSelectComboBox<String> normativa = new MultiSelectComboBox<>("Normativa");  //multiple hay que disponerlo
-    private final ComboBox<Normativa> normativa = new ComboBox<>();
+    private final TextField normativa = new TextField();
     private final DatePicker fecha_puesta = new DatePicker();
     private final MultiFileMemoryBuffer buffer = new MultiFileMemoryBuffer();
     private final ComboBox<String> avalador = new ComboBox<>();
@@ -88,20 +84,9 @@ public class SolicitudAddView extends Composite<VerticalLayout> {
         alcance.setId("Alcance");
         alcance.setLabel("Alcance");
 
+        normativa.setId("Normativa");
         normativa.setLabel("Normativa");
-        normativa.setPlaceholder("Seleccione Normativa:");
-        //funcion para todos los roles
 
-        /*
-        List<Normativa> normativas = List.of(
-                new Normativa("CLOFMFJOVO"),
-                new Normativa("KMCKSCLKCM")
-        );
-        //Para que salga el nombre
-        normativa.setItems(normativas);
-        normativa.setItemLabelGenerator(Normativa::getNombre);
-
-         */
 
         avalador.setLabel("Avalador");
         avalador.setPlaceholder("Seleccione Avalador:");
@@ -143,7 +128,7 @@ public class SolicitudAddView extends Composite<VerticalLayout> {
         });
 
         // Componentes del formulario
-        form.add(titulo, nombre, interesados, objetivos, alcance, normativa, avalador, fecha_puesta,normativa, memoria, upload);
+        form.add(titulo, nombre, interesados, objetivos, alcance, normativa, avalador, fecha_puesta, memoria, upload);
 
         form.setColspan(memoria,2);
         form.setColspan(upload,2);

@@ -34,9 +34,7 @@ public class Solicitud {
     @Column
     private String alcance; // Cantidad y grupo de personas a las que beneficiará el proyecto
 
-    @OneToOne
-    @JoinColumn(name = "normativa_id", nullable = false)  // Crea una columna normativa_id en la tabla Solicitud
-    private Normativa normativa;//Codigo y/o descripcion de la normativa de aplicación obligatoria
+    private String normativa;//Codigo y/o descripcion de la normativa de aplicación obligatoria
 
     @Column
     private String memoria; //Por ahora usaremos una URL
@@ -96,8 +94,8 @@ public class Solicitud {
     public String getAlcance() {return alcance;}
     public void setAlcance(String alcance) {this.alcance = alcance;}
 
-    public Normativa getNormativa() {return normativa;}
-    public void setNormativa(Normativa normativa) {this.normativa = normativa;}
+    public String  getNormativa() {return normativa;}
+    public void setNormativa(String normativa) {this.normativa = normativa;}
 
     public String getMemoria() {return memoria;}
     public void setMemoria(String memoria) {this.memoria = memoria;}
