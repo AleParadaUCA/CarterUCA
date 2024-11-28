@@ -1,6 +1,6 @@
-package es.uca.iw.carteruca.models.solicitud;
+package es.uca.iw.carteruca.repository;
 
-import es.uca.iw.carteruca.models.cartera.Cartera;
+import es.uca.iw.carteruca.models.solicitud.Solicitud;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 import java.time.LocalDateTime;
