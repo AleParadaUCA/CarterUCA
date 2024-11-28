@@ -28,7 +28,6 @@ import java.util.List;
 @PermitAll
 @PageTitle("Usuarios")
 @Route(value = "/usuario", layout = MainLayout.class)
-//todavia en estatico
 public class UsuarioAllView extends Composite<VerticalLayout> {
 
     private Grid<Usuario> grid = new Grid<>(Usuario.class);
