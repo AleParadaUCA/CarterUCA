@@ -16,6 +16,10 @@ public class Centro {
     @Unique
     private String nombre;
 
+    @Column(nullable = false)
+    @Unique
+    private String acronimo;
+
     //Constructor
 
     public Centro() {}
@@ -28,6 +32,10 @@ public class Centro {
 
     public Long getId() {return id;}
 
-    public String getNombre() {return nombre;}
-    public void setNombre(String nombre) {this.nombre = nombre;}
+
+    public @Unique String getAcronimo() {return acronimo;}
+    public void setAcronimo(@Unique String acronimo) {this.acronimo = acronimo;}
+
+    public @Unique String getNombre() {return nombre;}
+    public void setNombre(@Unique String nombre) {this.nombre = nombre;}
 }
