@@ -13,13 +13,16 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+
 import es.uca.iw.carteruca.security.AuthenticatedUser;
-import es.uca.iw.carteruca.views.login.LoginView;
 import es.uca.iw.carteruca.views.registro.RegistroView;
 
 public class Header extends Composite<VerticalLayout> {
 
+    private AuthenticatedUser authenticatedUser;
+
     public Header(AuthenticatedUser authenticatedUser) {
+        this.authenticatedUser = authenticatedUser;
         VerticalLayout header = getContent();
         header.setWidthFull();
         header.getStyle()
@@ -48,12 +51,12 @@ public class Header extends Composite<VerticalLayout> {
         HorizontalLayout iconsLayout = new HorizontalLayout();
         iconsLayout.setAlignItems(FlexComponent.Alignment.END);
         Icon languageIcon = new Icon(VaadinIcon.GLOBE);
-            languageIcon.getStyle()
-                    .set("cursor", "pointer")
-                    .set("margin-bottom", "3px");
+        languageIcon.getStyle()
+                .set("cursor", "pointer")
+                .set("margin-bottom", "3px");
         iconsLayout.add(languageIcon);
 
-        if (isUserLoggedIn()) {
+        if (authenticatedUser.get().isPresent()) {
 
             MenuBar userMenuBar = new MenuBar();
             userMenuBar.getStyle()
@@ -87,7 +90,17 @@ public class Header extends Composite<VerticalLayout> {
             });
 
             iconsLayout.add(bellIcon, userMenuBar);
+        } else {
+            // Ícono de login
+            Icon loginIcon = new Icon(VaadinIcon.SIGN_IN);
+            loginIcon.getStyle()
+                    .set("cursor", "pointer")
+                    .set("margin-bottom", "3px");
+            loginIcon.addClickListener(e -> UI.getCurrent().navigate("/login"));
+
+            iconsLayout.add(loginIcon);
         }
+
         topLayout.add(iconsLayout);
 
         // **Parte inferior: Layout horizontal**
@@ -126,23 +139,13 @@ public class Header extends Composite<VerticalLayout> {
             UI.getCurrent().navigate("/");
         }).getElement().getClassList().add("menu-item");
 
-
-        menuBar.addItem("Iniciar Session", e -> UI.getCurrent().navigate(LoginView.class))
-                .getElement().getClassList().add("menu-item");
-
         menuBar.addItem("Registrarse", e -> UI.getCurrent().navigate(RegistroView.class))
                 .getElement().getClassList().add("menu-item");
-
-        if (isUserLoggedIn()) {
+        if (authenticatedUser.get().isPresent()) {
             menuBar.addItem("Home", e -> {
                 // Redirigir a "/home"
                 UI.getCurrent().navigate("/home");
             }).getElement().getClassList().add("menu-item");
         }
-    }
-
-    private boolean isUserLoggedIn() {
-        // Aquí deberías implementar la lógica para verificar si el usuario está autenticado
-        return true; // Simulación de que el usuario está autenticado
     }
 }

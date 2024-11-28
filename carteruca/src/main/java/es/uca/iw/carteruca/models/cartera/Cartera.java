@@ -1,12 +1,18 @@
 package es.uca.iw.carteruca.models.cartera;
 
-import jakarta.persistence.*;
-import org.checkerframework.common.aliasing.qual.Unique;
 import java.time.LocalDateTime;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 @Entity
 @Table(
-        uniqueConstraints = @UniqueConstraint(columnNames = {"fecha_inicio", "fecha_fin"})//indica que la tupla es única
+        uniqueConstraints = @UniqueConstraint(columnNames = {"fechaInicio", "fechaFin"})//indica que la tupla es única
 )
 public class Cartera {
 
@@ -18,10 +24,10 @@ public class Cartera {
     private String nombre;
 
     @Column(nullable = false)
-    private LocalDateTime fecha_inicio;
+    private LocalDateTime fechaInicio;
 
     @Column(nullable = false)
-    private LocalDateTime fecha_fin;
+    private LocalDateTime fechaFin;
 
     @Column(nullable = false)
     private LocalDateTime fecha_apertura_solicitud;
@@ -36,11 +42,11 @@ public class Cartera {
     public String getNombre() {return nombre;}
     public void setNombre(String nombre) {this.nombre = nombre;}
 
-    public LocalDateTime getFecha_inicio() {return fecha_inicio;}
-    public void setFecha_inicio(LocalDateTime fecha_inicio) {this.fecha_inicio = fecha_inicio;}
+    public LocalDateTime getFecha_inicio() {return fechaInicio;}
+    public void setFecha_inicio(LocalDateTime fechaInicio) {this.fechaInicio = fechaInicio;}
 
-    public LocalDateTime getFecha_fin() {return fecha_fin;}
-    public void setFecha_fin(LocalDateTime fecha_fin) {this.fecha_fin = fecha_fin;}
+    public LocalDateTime getFecha_fin() {return fechaFin;}
+    public void setFecha_fin(LocalDateTime fechaFin) {this.fechaFin = fechaFin;}
 
     public LocalDateTime getFecha_apertura_solicitude() {return fecha_apertura_solicitud;}
     public void setFecha_apertura_solicitud(LocalDateTime fecha_apertura_solicitud){this.fecha_apertura_solicitud = fecha_apertura_solicitud;}
