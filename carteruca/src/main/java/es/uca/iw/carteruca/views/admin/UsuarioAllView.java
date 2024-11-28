@@ -13,7 +13,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouterLink;
-import es.uca.iw.carteruca.models.usuario.usuario;
+import es.uca.iw.carteruca.models.usuario.Usuario;
 import es.uca.iw.carteruca.models.usuario.Rol;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.grid.Grid;
@@ -30,8 +30,8 @@ import java.util.List;
 @Route(value = "/usuario", layout = MainLayout.class)
 public class UsuarioAllView extends Composite<VerticalLayout> {
 
-    private Grid<usuario> grid = new Grid<>(usuario.class);
-    private List<usuario> usuarios = new ArrayList<>(); // Lista de usuarios
+    private Grid<Usuario> grid = new Grid<>(Usuario.class);
+    private List<Usuario> usuarios = new ArrayList<>(); // Lista de usuarios
 
     private TextField usuarioField = new TextField("Usuario");
     private TextField nombreField = new TextField("Nombre");
@@ -57,9 +57,9 @@ public class UsuarioAllView extends Composite<VerticalLayout> {
     private void configureGrid() {
         // Configurar la tabla (Grid)
         grid.removeAllColumns(); // Limpiar las columnas previas
-        grid.addColumn(usuario::getUsuario).setHeader("Usuario").setSortable(true); // Columna de Usuario
-        grid.addColumn(usuario::getNombre).setHeader("Nombre").setSortable(true); // Columna de Nombre
-        grid.addColumn(usuario::getEmail).setHeader("Email").setSortable(true); // Columna de Email
+        grid.addColumn(Usuario::getUsuario).setHeader("Usuario").setSortable(true); // Columna de Usuario
+        grid.addColumn(Usuario::getNombre).setHeader("Nombre").setSortable(true); // Columna de Nombre
+        grid.addColumn(Usuario::getEmail).setHeader("Email").setSortable(true); // Columna de Email
 
         // Columna para editar el rol
         grid.addComponentColumn(usuario -> {
@@ -106,7 +106,7 @@ public class UsuarioAllView extends Composite<VerticalLayout> {
 
     private void saveUser() {
         // Crear un nuevo usuario con los datos proporcionados
-        usuario newUser = new usuario();
+        Usuario newUser = new Usuario();
         newUser.setUsuario(usuarioField.getValue());
         newUser.setNombre(nombreField.getValue());
         newUser.setEmail(emailField.getValue());
