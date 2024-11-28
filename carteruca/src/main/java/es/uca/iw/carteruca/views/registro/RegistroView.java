@@ -91,12 +91,19 @@ public class RegistroView extends Composite<VerticalLayout> {
         repetir_contraseña.setMaxLength(20);
 
         nombre.setLabel("Nombre");
+        nombre.getElement().setAttribute("aria-label", "Introduzca su nombre");
         apellidos.setLabel("Apellidos");
+        apellidos.getElement().setAttribute("aria-label", "Introduzca su apellido");
         usuario.setLabel("Usuario");
+        usuario.getElement().setAttribute("aria-label", "Introduzca su usuario");
         email.setLabel("Email");
+        email.getElement().setAttribute("aria-label", "Introduzca su email");
         contraseña.setLabel("Contraseña");
+        contraseña.getElement().setAttribute("aria-label", "Introduzca su contraseña");
         repetir_contraseña.setLabel("Repetir Contraseña");
+        repetir_contraseña.getElement().setAttribute("aria-label", "Repita la contraseña");
         centro.setLabel("Centro");
+        centro.getElement().setAttribute("aria-label", "Introduzca el centro");
 
         centro.setWidth("100px");
         /*
@@ -117,6 +124,7 @@ public class RegistroView extends Composite<VerticalLayout> {
 
         // Checkbox para términos y condiciones
         Checkbox checkbox = new Checkbox("He podido leer y entiendo la Política de Privacidad y Cookies");
+        checkbox.getElement().setAttribute("aria-label","He podido leer y entiendo la Política de Provacidad y Cookies");
 
         // Agregar campos al formulario
         formLayout2Col.add(nombre, apellidos, usuario, email, contraseña, repetir_contraseña);
@@ -208,16 +216,5 @@ public class RegistroView extends Composite<VerticalLayout> {
         layoutColumn2.add(h2, formLayout2Col, checkbox, layoutRow);
         getContent().add(layoutColumn2);
     }
-
-    record SampleItem(String value, String label, Boolean disabled) {
-    }
-
-    private void centros(ComboBox centro){
-        List<SampleItem> sampleItems = new ArrayList<>();
-        sampleItems.add(new SampleItem("ESI - Puerto Real", "ESI - Puerto Real", true));
-        sampleItems.add(new SampleItem("CASEM - Puerto Real", "CASEM - Puerto Real", true));
-        centro.setItems(sampleItems);
-        centro.setItemLabelGenerator(item -> ((SampleItem) item).label());
-    }
-
+    
 }
