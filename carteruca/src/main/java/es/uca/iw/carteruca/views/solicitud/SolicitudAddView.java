@@ -62,6 +62,7 @@ public class SolicitudAddView extends Composite<VerticalLayout> {
 
         // Título
         H2 h2 = new H2("Agregar Solicitud");
+        h2.getElement().setAttribute("aria-label","Agregar Solicitud");
         h2.getStyle().set("text-align", "center");  // Alineamos el título al centro
 
         // Formulario
@@ -71,34 +72,44 @@ public class SolicitudAddView extends Composite<VerticalLayout> {
 	    //Configuracion de los diferentes componentes del formulario
         titulo.setId("Titulo");
         titulo.setLabel("Titulo");
+        titulo.getElement().setAttribute("aria-label", "Introduzca el titulo");
 
         nombre.setId("Nombre");
         nombre.setLabel("Nombre Corto del Proyecto");
+        nombre.getElement().setAttribute("aria-label", "Introduzca el nombre Corto del Proyecto");
 
         interesados.setId("Interesados");
         interesados.setLabel("Interesados del Proyecto");
+        interesados.getElement().setAttribute("aria-label", "Introduzca los interesados");
 
         objetivos.setId("Objetivos");
         objetivos.setLabel("Objetivos del Proyecto");
+        objetivos.getElement().setAttribute("aria-label", "Introduzca los objetivos");
 
         alcance.setId("Alcance");
         alcance.setLabel("Alcance");
+        alcance.getElement().setAttribute("aria-label", "Introduzca el alcance");
 
         normativa.setId("Normativa");
         normativa.setLabel("Normativa");
+        normativa.getElement().setAttribute("aria-label", "Normativa");
 
 
         avalador.setLabel("Avalador");
         avalador.setPlaceholder("Seleccione Avalador:");
+        avalador.getElement().setAttribute("aria-label", "Seleccione al avalador");
+        //FAÑTA LA LOGICA INTERNA POR ROL Y CON LOS ARIA-LABEL
         //funcion que tenga todos los avaladores que hay por su rol
 
 
         fecha_puesta.setLabel("Fecha");
         fecha_puesta.setPlaceholder("Seleccione Fecha");
+        fecha_puesta.getElement().setAttribute("aria-label", "Seleccione Fecha");
         fecha_puesta.setAutoOpen(false);
         fecha_puesta.setHelperText("Fecha limite de puesta en marcha");
 
         Span memoria = new Span("Memoria");
+        memoria.getElement().setAttribute("aria-label", "Adjunte la memoria del proyecto");
         memoria.getStyle()
                 .set("font-size", "14px") // Tamaño de fuente
                 .set("font-weight", "600") // Negrita
@@ -143,6 +154,7 @@ public class SolicitudAddView extends Composite<VerticalLayout> {
         Button guardar = new Button("Guardar", e -> showConfirmDialog());
         guardar.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         guardar.setEnabled(false); // Comenzamos con el botón deshabilitado
+        guardar.getElement().setAttribute("aria-label", "Guardar");
 
         // Verificar si todos los campos están llenos
         HasValue.ValueChangeListener<AbstractField.ComponentValueChangeEvent<?, ?>> changeListener = event -> {
@@ -178,6 +190,7 @@ public class SolicitudAddView extends Composite<VerticalLayout> {
         volver.setWidth("min-content");
         volver.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         volver.addClickListener(e -> UI.getCurrent().navigate("/solicitudes"));
+        volver.getElement().setAttribute("aria-label", "Volver");
 
         // Layout para el footer con el botón
         HorizontalLayout footer = new HorizontalLayout(volver);

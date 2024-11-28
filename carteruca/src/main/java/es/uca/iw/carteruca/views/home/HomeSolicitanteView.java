@@ -28,17 +28,20 @@ public class HomeSolicitanteView extends Composite<VerticalLayout>{
     public HomeSolicitanteView() {
 
         mensaje_bienvenido.setText("Bienvenido, usuario");
+        mensaje_bienvenido.getElement().setAttribute("aria-label", "Bienvenido, usuario");
         mensaje_bienvenido.getStyle().set("color", "blue");
         getContent().add(mensaje_bienvenido);
 
         // Añadir los cuadros usando funciones
         Div solicitudes = common.createSquare("Solicitudes", VaadinIcon.FILE_O);
+        solicitudes.getElement().setAttribute("aria-label", "Solicitudes");
 
         solicitudes.addClickListener(event -> UI.getCurrent().navigate(SolicitudesMainView.class));
 
         getContent().add(solicitudes);
 
         Div avalar = common.createSquare("Avalar Solicitudes", VaadinIcon.BOOK);
+        avalar.getElement().setAttribute("aria-label", "Avalar Solicitudes");
         getContent().add(avalar);
 
     }
