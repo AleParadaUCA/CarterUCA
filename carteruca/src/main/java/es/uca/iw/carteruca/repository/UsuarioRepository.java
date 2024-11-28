@@ -5,12 +5,11 @@ import es.uca.iw.carteruca.models.usuario.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import java.util.List;
+import java.util.Optional;
 
 public interface UsuarioRepository extends JpaRepository<Usuario, Long>, JpaSpecificationExecutor<Usuario> {
 
-    //se puede usar Optional<clase> por si no existe la instancia de esa clase devolver error
-
-    Usuario findByUsuario(String usuario); //ej Optional<usuario> findByUsuario(String usuario);
+    Optional<Usuario> findByUsuario(String usuario); //ej Optional<usuario> findByUsuario(String usuario);
 
     Usuario findByNombreAndApellidos(String nombre, String apellidos); //devuelve usuario con nombre y apellidos dado
 

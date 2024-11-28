@@ -1,5 +1,10 @@
 package es.uca.iw.carteruca.views.registro;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -19,11 +24,12 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.theme.lumo.LumoUtility;
+
+import es.uca.iw.carteruca.models.usuario.Rol;
+import es.uca.iw.carteruca.models.usuario.Usuario;
+import es.uca.iw.carteruca.services.usuarioService;
 import es.uca.iw.carteruca.views.home.HomeView;
 import es.uca.iw.carteruca.views.layout.MainLayout;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @AnonymousAllowed
 @PageTitle("Registro")
@@ -37,6 +43,7 @@ public class RegistroView extends Composite<VerticalLayout> {
     private final EmailField email = new EmailField();
     private final PasswordField contraseña = new PasswordField();
     private final PasswordField repetir_contraseña = new PasswordField();
+    private final usuarioService userService;
     private ComboBox<String> centro = new ComboBox<>();
     //private ComboBox<Centro> centro = new ComboBox<>();
     //private final BeanValidationBinder<User> binder;
@@ -44,9 +51,9 @@ public class RegistroView extends Composite<VerticalLayout> {
     Button volver = new Button("Volver");
 
     //private final BeanValidationBinder;
-    public RegistroView(/*UserService userService*/) {
+    public RegistroView(usuarioService userService) {
 
-        //this.userService = userService;
+        this.userService = userService;
 
         // Configuración del layout principal
         getContent().setWidth("100%");
@@ -99,7 +106,7 @@ public class RegistroView extends Composite<VerticalLayout> {
         List<Centro> centros_disponibles = userService.findAllRoles();
         centro.setItems(centros_disponibles);
          */
-        centros(centro);
+        //centros(centro);
 
         // Inicializa el binder
         /*
@@ -112,7 +119,8 @@ public class RegistroView extends Composite<VerticalLayout> {
         Checkbox checkbox = new Checkbox("He podido leer y entiendo la Política de Privacidad y Cookies");
 
         // Agregar campos al formulario
-        formLayout2Col.add(nombre, apellidos, usuario, email, centro, contraseña, repetir_contraseña);
+        formLayout2Col.add(nombre, apellidos, usuario, email, contraseña, repetir_contraseña);
+        //formLayout2Col.add(nombre, apellidos, usuario, email, centro, contraseña, repetir_contraseña);
 
         formLayout2Col.setResponsiveSteps(
                 new FormLayout.ResponsiveStep("0", 1),
@@ -161,6 +169,23 @@ public class RegistroView extends Composite<VerticalLayout> {
         // Acción para el botón "Guardar"
         guardar.addClickListener(event -> {
             if (contraseña.getValue().equals(repetir_contraseña.getValue())) {
+
+//        // Crear un nuevo objeto Usuario con los datos del formulario
+//        Usuario nuevoUsuario = new Usuario();
+//        nuevoUsuario.setNombre(nombre.getValue());
+//        nuevoUsuario.setApellidos(apellidos.getValue());
+//        nuevoUsuario.setUsername(usuario.getValue());
+//        nuevoUsuario.setEmail(email.getValue());
+//        nuevoUsuario.setRol(Rol.Solicitante);
+//        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+//        String hashedPassword = passwordEncoder.encode(contraseña.getValue());
+//        nuevoUsuario.setPassword(hashedPassword);
+//        // Llamar al servicio para guardar el usuario en la base de datos
+//        userService.saveUser(nuevoUsuario);
+
+        //        createUsuario(usuario,nombre,apellidos,email,contraseña);
+
+
                 Notification.show("Registro exitoso");
                 // Aquí puedes añadir el código para guardar los datos
             } else {
