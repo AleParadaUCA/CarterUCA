@@ -170,24 +170,15 @@ public class RegistroView extends Composite<VerticalLayout> {
         guardar.addClickListener(event -> {
             if (contraseña.getValue().equals(repetir_contraseña.getValue())) {
 
-//        // Crear un nuevo objeto Usuario con los datos del formulario
-//        Usuario nuevoUsuario = new Usuario();
-//        nuevoUsuario.setNombre(nombre.getValue());
-//        nuevoUsuario.setApellidos(apellidos.getValue());
-//        nuevoUsuario.setUsername(usuario.getValue());
-//        nuevoUsuario.setEmail(email.getValue());
-//        nuevoUsuario.setRol(Rol.Solicitante);
-//        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-//        String hashedPassword = passwordEncoder.encode(contraseña.getValue());
-//        nuevoUsuario.setPassword(hashedPassword);
-//        // Llamar al servicio para guardar el usuario en la base de datos
-//        userService.saveUser(nuevoUsuario);
+                //falta comprobaciones.
+                if (userService.createUser( nombre.getValue(), apellidos.getValue(), usuario.getValue(), email.getValue(), contraseña.getValue())){
+                    Notification.show("Registro exitoso");
+                    
+                    UI.getCurrent().access(() -> UI.getCurrent().navigate(""));
+                }else{
+                    Notification.show("Error al registrar usuario");
+                }
 
-        //        createUsuario(usuario,nombre,apellidos,email,contraseña);
-
-
-                Notification.show("Registro exitoso");
-                // Aquí puedes añadir el código para guardar los datos
             } else {
                 Notification.show("Las contraseñas no coinciden", 3000, Notification.Position.MIDDLE);
             }

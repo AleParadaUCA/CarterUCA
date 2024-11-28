@@ -1,8 +1,15 @@
 package es.uca.iw.carteruca.services;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
+import es.uca.iw.carteruca.models.usuario.Rol;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,20 +33,50 @@ public class UsuarioService implements UserDetailsService {
         // this.emailService = emailService;
     }
 
-    @Override
-    @Transactional
-    public Usuario loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<Usuario> user = repository.findByUsuario(username);
-        if (!user.isPresent()) {
-            throw new UsernameNotFoundException("No user present with username: " + username);
-        } else {
-            return user.get();
+    public boolean createUser(String nombre, String apellidos, String username, String email, String password) {
+        // Crear un nuevo objeto Usuario con los datos del formulario
+        Usuario nuevoUsuario = new Usuario();
+        nuevoUsuario.setNombre(nombre);
+        nuevoUsuario.setApellidos(apellidos);
+        nuevoUsuario.setUsername(username);
+        nuevoUsuario.setEmail(email);
+        nuevoUsuario.setRol(Rol.Solicitante);
+        nuevoUsuario.setPassword(passwordEncoder.encode(password));
+
+        try {
+            repository.save(nuevoUsuario);
+//            emailService.sendRegistrationEmail(nuevoUsuario);
+            return true;
+        } catch (DataIntegrityViolationException e) {
+            return false;
         }
     }
 
-    public Usuario saveUser(Usuario usuario) {
-        return repository.save(usuario);
+    @Override
+    @Transactional
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Usuario user = repository.findByUsuario(username)
+                .orElseThrow(() -> new UsernameNotFoundException("No user present with username: " + username));
+
+        // Convierte roles a una lista de autoridades
+        List<GrantedAuthority> authorities = Collections.singletonList(
+                new SimpleGrantedAuthority("ROLE_" + user.getRol().name())
+        );
+
+        return new org.springframework.security.core.userdetails.User(
+                user.getUsername(),
+                user.getPassword(),
+                user.isEnabled(), // Aquí puedes agregar más lógica si es necesario
+                true,
+                true,
+                true,
+                authorities
+        );
     }
+
+//    public Usuario saveUser(Usuario usuario) {
+//        return repository.save(usuario);
+//    }
 
     public Optional<Usuario> getUserById(Long id) {
         return repository.findById(id);
