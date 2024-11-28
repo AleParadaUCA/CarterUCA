@@ -42,7 +42,7 @@ public class Usuario implements UserDetails {
     @OneToMany
     private List<Solicitud> solicitudes;
 
-    @Column
+    @Column(columnDefinition = "VARCHAR(255) DEFAULT 'Solicitante'")
     @Enumerated(EnumType.STRING)
     private Rol rol;
 

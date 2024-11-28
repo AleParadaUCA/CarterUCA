@@ -27,7 +27,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility;
 
 import es.uca.iw.carteruca.models.usuario.Rol;
 import es.uca.iw.carteruca.models.usuario.Usuario;
-import es.uca.iw.carteruca.services.usuarioService;
+import es.uca.iw.carteruca.services.UsuarioService;
 import es.uca.iw.carteruca.views.home.HomeView;
 import es.uca.iw.carteruca.views.layout.MainLayout;
 
@@ -43,7 +43,7 @@ public class RegistroView extends Composite<VerticalLayout> {
     private final EmailField email = new EmailField();
     private final PasswordField contraseña = new PasswordField();
     private final PasswordField repetir_contraseña = new PasswordField();
-    private final usuarioService userService;
+    private final UsuarioService userService;
     private ComboBox<String> centro = new ComboBox<>();
     //private ComboBox<Centro> centro = new ComboBox<>();
     //private final BeanValidationBinder<User> binder;
@@ -51,7 +51,7 @@ public class RegistroView extends Composite<VerticalLayout> {
     Button volver = new Button("Volver");
 
     //private final BeanValidationBinder;
-    public RegistroView(usuarioService userService) {
+    public RegistroView(UsuarioService userService) {
 
         this.userService = userService;
 
