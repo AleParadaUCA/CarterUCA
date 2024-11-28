@@ -25,5 +25,5 @@ public class HomeView extends Composite<VerticalLayout> {
 
         getContent().add(proyectos);
     }
-    
+
 }
