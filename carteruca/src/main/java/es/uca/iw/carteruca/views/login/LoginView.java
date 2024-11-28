@@ -93,6 +93,8 @@ public class LoginView extends LoginOverlay implements BeforeEnterObserver {
 
         setForgotPasswordButtonVisible(false);
         setOpened(true);
+
+        getElement().setAttribute("aria-label", "Login");
     }
 
     @Override

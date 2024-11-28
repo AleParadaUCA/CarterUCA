@@ -22,6 +22,7 @@ public class HomeView extends Composite<VerticalLayout> {
     public HomeView(){
 
         Div proyectos = common.createSquare("Proyectos", VaadinIcon.FILE_O);
+        proyectos.getElement().setAttribute("aria-label", "Proyectos");
 
         getContent().add(proyectos);
     }
