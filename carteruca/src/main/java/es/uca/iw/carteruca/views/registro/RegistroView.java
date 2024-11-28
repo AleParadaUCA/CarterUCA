@@ -177,25 +177,7 @@ public class RegistroView extends Composite<VerticalLayout> {
         // Acción para el botón "Guardar"
         guardar.addClickListener(event -> {
             if (contraseña.getValue().equals(repetir_contraseña.getValue())) {
-
-//        // Crear un nuevo objeto Usuario con los datos del formulario
-//        Usuario nuevoUsuario = new Usuario();
-//        nuevoUsuario.setNombre(nombre.getValue());
-//        nuevoUsuario.setApellidos(apellidos.getValue());
-//        nuevoUsuario.setUsername(usuario.getValue());
-//        nuevoUsuario.setEmail(email.getValue());
-//        nuevoUsuario.setRol(Rol.Solicitante);
-//        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-//        String hashedPassword = passwordEncoder.encode(contraseña.getValue());
-//        nuevoUsuario.setPassword(hashedPassword);
-//        // Llamar al servicio para guardar el usuario en la base de datos
-//        userService.saveUser(nuevoUsuario);
-
-        //        createUsuario(usuario,nombre,apellidos,email,contraseña);
-
-
                 Notification.show("Registro exitoso");
-                // Aquí puedes añadir el código para guardar los datos
             } else {
                 Notification.show("Las contraseñas no coinciden", 3000, Notification.Position.MIDDLE);
             }
@@ -216,5 +198,5 @@ public class RegistroView extends Composite<VerticalLayout> {
         layoutColumn2.add(h2, formLayout2Col, checkbox, layoutRow);
         getContent().add(layoutColumn2);
     }
-    
+
 }
