@@ -105,7 +105,6 @@ public class LoginView extends LoginOverlay implements BeforeEnterObserver {
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
         Optional<Usuario> optionalUser = authenticatedUser.get();
-        System.out.println("beforeEnter");
 
         if (optionalUser.isPresent()) {
             Rol userRole = optionalUser.get().getRol();

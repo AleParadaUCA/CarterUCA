@@ -3,6 +3,7 @@ package es.uca.iw.carteruca.security;
 import com.vaadin.flow.spring.security.AuthenticationContext;
 import es.uca.iw.carteruca.models.usuario.Usuario;
 import es.uca.iw.carteruca.repository.UsuarioRepository;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +26,16 @@ public class AuthenticatedUser {
         return authenticationContext.getAuthenticatedUser(UserDetails.class)
                 .map(userDetails -> userRepository.findByUsuario(userDetails.getUsername()).get());
     }
+
+    public void logout() {
+        authenticationContext.logout();
+    }
+
+    @Bean
+    public AuthenticationContext authenticationContext() {
+        return new AuthenticationContext();
+    }
+
 //    public Optional<Usuario> get() {
 //        Optional<UserDetails> authenticatedUserDetails = authenticationContext.getAuthenticatedUser(UserDetails.class);
 //
@@ -45,8 +56,4 @@ public class AuthenticatedUser {
 //            return Optional.empty();
 //        }
 //    }
-
-    public void logout() {
-        authenticationContext.logout();
-    }
 }
