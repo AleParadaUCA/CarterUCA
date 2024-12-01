@@ -16,24 +16,17 @@ import com.vaadin.flow.component.textfield.TextField;
 
 import es.uca.iw.carteruca.models.usuario.Rol;
 import es.uca.iw.carteruca.security.AuthenticatedUser;
-import es.uca.iw.carteruca.views.registro.RegistroView;
 
 public class Header extends Composite<VerticalLayout> {
 
     private final AuthenticatedUser authenticatedUser;
-
-    private static final String HEADER_BACKGROUND_COLOR = "#384850";
-    private static final String HEADER_TEXT_COLOR = "white";
 
     public Header(AuthenticatedUser authenticatedUser) {
         this.authenticatedUser = authenticatedUser;
 
         VerticalLayout header = getContent();
         header.setWidthFull();
-        header.getStyle()
-                .setBackground(HEADER_BACKGROUND_COLOR)
-                .setColor(HEADER_TEXT_COLOR)
-                .setPadding("10px");
+        header.addClassName("header");
 
         header.add(createTopLayout(), createBottomLayout());
     }
@@ -157,7 +150,7 @@ public class Header extends Composite<VerticalLayout> {
         searchField.addClassName("search-color");
 
         Icon searchIcon = VaadinIcon.SEARCH.create();
-        searchIcon.getStyle().set("color", HEADER_BACKGROUND_COLOR);
+        searchIcon.addClassName("menu-item");
         searchField.setSuffixComponent(searchIcon);
 
         return searchField;

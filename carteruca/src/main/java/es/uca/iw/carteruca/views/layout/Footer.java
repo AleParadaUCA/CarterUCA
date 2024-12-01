@@ -18,25 +18,15 @@ public class Footer extends Composite<HorizontalLayout> {
 
     public Footer() {
         //Poner estilo del footer.
-        getStyle()
-                .setBackground("#384850")
-                .set("color", "white")
-                .set("width", "100%")
-                .set("text-align", "center")
-                .set("padding", "10px 0");
+        addClassName("footer");
 
         // 1ª Columna: Logo con icono
         Image footerLogo = new Image("layout/logoFooterUCA_05.png", "Logo UCA");
         footerLogo.setHeight("90px");
         Div logoContainer = new Div(footerLogo);
-        logoContainer.getStyle()
-                .set("border-right", "2px solid white")
-                .set("margin-left", "30px")
-                .set("margin-right", "30px")
-                .set("width", "20%")
-                .set("display", "flex")
-                .set("justify-content", "center")
-                .set("align-items", "center");
+        logoContainer.addClassName("border-right");
+        logoContainer.addClassName("width-20");
+        logoContainer.addClassName("column");
 
         // 2ª Columna: Dirección con texto más pequeño
         Icon locationIcon = new Icon(VaadinIcon.MAP_MARKER);
@@ -49,39 +39,27 @@ public class Footer extends Composite<HorizontalLayout> {
                 new Div(new Text("11003, Cádiz")),
                 new Div(new Text("CÁDIZ"))
         );
-        addressContainer.getStyle()
-                .set("font-size", "0.85rem")
-                .set("border-right", "2px solid white")
-                .set("padding", "0 10px")
-                .set("width", "20%")
-                .set("display", "flex")
-                .set("flex-direction", "column")
-                .set("justify-content", "center")
-                .set("align-items", "center");
+        addressContainer.addClassName("border-right");
+        addressContainer.addClassName("width-20");
+        addressContainer.addClassName("column");
+        addressContainer.addClassName("extra");
 
         // 3ª Columna: Enlaces de la UCA
-
         VerticalLayout linksColumn = new VerticalLayout(
                 createLink("https://www.uca.es/aviso-legal", "Aviso legal"),
                 createLink("https://www.uca.es/accesibilidad", "Accesibilidad"),
                 createLink("https://www.uca.es/sitemap/", "Mapa del Sitio"),
                 createLink("https://www.uca.es/cookies", "Cookies")
         );
-        linksColumn.getStyle()
-                .set("font-size", "0.85rem")
-                .set("border-right", "2px solid white")
-                .set("width", "10%")
-                .set("display", "flex")
-                .set("flex-direction", "column")
-                .set("justify-content", "center")
-                .set("align-items", "center");
+        linksColumn.addClassName("column");
+        linksColumn.addClassName("extra");
+        linksColumn.addClassName("border-right");
+        linksColumn.getStyle().set("width", "10%");
 
-        linksColumn.setAlignItems(FlexComponent.Alignment.CENTER); // Centra el contenido verticalmente
-        linksColumn.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER); // Centra el contenido horizontalmente
+//        linksColumn.setAlignItems(FlexComponent.Alignment.CENTER); // Centra el contenido verticalmente
+//        linksColumn.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER); // Centra el contenido horizontalmente
 
-
-
-        // 4ª Columna: Redes sociales sin borde derecho
+        // 4ª Columna: Redes sociales
         HorizontalLayout socialLinks = new HorizontalLayout(
                 createSocialIcon("https://www.facebook.com/universidaddecadiz/", VaadinIcon.FACEBOOK, "Facebook"),
                 createSocialIcon("https://twitter.com/univcadiz", VaadinIcon.TWITTER, "Twitter"),
@@ -95,7 +73,6 @@ public class Footer extends Composite<HorizontalLayout> {
                 .set("display", "flex")
                 .set("justify-content", "center")
                 .set("align-items", "center");
-
 
         // Layout del footer
         HorizontalLayout footerLayout = new HorizontalLayout(logoContainer, addressContainer, linksColumn, socialLinks);
@@ -118,25 +95,25 @@ public class Footer extends Composite<HorizontalLayout> {
         return link;
     }
 
-        private Anchor createSocialIcon(String url, VaadinIcon icon, String altText) {
+    private Anchor createSocialIcon(String url, VaadinIcon icon, String altText) {
         Icon socialIcon = new Icon(icon);
         socialIcon.setSize("24px");
         socialIcon.getStyle().set("color", "white");
-        socialIcon.getStyle().set("vertical-align", "middle"); // Asegura la alineación vertical
+        socialIcon.getStyle().set("vertical-align", "middle");
         Anchor anchor = new Anchor(url, socialIcon);
         anchor.setTarget("_blank");
         anchor.getElement().setAttribute("aria-label", altText);
         return anchor;
-        }
+    }
 
-        private Component createSocialIcon(String url, String iconPath, String altText) {
+    private Component createSocialIcon(String url, String iconPath, String altText) {
         Image icon = new Image(iconPath, altText);
         icon.setWidth("28px");
         icon.setHeight("28px");
-        icon.getStyle().set("vertical-align", "middle"); // Asegura la alineación vertical
+        icon.getStyle().set("vertical-align", "middle");
         Anchor anchor = new Anchor(url, icon);
         anchor.setTarget("_blank");
         anchor.getElement().setAttribute("aria-label", altText);
         return anchor;
-        }
+    }
 }
