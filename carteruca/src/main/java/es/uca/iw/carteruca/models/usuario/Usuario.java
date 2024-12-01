@@ -1,15 +1,24 @@
 package es.uca.iw.carteruca.models.usuario;
 
-import es.uca.iw.carteruca.models.solicitud.Solicitud;
-import jakarta.persistence.*;
+import java.util.Collections;
+import java.util.List;
+
 import org.checkerframework.common.aliasing.qual.Unique;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
+import es.uca.iw.carteruca.models.solicitud.Solicitud;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 
 @Entity
 @Table
@@ -45,6 +54,9 @@ public class Usuario implements UserDetails {
     @Column(columnDefinition = "VARCHAR(255) DEFAULT 'Solicitante'")
     @Enumerated(EnumType.STRING)
     private Rol rol;
+
+    @Column(columnDefinition = "VARCHAR(255) DEFAULT 'icons/profile.svg'")
+    private String fotoPerfil = "icons/profile.svg";
 
     public List<GrantedAuthority> getAuthorities() {
         return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + this.getRol().name()));
@@ -126,6 +138,12 @@ public class Usuario implements UserDetails {
 
     public Centro getCentro() {
         return centro;
+    }
+
+    public String getFotoPerfil() { return fotoPerfil; }
+
+    public void setFotoPerfil(String fotoPerfil) {
+        this.fotoPerfil = fotoPerfil;
     }
 
     public void setCentro(Centro centro) {

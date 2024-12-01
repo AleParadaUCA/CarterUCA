@@ -14,138 +14,152 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 
+import es.uca.iw.carteruca.models.usuario.Rol;
 import es.uca.iw.carteruca.security.AuthenticatedUser;
 import es.uca.iw.carteruca.views.registro.RegistroView;
 
 public class Header extends Composite<VerticalLayout> {
 
-    private AuthenticatedUser authenticatedUser;
+    private final AuthenticatedUser authenticatedUser;
+
+    private static final String HEADER_BACKGROUND_COLOR = "#384850";
+    private static final String HEADER_TEXT_COLOR = "white";
 
     public Header(AuthenticatedUser authenticatedUser) {
         this.authenticatedUser = authenticatedUser;
+
         VerticalLayout header = getContent();
         header.setWidthFull();
         header.getStyle()
-                .setBackground("#384850")
-                .setColor("white")
+                .setBackground(HEADER_BACKGROUND_COLOR)
+                .setColor(HEADER_TEXT_COLOR)
                 .setPadding("10px");
 
-        // **Parte superior: Layout horizontal**
+        header.add(createTopLayout(), createBottomLayout());
+    }
+
+    private HorizontalLayout createTopLayout() {
         HorizontalLayout topLayout = new HorizontalLayout();
         topLayout.setWidthFull();
         topLayout.setAlignItems(FlexComponent.Alignment.CENTER);
-        topLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.BETWEEN); // Para separar el logo de los íconos
-        //topLayout.getStyle().set("border-bottom", "1px solid #ccc");
+        topLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.BETWEEN);
 
-        // **Parte superior izquierda: Logo**
-    //    Anchor homeLink = new Anchor("https://www.uca.es", new Image("images/Universidad_de_cadiz_2.0.png", "Foto UCA"));
-        Anchor homeLink = new Anchor("https://www.uca.es", new Image("layout/Universidad_de_cadiz_2.0.png", "Foto UCA"));
-        homeLink.getElement().getStyle()
-            .set("width", "100px") // Ajustado el ancho del logo
-            .set("height", "auto")
-            .setMargin("0")
-            .setPadding("0");
-        topLayout.add(homeLink);
+        topLayout.add(createLogo(), createIconsLayout());
+        return topLayout;
+    }
 
-        // **Parte superior derecha: Íconos (Idioma, Notificaciones, Usuario)**
+    private Anchor createLogo() {
+        Image logoImage = new Image("layout/Universidad_de_cadiz_2.0.png", "Foto UCA");
+        logoImage.getStyle()
+                .set("max-width", "75%")
+                .set("height", "auto")
+                .set("margin-right", "auto");
+
+        return new Anchor("https://www.uca.es", logoImage);
+    }
+
+    private HorizontalLayout createIconsLayout() {
         HorizontalLayout iconsLayout = new HorizontalLayout();
         iconsLayout.setAlignItems(FlexComponent.Alignment.END);
+        iconsLayout.setSpacing(false); // Elimina el espacio entre los componentes
+        iconsLayout.setPadding(false); // Elimina el padding interno
+
+
         Icon languageIcon = new Icon(VaadinIcon.GLOBE);
-        languageIcon.getStyle()
-                .set("cursor", "pointer")
-                .set("margin-bottom", "3px");
+        languageIcon.setClassName("icon-button");
         iconsLayout.add(languageIcon);
 
         if (authenticatedUser.get().isPresent()) {
 
-            MenuBar userMenuBar = new MenuBar();
-            userMenuBar.getStyle()
-                    .set("align-self", "flex-end")
-                    .set("padding", "0")
-                    .set("margin", "0");
-            userMenuBar.setWidth("auto"); // Asegúrate de que el menú no tenga ancho fijo
-
-            // Ícono de notificaciones
+            //icono de notifcaciones
             Icon bellIcon = new Icon(VaadinIcon.BELL);
-            bellIcon.getStyle()
-                    .set("cursor", "pointer")
-                    .set("margin-bottom", "3px");
+            bellIcon.setClassName("icon-button");
+            bellIcon.getStyle().set("margin-left", "10px");
             bellIcon.addClickListener(e -> UI.getCurrent().navigate("/notificaciones"));
+            iconsLayout.add(bellIcon);
 
-            // Ícono de usuario
+            // Usuario autenticado
+            Icon profileIcon =   new Icon();
+            profileIcon.getElement().setAttribute("style",
+                "background-image: url('" + authenticatedUser.get().get().getFotoPerfil() + "'); " +
+                        "width: 32px; height: 32px; border-radius: 50%; background-size: cover; cursor: pointer;");
+
+            MenuBar userMenuBar = new MenuBar();
+            MenuItem userMenuItem = userMenuBar.addItem(profileIcon);
+            SubMenu userSubMenu = userMenuItem.getSubMenu();
+            userMenuBar.getStyle()
+                    .set("margin", "0") // Elimina márgenes
+                    .set("padding", "0"); // Elimina padding
+
+
+            //Posibles botones: notificaciones, configuración
+
+            userSubMenu.addItem("Perfil", e -> UI.getCurrent().navigate("/profile"));
+            userSubMenu.addItem("Cerrar Sesión", e -> authenticatedUser.logout());
+
+            iconsLayout.add(userMenuBar);
+        } else {
+            // Usuario no autenticado
             Icon userIcon = new Icon(VaadinIcon.USER);
             userIcon.getStyle()
                     .set("font-size", "20px")
                     .set("cursor", "pointer")
-                    .set("color", "white")
-                    .set("position", "absolute")  // Posicionarlo dentro de su contenedor
-                    .set("bottom", "0")
-                    .set("left", "0");
+                    .set("color", "white");
 
+            MenuBar userMenuBar = new MenuBar();
             MenuItem userMenuItem = userMenuBar.addItem(userIcon);
             SubMenu userSubMenu = userMenuItem.getSubMenu();
-            //userSubMenu.addItem("Ver Perfil", e -> UI.getCurrent().navigate("/profile"));
-            userSubMenu.addItem("Cerrar Sesión", e -> {
-                authenticatedUser.logout();
-            });
 
-            iconsLayout.add(bellIcon, userMenuBar);
-        } else {
-            // Ícono de login
-            Icon loginIcon = new Icon(VaadinIcon.SIGN_IN);
-            loginIcon.getStyle()
-                    .set("cursor", "pointer")
-                    .set("margin-bottom", "3px");
-            loginIcon.addClickListener(e -> UI.getCurrent().navigate("/login"));
+            userSubMenu.addItem("Iniciar Sesión", e -> UI.getCurrent().navigate("/login"));
+            userSubMenu.addItem("Registrarse", e -> UI.getCurrent().navigate("registro"));
 
-            iconsLayout.add(loginIcon);
+            iconsLayout.add(userMenuBar);
         }
 
-        topLayout.add(iconsLayout);
+        return iconsLayout;
+    }
 
-        // **Parte inferior: Layout horizontal**
+    private HorizontalLayout createBottomLayout() {
         HorizontalLayout bottomLayout = new HorizontalLayout();
         bottomLayout.setWidthFull();
         bottomLayout.setAlignItems(FlexComponent.Alignment.CENTER);
         bottomLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.BETWEEN);
 
-        // **Parte inferior izquierda: Menú**
+        bottomLayout.add(createMenuBar(), createSearchField());
+        return bottomLayout;
+    }
+
+    private MenuBar createMenuBar() {
         MenuBar menuBar = new MenuBar();
         menuBar.addClassName("rounded-menu-bar");
-        setMenuItems(menuBar);
-        bottomLayout.add(menuBar);
 
-        // **Parte inferior derecha: Buscador**
+        menuBar.addItem("Proyectos", e -> UI.getCurrent().navigate("/"))
+                .getElement().getClassList().add("menu-item");
+        //menuBar.addItem("Registrarse", e -> UI.getCurrent().navigate(RegistroView.class));
+
+        if (authenticatedUser.get().isPresent()) {
+            if (authenticatedUser.get().get().getRol() == Rol.Admin){
+                menuBar.addItem("Home-Admin", e -> UI.getCurrent().navigate("/home-admin"))
+                        .getElement().getClassList().add("menu-item");
+            }else {
+                menuBar.addItem("Home", e -> UI.getCurrent().navigate("/home"))
+                        .getElement().getClassList().add("menu-item");
+            }
+        }
+
+        return menuBar;
+    }
+
+    private TextField createSearchField() {
         TextField searchField = new TextField();
         searchField.setPlaceholder("Buscar...");
         searchField.setWidth("20%");
         searchField.addClassName("search-color");
 
-        // Añadir ícono de búsqueda
         Icon searchIcon = VaadinIcon.SEARCH.create();
-        searchIcon.getStyle().set("color", "#384850");
+        searchIcon.getStyle().set("color", HEADER_BACKGROUND_COLOR);
         searchField.setSuffixComponent(searchIcon);
 
-        bottomLayout.add(searchField);
-
-        // Añadir las dos partes al layout principal
-        header.add(topLayout, bottomLayout);
-
-    }
-
-    private void setMenuItems(MenuBar menuBar) {
-        menuBar.addItem("Proyectos", e -> {
-            // Redirigir a "/"
-            UI.getCurrent().navigate("/");
-        }).getElement().getClassList().add("menu-item");
-
-        menuBar.addItem("Registrarse", e -> UI.getCurrent().navigate(RegistroView.class))
-                .getElement().getClassList().add("menu-item");
-        if (authenticatedUser.get().isPresent()) {
-            menuBar.addItem("Home", e -> {
-                // Redirigir a "/home"
-                UI.getCurrent().navigate("/home");
-            }).getElement().getClassList().add("menu-item");
-        }
+        return searchField;
     }
 }
