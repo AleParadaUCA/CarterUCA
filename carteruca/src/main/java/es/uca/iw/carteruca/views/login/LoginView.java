@@ -105,21 +105,6 @@ public class LoginView extends LoginOverlay implements BeforeEnterObserver {
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
         Optional<Usuario> optionalUser = authenticatedUser.get();
-
-        if (optionalUser.isPresent()) {
-            Rol userRole = optionalUser.get().getRol();
-
-            if (userRole == Rol.Admin) {
-                UI.getCurrent().navigate("home-admin");
-            } else {
-                UI.getCurrent().navigate("home");
-            }
-            setOpened(false);
-        } else {
-            System.out.println("No authenticated user found");
-        }
-
-        setError(event.getLocation().getQueryParameters().getParameters().containsKey("error"));
     }
 
 }

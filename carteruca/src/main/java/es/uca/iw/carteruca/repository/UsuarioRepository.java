@@ -17,5 +17,9 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long>, JpaSpec
 
     List<Usuario> findByRol(Rol rol); //devuelve lista de usuarios con un rol
 
+    boolean existsByUsuario(String username);
+
+    boolean existsByEmail(String email);
+
     void deleteByEmail(String email);//Elimina un usuario dado un email
 }

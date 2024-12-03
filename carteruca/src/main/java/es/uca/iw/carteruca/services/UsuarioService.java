@@ -1,10 +1,16 @@
 package es.uca.iw.carteruca.services;
 
+import com.vaadin.hilla.ExplicitNullableTypeChecker;
+import es.uca.iw.carteruca.models.usuario.Centro;
+import es.uca.iw.carteruca.models.usuario.Usuario;
+import es.uca.iw.carteruca.models.usuario.Rol;
+import es.uca.iw.carteruca.repository.UsuarioRepository;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
-import es.uca.iw.carteruca.models.usuario.Rol;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.GrantedAuthority;
@@ -14,27 +20,52 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import es.uca.iw.carteruca.models.usuario.Usuario;
-import es.uca.iw.carteruca.repository.UsuarioRepository;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 @Service
-public class UsuarioService implements UserDetailsService {
+public class UsuarioService {
 
     private final UsuarioRepository repository;
     private final PasswordEncoder passwordEncoder;
     //private final EmailService emailService;
+    private static final Pattern EMAIL_PATTERN = Pattern.compile("^[\\w.%+-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$");
+    private final ExplicitNullableTypeChecker typeChecker;
 
     @Autowired
-    public UsuarioService(UsuarioRepository repository, PasswordEncoder passwordEncoder) {
+    public UsuarioService(UsuarioRepository repository, PasswordEncoder passwordEncoder, ExplicitNullableTypeChecker typeChecker) {
         this.repository = repository;
         this.passwordEncoder = passwordEncoder;
         // this.emailService = emailService;
+        this.typeChecker = typeChecker;
     }
 
-    public boolean createUser(String nombre, String apellidos, String username, String email, String password) {
-        // Crear un nuevo objeto Usuario con los datos del formulario
+    @Transactional
+    public String   createUser(String nombre, String apellidos, String username, String email, String password, Centro centro) {
+        // Validar campos vacíos
+        if (!StringUtils.hasText(username) || !StringUtils.hasText(email) || !StringUtils.hasText(password) || !StringUtils.hasText(apellidos) || !StringUtils.hasText(nombre)) {
+            return ("Todos los campos son obligatorios.");
+        }
+        // Validar el centro
+        if (centro == null || !StringUtils.hasText(centro.getNombre())) {
+            return "Debe seleccionar un centro válido.";
+        }
+
+        // Validar formato del email
+        if (!EMAIL_PATTERN.matcher(email).matches()) {
+            return ("El correo no es válido.");
+        }
+
+        // Comprobar si el usuario ya existe
+            if (repository.existsByUsuario(username)) {
+            return ("El nombre de usuario ya está en uso.");
+        }
+
+        // Comprobar si el correo ya existe
+        if (repository.existsByEmail(email)) {
+            return ("El correo ya está en uso.");
+        }
+
         Usuario nuevoUsuario = new Usuario();
         nuevoUsuario.setNombre(nombre);
         nuevoUsuario.setApellidos(apellidos);
@@ -42,17 +73,18 @@ public class UsuarioService implements UserDetailsService {
         nuevoUsuario.setEmail(email);
         nuevoUsuario.setRol(Rol.Solicitante);
         nuevoUsuario.setPassword(passwordEncoder.encode(password));
+        nuevoUsuario.setCentro(centro);
 
         try {
             repository.save(nuevoUsuario);
-//            emailService.sendRegistrationEmail(nuevoUsuario);
-            return true;
+//            emailService.sendRegistrationEmail(nuevoUsuario); //futuro
+            return "Exito";
         } catch (DataIntegrityViolationException e) {
-            return false;
+            return "Error";
         }
     }
 
-    @Override
+//    @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Usuario user = repository.findByUsuario(username)

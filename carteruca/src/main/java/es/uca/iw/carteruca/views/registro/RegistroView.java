@@ -1,9 +1,10 @@
 package es.uca.iw.carteruca.views.registro;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import com.vaadin.flow.data.binder.BeanValidationBinder;
+import es.uca.iw.carteruca.models.usuario.Centro;
 
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.UI;
@@ -25,7 +26,9 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 
+import es.uca.iw.carteruca.models.usuario.Usuario;
 import es.uca.iw.carteruca.services.UsuarioService;
+import es.uca.iw.carteruca.services.CentroService;
 import es.uca.iw.carteruca.views.home.HomeView;
 import es.uca.iw.carteruca.views.layout.MainLayout;
 
@@ -39,19 +42,15 @@ public class RegistroView extends Composite<VerticalLayout> {
     private final TextField apellidos = new TextField();
     private final TextField usuario = new TextField();
     private final EmailField email = new EmailField();
-    private final PasswordField contraseña = new PasswordField();
-    private final PasswordField repetir_contraseña = new PasswordField();
-    private final UsuarioService userService;
-    private ComboBox<String> centro = new ComboBox<>();
-    //private ComboBox<Centro> centro = new ComboBox<>();
-    //private final BeanValidationBinder<User> binder;
+    private final PasswordField password = new PasswordField();
+    private final PasswordField repetir_password = new PasswordField();
+    private final ComboBox<Centro> centro = new ComboBox<>();
+    private final BeanValidationBinder<Usuario> binder;
     Button guardar = new Button("Guardar");
     Button volver = new Button("Volver");
 
     //private final BeanValidationBinder;
-    public RegistroView(UsuarioService userService) {
-
-        this.userService = userService;
+    public RegistroView(UsuarioService userService, CentroService centroService) {
 
         // Configuración del layout principal
         getContent().setWidth("100%");
@@ -76,17 +75,17 @@ public class RegistroView extends Composite<VerticalLayout> {
         apellidos.setId("Apellidos");
         usuario.setId("Usuario");
         email.setId("Email");
-        contraseña.setId("Contraseña");
-        repetir_contraseña.setId("Repetir Contraseña");
+        password.setId("Contraseña");
+        repetir_password.setId("Repetir Contraseña");
         centro.setId("Centro");
 
 
-        contraseña.setMinLength(6);
-        contraseña.setMaxLength(20);
-        contraseña.setHelperText("6-20 letras y numeros");
+        password.setMinLength(6);
+        password.setMaxLength(20);
+        password.setHelperText("6-20 letras y numeros");
 
-        repetir_contraseña.setMinLength(6);
-        repetir_contraseña.setMaxLength(20);
+        repetir_password.setMinLength(6);
+        repetir_password.setMaxLength(20);
 
         nombre.setLabel("Nombre");
         nombre.getElement().setAttribute("aria-label", "Introduzca su nombre");
@@ -96,37 +95,33 @@ public class RegistroView extends Composite<VerticalLayout> {
         usuario.getElement().setAttribute("aria-label", "Introduzca su usuario");
         email.setLabel("Email");
         email.getElement().setAttribute("aria-label", "Introduzca su email");
-        contraseña.setLabel("Contraseña");
-        contraseña.getElement().setAttribute("aria-label", "Introduzca su contraseña");
-        repetir_contraseña.setLabel("Repetir Contraseña");
-        repetir_contraseña.getElement().setAttribute("aria-label", "Repita la contraseña");
+        password.setLabel("Contraseña");
+        password.getElement().setAttribute("aria-label", "Introduzca su contraseña");
+        repetir_password.setLabel("Repetir contraseña");
+        repetir_password.getElement().setAttribute("aria-label", "Repita la contraseña");
         centro.setLabel("Centro");
         centro.getElement().setAttribute("aria-label", "Introduzca el centro");
-
         centro.setWidth("100px");
-        /*
-        centro.setItemLabelGenerator(Centro::getNombre);
-        centro.setClearButtonVisible(true);
-        centro.setPlaceholder("Elige el centro");
-        List<Centro> centros_disponibles = userService.findAllRoles();
-        centro.setItems(centros_disponibles);
-         */
-        //centros(centro);
 
-        // Inicializa el binder
-        /*
-        binder = new BeanValidationBinder<>(User.class);  // Crear el binder
-        binder.bindInstanceFields(this); // Enlazar los campos del formulario con la entidad User
-        binder.setBean(new usuario()); // Asignar un nuevo objeto User al binder
-         */
+        // Cargar los datos de los centros
+        List<Centro> centrosDisponibles = centroService.getAllCentros();
+        centro.setItems(centrosDisponibles);
+        centro.setItemLabelGenerator(Centro::getNombre);
+        centro.setPlaceholder("Seleccione un centro");
+
+        // Configuración del Binder
+        binder = new BeanValidationBinder<>(Usuario.class);
+        binder.forField(centro)
+                .asRequired("Debe seleccionar un centro")
+                .bind(Usuario::getCentro, Usuario::setCentro);
+
 
         // Checkbox para términos y condiciones
         Checkbox checkbox = new Checkbox("He podido leer y entiendo la Política de Privacidad y Cookies");
         checkbox.getElement().setAttribute("aria-label","He podido leer y entiendo la Política de Provacidad y Cookies");
 
         // Agregar campos al formulario
-        formLayout2Col.add(nombre, apellidos, usuario, email, contraseña, repetir_contraseña);
-        //formLayout2Col.add(nombre, apellidos, usuario, email, centro, contraseña, repetir_contraseña);
+        formLayout2Col.add(nombre, apellidos, usuario, email, centro, password, repetir_password);
 
         formLayout2Col.setResponsiveSteps(
                 new FormLayout.ResponsiveStep("0", 1),
@@ -139,8 +134,8 @@ public class RegistroView extends Composite<VerticalLayout> {
         formLayout2Col.setColspan(usuario, 1);
         formLayout2Col.setColspan(email, 1);
         formLayout2Col.setColspan(centro, 2); // Centro ocupa toda la fila en este caso
-        formLayout2Col.setColspan(contraseña, 1);
-        formLayout2Col.setColspan(repetir_contraseña, 1);
+        formLayout2Col.setColspan(password, 1);
+        formLayout2Col.setColspan(repetir_password, 1);
 
 
 
@@ -155,18 +150,18 @@ public class RegistroView extends Composite<VerticalLayout> {
         volver.getElement().setAttribute("aria-label", "Volver");
 
         Runnable actualizarEstadoBoton = () -> {
-            boolean contraseñasCoinciden = contraseña.getValue().equals(repetir_contraseña.getValue());
+            boolean passwordsCoinciden = password.getValue().equals(repetir_password.getValue());
             boolean checkboxMarcado = checkbox.getValue();
-            guardar.setEnabled(contraseñasCoinciden && checkboxMarcado);
+            guardar.setEnabled(passwordsCoinciden && checkboxMarcado);
         };
 
-        // Validación de contraseñas
-        repetir_contraseña.addValueChangeListener(e -> {
-            if (!contraseña.getValue().equals(repetir_contraseña.getValue())) {
-                repetir_contraseña.setInvalid(true);
-                repetir_contraseña.setErrorMessage("Las contraseñas no coinciden");
+        // Validación de passwords
+        repetir_password.addValueChangeListener(e -> {
+            if (!password.getValue().equals(repetir_password.getValue())) {
+                repetir_password.setInvalid(true);
+                repetir_password.setErrorMessage("Las contraseña no coinciden");
             } else{
-                repetir_contraseña.setInvalid(false);
+                repetir_password.setInvalid(false);
             }
             actualizarEstadoBoton.run();
         });
@@ -176,15 +171,16 @@ public class RegistroView extends Composite<VerticalLayout> {
 
         // Acción para el botón "Guardar"
         guardar.addClickListener(event -> {
-            if (contraseña.getValue().equals(repetir_contraseña.getValue())) {
+            if (password.getValue().equals(repetir_password.getValue())) {
 
-                //falta comprobaciones.
-                if (userService.createUser( nombre.getValue(), apellidos.getValue(), usuario.getValue(), email.getValue(), contraseña.getValue())){
+                String res = userService.createUser( nombre.getValue(), apellidos.getValue(), usuario.getValue(), email.getValue(), password.getValue(), centro.getValue() );
+
+                if (Objects.equals(res, "Exito")){
                     Notification.show("Registro exitoso");
-                    
-                    UI.getCurrent().access(() -> UI.getCurrent().navigate(""));
+                    //Notification.show("Correo de verificación enviado");  //futuro 
+                    UI.getCurrent().navigate("/");
                 }else{
-                    Notification.show("Error al registrar usuario");
+                    Notification.show(res);
                 }
 
             } else {

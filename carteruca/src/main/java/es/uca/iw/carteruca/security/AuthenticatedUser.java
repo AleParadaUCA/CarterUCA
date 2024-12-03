@@ -3,8 +3,6 @@ package es.uca.iw.carteruca.security;
 import com.vaadin.flow.spring.security.AuthenticationContext;
 import es.uca.iw.carteruca.models.usuario.Usuario;
 import es.uca.iw.carteruca.repository.UsuarioRepository;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,12 +28,6 @@ public class AuthenticatedUser {
 
     public void logout() {
         authenticationContext.logout();
-    }
-
-    @Bean
-    @Lazy
-    public AuthenticationContext authenticationContext() {
-        return new AuthenticationContext();
     }
 
 //    public Optional<Usuario> get() {
