@@ -87,7 +87,7 @@ public class Header extends Composite<VerticalLayout> {
 
             //Posibles botones: notificaciones, configuración
 
-            userSubMenu.addItem("Perfil", e -> UI.getCurrent().navigate("/profile"));
+            userSubMenu.addItem("Perfil", e -> UI.getCurrent().navigate("/perfil"));
             userSubMenu.addItem("Cerrar Sesión", e -> authenticatedUser.logout());
 
             iconsLayout.add(userMenuBar);

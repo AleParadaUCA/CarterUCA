@@ -23,7 +23,7 @@ import es.uca.iw.carteruca.views.registro.RegistroView;
 
 @AnonymousAllowed
 @PageTitle("Login")
-@Route(value = "login", layout = MainLayout.class)
+@Route(value = "/login", layout = MainLayout.class)
 public class LoginView extends Composite<VerticalLayout> implements BeforeEnterObserver {
 
     private final AuthenticatedUser authenticatedUser;
