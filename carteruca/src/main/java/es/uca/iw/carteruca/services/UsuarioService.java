@@ -1,11 +1,5 @@
 package es.uca.iw.carteruca.services;
 
-import com.vaadin.hilla.ExplicitNullableTypeChecker;
-import es.uca.iw.carteruca.models.usuario.Centro;
-import es.uca.iw.carteruca.models.usuario.Usuario;
-import es.uca.iw.carteruca.models.usuario.Rol;
-import es.uca.iw.carteruca.repository.UsuarioRepository;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -23,25 +17,32 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import com.vaadin.hilla.ExplicitNullableTypeChecker;
+
+import es.uca.iw.carteruca.models.usuario.Centro;
+import es.uca.iw.carteruca.models.usuario.Rol;
+import es.uca.iw.carteruca.models.usuario.Usuario;
+import es.uca.iw.carteruca.repository.UsuarioRepository;
+
 @Service
-public class UsuarioService {
+public class UsuarioService implements UserDetailsService {
 
     private final UsuarioRepository repository;
     private final PasswordEncoder passwordEncoder;
     //private final EmailService emailService;
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[\\w.%+-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$");
-    private final ExplicitNullableTypeChecker typeChecker;
+    //private final ExplicitNullableTypeChecker typeChecker;
 
     @Autowired
     public UsuarioService(UsuarioRepository repository, PasswordEncoder passwordEncoder, ExplicitNullableTypeChecker typeChecker) {
         this.repository = repository;
         this.passwordEncoder = passwordEncoder;
         // this.emailService = emailService;
-        this.typeChecker = typeChecker;
+        //this.typeChecker = typeChecker;
     }
 
     @Transactional
-    public String   createUser(String nombre, String apellidos, String username, String email, String password, Centro centro) {
+    public String createUser(String nombre, String apellidos, String username, String email, String password, Centro centro) {
         // Validar campos vacíos
         if (!StringUtils.hasText(username) || !StringUtils.hasText(email) || !StringUtils.hasText(password) || !StringUtils.hasText(apellidos) || !StringUtils.hasText(nombre)) {
             return ("Todos los campos son obligatorios.");
@@ -84,7 +85,7 @@ public class UsuarioService {
         }
     }
 
-//    @Override
+    @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Usuario user = repository.findByUsuario(username)
