@@ -1,13 +1,17 @@
 package es.uca.iw.carteruca.security;
 
 import com.vaadin.flow.spring.security.AuthenticationContext;
+
 import es.uca.iw.carteruca.models.usuario.Usuario;
 import es.uca.iw.carteruca.repository.UsuarioRepository;
+
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+
+import org.springframework.context.annotation.Lazy;
 
 @Component
 public class AuthenticatedUser {
@@ -15,7 +19,7 @@ public class AuthenticatedUser {
     private final UsuarioRepository userRepository;
     private final AuthenticationContext authenticationContext;
 
-    public AuthenticatedUser(AuthenticationContext authenticationContext, UsuarioRepository userRepository) {
+    public AuthenticatedUser(@Lazy AuthenticationContext authenticationContext, @Lazy UsuarioRepository userRepository) {
         this.userRepository = userRepository;
         this.authenticationContext = authenticationContext;
     }
