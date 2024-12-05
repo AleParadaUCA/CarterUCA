@@ -115,6 +115,10 @@ public class common {
         successNotification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
         successNotification.open();
     }
-
+    public static void showErrorNotification(String message) {
+        Notification errorNotification = new Notification(message, 4000, Notification.Position.MIDDLE);
+        errorNotification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+        errorNotification.open();
+    }
 
 }
