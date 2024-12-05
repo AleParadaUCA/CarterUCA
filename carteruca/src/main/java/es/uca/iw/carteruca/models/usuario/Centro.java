@@ -9,7 +9,7 @@ import org.checkerframework.common.aliasing.qual.Unique;
 public class Centro {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue //cambiu9oa estrqtegia segura pero lenta
     private Long id;
 
     @Column(nullable = false)
