@@ -4,6 +4,7 @@ import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.avatar.Avatar;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.notification.Notification;
@@ -13,10 +14,10 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.server.VaadinSession;
 import es.uca.iw.carteruca.models.usuario.Usuario;
 import es.uca.iw.carteruca.security.AuthenticatedUser;
 import es.uca.iw.carteruca.services.UsuarioService;
+import es.uca.iw.carteruca.views.common.common;
 import es.uca.iw.carteruca.views.home.HomeAdminView;
 import es.uca.iw.carteruca.views.layout.MainLayout;
 import es.uca.iw.carteruca.views.home.HomeSolicitanteView;
@@ -30,6 +31,13 @@ public class PerfilView extends Composite<VerticalLayout> {
 
     private final UsuarioService usuarioService;
     private Usuario currentUser;
+
+    // Campos de la vista principal
+    private TextField nombreField;
+    private TextField apellidosField;
+    private TextField emailField;
+    private TextField usernameField;
+    private TextField rolField;
 
     @Autowired
     public PerfilView(AuthenticatedUser authenticatedUser, UsuarioService usuarioService) {
@@ -48,6 +56,7 @@ public class PerfilView extends Composite<VerticalLayout> {
         // Construcción de la vista
         createHeader();
         createProfileForm();
+        createButton();
         createFooter();
     }
 
@@ -55,7 +64,8 @@ public class PerfilView extends Composite<VerticalLayout> {
         H2 header = new H2("Datos Personales");
 
         Avatar avatar = new Avatar(currentUser.getNombre() + " " + currentUser.getApellidos());
-        avatar.setImage(currentUser.getFotoPerfil()); // Configura la URL de la imagen si está disponible
+        String uniqueColor = common.getColorFromName(currentUser.getNombre());
+        avatar.getElement().getStyle().set("background-color", uniqueColor);
         avatar.getElement().getStyle().set("width", "100px").set("height", "100px");
 
         HorizontalLayout headerLayout = new HorizontalLayout(avatar, header);
@@ -66,23 +76,24 @@ public class PerfilView extends Composite<VerticalLayout> {
     private void createProfileForm() {
         FormLayout formLayout = new FormLayout();
 
-        TextField nombreField = new TextField("Nombre");
+        // Crear los campos de la vista principal
+        nombreField = new TextField("Nombre");
         nombreField.setValue(currentUser.getNombre());
         nombreField.setReadOnly(true);
 
-        TextField apellidosField = new TextField("Apellidos");
+        apellidosField = new TextField("Apellidos");
         apellidosField.setValue(currentUser.getApellidos());
         apellidosField.setReadOnly(true);
 
-        TextField emailField = new TextField("Email");
+        emailField = new TextField("Email");
         emailField.setValue(currentUser.getEmail());
         emailField.setReadOnly(true);
 
-        TextField usernameField = new TextField("Usuario");
+        usernameField = new TextField("Usuario");
         usernameField.setValue(currentUser.getUsername());
         usernameField.setReadOnly(true);
 
-        TextField rolField = new TextField("Rol");
+        rolField = new TextField("Rol");
         rolField.setValue(currentUser.getRol().name());
         rolField.setReadOnly(true);
 
@@ -93,6 +104,25 @@ public class PerfilView extends Composite<VerticalLayout> {
         );
 
         getContent().add(formLayout);
+    }
+
+    private void createButton() {
+        HorizontalLayout buttonLayout = new HorizontalLayout();
+
+        Button eliminar = new Button("Eliminar");
+        eliminar.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        //eliminar.addClickListener(e -> openEliminarDialog());
+
+        Button modificar = new Button("Modificar");
+        modificar.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        modificar.addClickListener(e -> openEditDialog());
+
+        buttonLayout.add(modificar, eliminar);
+        buttonLayout.setWidthFull(); // Asegúrate de que ocupe todo el ancho disponible
+        buttonLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER); // Centra los botones horizontalmente
+        buttonLayout.setAlignItems(FlexComponent.Alignment.CENTER); // Centra los botones verticalmente (opcional)
+
+        getContent().add(buttonLayout);
     }
 
     private void createFooter() {
@@ -116,6 +146,68 @@ public class PerfilView extends Composite<VerticalLayout> {
             getUI().ifPresent(ui -> ui.navigate(HomeSolicitanteView.class));
         }
     }
+
+    private void openEditDialog() {
+        Dialog editDialog = new Dialog();
+        FormLayout formLayout = new FormLayout();
+
+        // Campos de edición
+        TextField nombreFieldDialog = new TextField("Nombre");
+        nombreFieldDialog.setValue(currentUser.getNombre());
+
+        TextField apellidosFieldDialog = new TextField("Apellidos");
+        apellidosFieldDialog.setValue(currentUser.getApellidos());
+
+        TextField emailFieldDialog = new TextField("Email");
+        emailFieldDialog.setValue(currentUser.getEmail());
+
+
+        formLayout.add(nombreFieldDialog, apellidosFieldDialog, emailFieldDialog);
+
+        // Botón para guardar los cambios
+        Button saveButton = new Button("Guardar", event -> {
+            String result = usuarioService.updateUser(
+                    currentUser.getId(),
+                    nombreFieldDialog.getValue(),
+                    apellidosFieldDialog.getValue(),
+                    emailFieldDialog.getValue()
+            );
+
+
+            if (result.equals("Usuario actualizado correctamente.")) {
+                // Actualizamos currentUser con los nuevos datos
+                currentUser.setNombre(nombreFieldDialog.getValue());
+                currentUser.setApellidos(apellidosFieldDialog.getValue());
+                currentUser.setEmail(emailFieldDialog.getValue());
+
+                // **Actualizamos los campos de la vista principal directamente**
+                nombreField.setValue(currentUser.getNombre());
+                apellidosField.setValue(currentUser.getApellidos());
+                emailField.setValue(currentUser.getEmail());
+                usernameField.setValue(currentUser.getUsername());
+                rolField.setValue(currentUser.getRol().name());
+
+                // Mostrar notificación
+                common.showSuccessNotification(result);
+                editDialog.close();
+            } else {
+                // Notificación de error
+                common.showErrorNotification("Error: " + result);
+            }
+        });
+
+        // Botón para cancelar
+        Button cancelButton = new Button("Cancelar", event -> editDialog.close());
+        cancelButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
+
+        HorizontalLayout buttonLayout = new HorizontalLayout(saveButton, cancelButton);
+        buttonLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
+
+        VerticalLayout dialogLayout = new VerticalLayout(formLayout, buttonLayout);
+        editDialog.add(dialogLayout);
+        editDialog.open();
+    }
 }
+
 
 

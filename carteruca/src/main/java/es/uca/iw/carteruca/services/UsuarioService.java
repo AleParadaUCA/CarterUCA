@@ -126,4 +126,46 @@ public class UsuarioService implements UserDetailsService {
     public void deleteUser(Long id) {
         repository.deleteById(id);
     }
+
+    @Transactional
+    public String updateUser(Long id, String nombre, String apellidos, String email) {
+        Optional<Usuario> userOptional = repository.findById(id);
+        if (userOptional.isEmpty()) {
+            System.out.println("Usuario no encontrado.");
+            return "Usuario no encontrado.";
+        }
+
+        Usuario usuario = userOptional.get();
+
+        if (!StringUtils.hasText(nombre) || !StringUtils.hasText(apellidos) || !StringUtils.hasText(email)) {
+            System.out.println("Faltan campos obligatorios.");
+            return "Todos los campos son obligatorios.";
+        }
+
+        if (!EMAIL_PATTERN.matcher(email).matches()) {
+            System.out.println("Correo no válido.");
+            return "El correo no es válido.";
+        }
+
+        if (!usuario.getEmail().equals(email) && repository.existsByEmail(email)) {
+            System.out.println("Correo ya está en uso.");
+            return "El correo ya está en uso.";
+        }
+
+        usuario.setNombre(nombre);
+        usuario.setApellidos(apellidos);
+        usuario.setEmail(email);
+
+        try {
+            repository.save(usuario);
+            System.out.println("Usuario actualizado correctamente.");
+            return "Usuario actualizado correctamente.";
+        } catch (DataIntegrityViolationException e) {
+            System.out.println("Error al guardar: " + e.getMessage());
+            return "Error al actualizar el usuario.";
+        }
+    }
+
+
+
 }
