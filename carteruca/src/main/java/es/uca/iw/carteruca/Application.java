@@ -12,7 +12,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * and some desktop browsers.
  *
  */
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "es.uca.iw.carteruca")
 @Theme(value = "carteruca")
 public class Application implements AppShellConfigurator {
 
