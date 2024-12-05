@@ -29,6 +29,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility;
 import es.uca.iw.carteruca.models.usuario.Usuario;
 import es.uca.iw.carteruca.services.UsuarioService;
 import es.uca.iw.carteruca.services.CentroService;
+import es.uca.iw.carteruca.views.common.common;
 import es.uca.iw.carteruca.views.home.HomeView;
 import es.uca.iw.carteruca.views.layout.MainLayout;
 
@@ -176,11 +177,10 @@ public class RegistroView extends Composite<VerticalLayout> {
                 String res = userService.createUser( nombre.getValue(), apellidos.getValue(), usuario.getValue(), email.getValue(), password.getValue(), centro.getValue() );
 
                 if (Objects.equals(res, "Exito")){
-                    Notification.show("Registro exitoso");
-                    //Notification.show("Correo de verificación enviado");  //futuro 
+                    common.showSuccessNotification("Registro exitoso");
                     UI.getCurrent().navigate("/");
                 }else{
-                    Notification.show(res);
+                    common.showErrorNotification(res);
                 }
 
             } else {
