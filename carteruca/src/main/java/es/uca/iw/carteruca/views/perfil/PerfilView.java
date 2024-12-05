@@ -15,6 +15,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 import es.uca.iw.carteruca.models.usuario.Usuario;
+import es.uca.iw.carteruca.security.AuthenticatedUser;
 import es.uca.iw.carteruca.services.UsuarioService;
 import es.uca.iw.carteruca.views.home.HomeAdminView;
 import es.uca.iw.carteruca.views.layout.MainLayout;
@@ -26,15 +27,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Route(value = "/perfil", layout = MainLayout.class)
 @RolesAllowed({"Admin", "CIO", "Promotor", "Solicitante", "OTP"})
 public class PerfilView extends Composite<VerticalLayout> {
+
     private final UsuarioService usuarioService;
     private Usuario currentUser;
 
     @Autowired
-    public PerfilView(UsuarioService usuarioService) {
+    public PerfilView(AuthenticatedUser authenticatedUser, UsuarioService usuarioService) {
         this.usuarioService = usuarioService;
 
         // Obtener el usuario actual de la sesión
-        this.currentUser = fetchCurrentUser();
+        this.currentUser = authenticatedUser.get().get();
 
         if (currentUser == null) {
             // Si no se encuentra un usuario, redirigir al login
@@ -48,27 +50,6 @@ public class PerfilView extends Composite<VerticalLayout> {
         createProfileForm();
         createFooter();
     }
-
-
-    private Usuario fetchCurrentUser() {
-        // Obtener el nombre de usuario de la sesión
-        Object usernameAttribute = VaadinSession.getCurrent().getAttribute("username");
-
-        if (usernameAttribute == null) {
-            // Mostrar mensaje si no se encuentra el nombre de usuario en la sesión
-            System.out.println("No se encontró el atributo 'username' en la sesión.");
-            Notification.show("Sesión expirada o no autenticado. Vuelve a iniciar sesión.", 3000, Notification.Position.MIDDLE);
-            return null; // Si no hay sesión, devolver null
-        }
-
-        // Convertir el atributo a cadena
-        String username = usernameAttribute.toString();
-        System.out.println("Usuario encontrado en la sesión: " + username);
-
-        // Obtener el usuario desde el servicio
-        return usuarioService.getUserByUsername(username);
-    }
-
 
     private void createHeader() {
         H2 header = new H2("Datos Personales");
