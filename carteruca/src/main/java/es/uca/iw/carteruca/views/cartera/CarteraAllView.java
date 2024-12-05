@@ -7,6 +7,8 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.textfield.IntegerField;
+import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.button.Button;
@@ -27,8 +29,8 @@ import java.util.List;
 
 @PageTitle("Carteras")
 @Route(value = "/home-admin/cartera", layout = MainLayout.class)
-@RolesAllowed({"Admin","CIO"})
-
+//@RolesAllowed({"Admin","CIO"})
+@AnonymousAllowed
 public class CarteraAllView extends VerticalLayout {
 
     @Autowired
@@ -101,12 +103,17 @@ public class CarteraAllView extends VerticalLayout {
         FormLayout formLayout = new FormLayout();
 
         TextField nombreField = new TextField("Nombre");
-        DatePicker fechaInicioField = new DatePicker("Fecha Inicio");
-        DatePicker fechaFinField = new DatePicker("Fecha Fin");
-        DatePicker aperturaSolicitudField = new DatePicker("Apertura de Solicitudes");
-        DatePicker cierreSolicitudField = new DatePicker("Cierre de Solicitudes");
-
-        formLayout.add(nombreField, fechaInicioField, fechaFinField, aperturaSolicitudField, cierreSolicitudField);
+        IntegerField n_tecnicosField = new IntegerField("Número Máximo de Técnicos");
+        DatePicker fechaInicioField = new DatePicker("Fecha Inicio de Plazo");
+        DatePicker fechaFinField = new DatePicker("Fecha Fin de Plazo");
+        DatePicker aperturaSolicitudField = new DatePicker("Fecha de Apertura de Solicitudes");
+        DatePicker cierreSolicitudField = new DatePicker("Fecha de Cierre de Solicitudes");
+        DatePicker aperturaEvaluacionField = new DatePicker("Fecha de Apertura de Evaluacion");
+        DatePicker cierreEvaluacionField = new DatePicker("Fecha de Cierre de Evaluacion");
+        NumberField n_horasField = new NumberField("Numero de Horas");
+        NumberField presupuestoField = new NumberField("Presupuesto Total");
+        formLayout.add(nombreField, n_tecnicosField,fechaInicioField, fechaFinField, aperturaSolicitudField, cierreSolicitudField,
+                aperturaEvaluacionField, cierreEvaluacionField, n_horasField, presupuestoField);
 
         Button saveButton = new Button("Guardar", event -> {
             try {
@@ -118,6 +125,11 @@ public class CarteraAllView extends VerticalLayout {
                 nuevaCartera.setFecha_fin(fechaFinField.getValue().atStartOfDay());
                 nuevaCartera.setFecha_apertura_solicitud(aperturaSolicitudField.getValue().atStartOfDay());
                 nuevaCartera.setFecha_cierre_solicitud(cierreSolicitudField.getValue().atStartOfDay());
+                nuevaCartera.setFecha_apertura_evaluacion(aperturaEvaluacionField.getValue().atStartOfDay());
+                nuevaCartera.setFecha_cierre_evaluacion(cierreEvaluacionField.getValue().atStartOfDay());
+                nuevaCartera.setN_horas(n_horasField.getValue().floatValue());
+                nuevaCartera.setPresupuesto_total(presupuestoField.getValue().floatValue());
+                nuevaCartera.setN_max_tecnicos(n_tecnicosField.getValue().intValue());
 
                 carteraService.addCartera(nuevaCartera);
                 updateGrid();
@@ -128,12 +140,16 @@ public class CarteraAllView extends VerticalLayout {
             }
         });
 
+        HorizontalLayout layout = new HorizontalLayout();
+
         saveButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
         Button cancelButton = new Button("Cancelar", event -> dialog.close());
-        cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        cancelButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
+        layout.add(saveButton, cancelButton);
+        layout.setJustifyContentMode(JustifyContentMode.END);
 
-        dialog.add(formLayout, new VerticalLayout(saveButton, cancelButton));
+        dialog.add(formLayout, layout);
         dialog.open();
     }
 
@@ -143,17 +159,30 @@ public class CarteraAllView extends VerticalLayout {
 
         TextField nombreField = new TextField("Nombre", cartera.getNombre());
 
-        // Convertir LocalDateTime a LocalDate para usarlo en DatePicker
-        DatePicker fechaInicioField = new DatePicker("Fecha Inicio",
-                cartera.getFecha_inicio() != null ? cartera.getFecha_inicio().toLocalDate() : null);
-        DatePicker fechaFinField = new DatePicker("Fecha Fin",
-                cartera.getFecha_fin() != null ? cartera.getFecha_fin().toLocalDate() : null);
-        DatePicker aperturaSolicitudField = new DatePicker("Apertura de Solicitudes",
-                cartera.getFecha_apertura_solicitud() != null ? cartera.getFecha_apertura_solicitud().toLocalDate() : null);
-        DatePicker cierreSolicitudField = new DatePicker("Cierre de Solicitudes",
-                cartera.getFecha_cierre_solicitud() != null ? cartera.getFecha_cierre_solicitud().toLocalDate() : null);
 
-        formLayout.add(nombreField, fechaInicioField, fechaFinField, aperturaSolicitudField, cierreSolicitudField);
+        DatePicker fechaInicioField = new DatePicker("Fecha Inicio de Plazo",
+                cartera.getFecha_inicio() != null ? cartera.getFecha_inicio().toLocalDate() : null);
+        DatePicker fechaFinField = new DatePicker("Fecha Fin de Plazo",
+                cartera.getFecha_fin() != null ? cartera.getFecha_fin().toLocalDate() : null);
+        DatePicker aperturaSolicitudField = new DatePicker("Fecha de Apertura de Solicitudes",
+                cartera.getFecha_apertura_solicitud() != null ? cartera.getFecha_apertura_solicitud().toLocalDate() : null);
+        DatePicker cierreSolicitudField = new DatePicker("Fecha de Cierre de Solicitudes",
+                cartera.getFecha_cierre_solicitud() != null ? cartera.getFecha_cierre_solicitud().toLocalDate() : null);
+        DatePicker aperturaEvaluacionField = new DatePicker("Fecha de Apertura de evaluacion",
+                cartera.getFecha_apertura_evaluacion() != null ? cartera.getFecha_apertura_evaluacion().toLocalDate() : null);
+        DatePicker cierreEvaluacionField = new DatePicker("Fecha de Cierre de evaluacion",
+                cartera.getFecha_cierre_evaluacion() != null ? cartera.getFecha_cierre_evaluacion().toLocalDate() : null);
+        IntegerField n_tecnicosField = new IntegerField("Número Máximo de Técnicos");
+        n_tecnicosField.setValue(cartera.getN_max_tecnicos());
+
+        NumberField n_horasField = new NumberField("Número máximo de Horas");
+        n_horasField.setValue(Double.valueOf(cartera.getN_horas()));
+
+        NumberField presupuestoField = new NumberField("Presupuesto");
+        presupuestoField.setValue(Double.valueOf(cartera.getPresupuesto_total()));
+
+        formLayout.add(nombreField, n_tecnicosField, fechaInicioField, fechaFinField, aperturaSolicitudField, cierreSolicitudField,
+                aperturaEvaluacionField, cierreEvaluacionField, n_tecnicosField, n_horasField, presupuestoField);
 
         Button saveButton = new Button("Guardar", event -> {
             try {
@@ -164,6 +193,8 @@ public class CarteraAllView extends VerticalLayout {
                 cartera.setFecha_fin(fechaFinField.getValue() != null ? fechaFinField.getValue().atStartOfDay() : null);
                 cartera.setFecha_apertura_solicitud(aperturaSolicitudField.getValue() != null ? aperturaSolicitudField.getValue().atStartOfDay() : null);
                 cartera.setFecha_cierre_solicitud(cierreSolicitudField.getValue() != null ? cierreSolicitudField.getValue().atStartOfDay() : null);
+                cartera.setFecha_apertura_evaluacion(aperturaEvaluacionField.getValue() != null ? aperturaEvaluacionField.getValue().atStartOfDay() : null);
+                cartera.setFecha_cierre_evaluacion(cierreEvaluacionField.getValue() != null ? cierreEvaluacionField.getValue().atStartOfDay() : null);
 
                 carteraService.updateCartera(cartera.getId(), cartera);
                 updateGrid();
@@ -173,12 +204,16 @@ public class CarteraAllView extends VerticalLayout {
                 Notification.show("Error: " + e.getMessage(), 3000, Notification.Position.MIDDLE);
             }
         });
+        HorizontalLayout layout = new HorizontalLayout();
+
         saveButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
         Button cancelButton = new Button("Cancelar", event -> dialog.close());
-        cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        cancelButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
+        layout.add(saveButton, cancelButton);
+        layout.setJustifyContentMode(JustifyContentMode.END);
 
-        dialog.add(formLayout, new VerticalLayout(saveButton, cancelButton));
+        dialog.add(formLayout, layout);
         dialog.open();
     }
 

@@ -8,6 +8,7 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
@@ -25,6 +26,12 @@ public class HomeView extends Composite<VerticalLayout> {
         proyectos.getElement().setAttribute("aria-label", "Proyectos");
 
         getContent().add(proyectos);
+
+        Div cartera = common.createSquare("Cartera", VaadinIcon.CLIPBOARD);
+        cartera.getElement().setAttribute("aria-label", "Cartera");
+
+        getContent().add(cartera);
+
     }
 
 }
