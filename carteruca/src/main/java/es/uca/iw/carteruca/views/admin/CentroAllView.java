@@ -14,6 +14,7 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import es.uca.iw.carteruca.views.common.common;
+import es.uca.iw.carteruca.views.layout.MainLayout;
 import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ import com.vaadin.flow.component.UI;
 import java.util.List;
 
 @PageTitle("Centros")
-@Route("/centro") // Ruta para la página
+@Route(value = "/home-admin/centro", layout = MainLayout.class)
 @RolesAllowed("Admin")
 public class CentroAllView extends Composite<VerticalLayout> {
 

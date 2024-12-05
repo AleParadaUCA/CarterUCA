@@ -11,16 +11,18 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.auth.AnonymousAllowed;
 import es.uca.iw.carteruca.views.admin.CentroAllView;
 import es.uca.iw.carteruca.views.admin.UsuarioAllView;
+import es.uca.iw.carteruca.views.cartera.CarteraAllView;
 import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import es.uca.iw.carteruca.views.common.common;
 
 @Route("/home-admin")
 @PageTitle("Home")
-//@RolesAllowed("Admin")
-@PermitAll
+@RolesAllowed("Admin")
+
 public class HomeAdminView extends Composite<VerticalLayout> {
 
     public HomeAdminView() {
@@ -37,6 +39,11 @@ public class HomeAdminView extends Composite<VerticalLayout> {
 
         getContent().add(centro);
 
+        Div cartera = common.createSquare("Cartera", VaadinIcon.CLIPBOARD);
+
+        cartera.addClickListener(e -> UI.getCurrent().navigate(CarteraAllView.class));
+
+        getContent().add(cartera);
     }
 
 }

@@ -48,10 +48,10 @@ public class Cartera {
     public LocalDateTime getFecha_fin() {return fechaFin;}
     public void setFecha_fin(LocalDateTime fechaFin) {this.fechaFin = fechaFin;}
 
-    public LocalDateTime getFecha_apertura_solicitude() {return fecha_apertura_solicitud;}
+    public LocalDateTime getFecha_apertura_solicitud() {return fecha_apertura_solicitud;}
     public void setFecha_apertura_solicitud(LocalDateTime fecha_apertura_solicitud){this.fecha_apertura_solicitud = fecha_apertura_solicitud;}
 
-    public LocalDateTime getFecha_cierre_solicitude() {return fecha_cierre_solicitud;}
+    public LocalDateTime getFecha_cierre_solicitud  () {return fecha_cierre_solicitud;}
     public void setFecha_cierre_solicitud(LocalDateTime fecha_cierre_solicitud){this.fecha_cierre_solicitud = fecha_cierre_solicitud;}
 
 

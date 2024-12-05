@@ -63,7 +63,7 @@ public class common {
         composite.getContent().add(titulo);
     }
 
-    // Método estático para abrir el diálogo de crear/editar
+    // Método estático para abrir el diázlogo de crear/editar
     public static void openDialog(String title, String nombreCentro, String acronimoCentro, Centro centro, boolean isEdit,
                                   CentroService centroService, Runnable updateGrid) {
         Dialog dialog = new Dialog();
@@ -115,4 +115,6 @@ public class common {
         successNotification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
         successNotification.open();
     }
+
+
 }
