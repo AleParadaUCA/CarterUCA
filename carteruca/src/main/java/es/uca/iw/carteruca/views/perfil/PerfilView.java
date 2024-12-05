@@ -7,6 +7,7 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.html.H4;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -48,7 +49,7 @@ public class PerfilView extends Composite<VerticalLayout> {
 
         if (currentUser == null) {
             // Si no se encuentra un usuario, redirigir al login
-            getUI().ifPresent(ui -> ui.navigate("login"));
+            getUI().ifPresent(ui -> ui.navigate(""));
             Notification.show("Sesión expirada o no autenticado. Vuelve a iniciar sesión.", 3000, Notification.Position.MIDDLE);
             return; // No se debe cargar la vista si la sesión está expirada
         }
@@ -111,7 +112,7 @@ public class PerfilView extends Composite<VerticalLayout> {
 
         Button eliminar = new Button("Eliminar");
         eliminar.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-        //eliminar.addClickListener(e -> openEliminarDialog());
+        eliminar.addClickListener(e -> openEliminarDialog());
 
         Button modificar = new Button("Modificar");
         modificar.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
@@ -207,6 +208,56 @@ public class PerfilView extends Composite<VerticalLayout> {
         editDialog.add(dialogLayout);
         editDialog.open();
     }
+
+    private void openEliminarDialog() {
+        Dialog eliminarDialog = new Dialog();
+
+        // Título de la confirmación
+        H4 titulo = new H4("¿Estás seguro de querer eliminar la cuenta?");
+
+        // Botones de acción
+        Button eliminarButton = new Button("Eliminar");
+        eliminarButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
+        /*
+        eliminarButton.addClickListener(event -> {
+            // Llamar al servicio para eliminar el usuario
+            usuarioService.deleteUser(currentUser.getId());
+            common.showSuccessNotification("Tu cuenta ha sido eliminada correctamente.");
+
+            // Cerrar sesión y redirigir al inicio
+            getUI().ifPresent(ui -> {
+                ui.getSession().close();
+                ui.navigate("");  // Redirige al inicio
+            });
+
+            eliminarDialog.close();
+        });
+
+         */
+
+        Button volverButton = new Button("Volver");
+        volverButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        volverButton.addClickListener(event -> eliminarDialog.close());
+
+        // Crear un HorizontalLayout para los botones
+        HorizontalLayout buttonLayout = new HorizontalLayout(eliminarButton, volverButton);
+        buttonLayout.setSpacing(true); // Para un espacio entre los botones
+        buttonLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER); // Centra los botones
+        buttonLayout.setAlignItems(FlexComponent.Alignment.CENTER);
+
+        // Agregar el título y los botones al Dialog
+        VerticalLayout dialogContent = new VerticalLayout(titulo, buttonLayout);
+        dialogContent.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
+        dialogContent.setSpacing(true);
+        eliminarDialog.add(dialogContent);
+
+        // Abrir el diálogo
+        eliminarDialog.open();
+    }
+
+
+
+
 }
 
 
