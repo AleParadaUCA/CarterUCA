@@ -140,6 +140,9 @@ public class Header extends Composite<VerticalLayout> {
             }
         }
 
+        menuBar.addItem("Cartera", e -> UI.getCurrent().navigate("/cartera"))
+                .getElement().getClassList().add("menu-item");
+
         return menuBar;
     }
 
