@@ -58,7 +58,7 @@ public class UsuarioService implements UserDetailsService {
         }
 
         // Comprobar si el usuario ya existe
-            if (repository.existsByUsuario(username)) {
+        if (repository.existsByUsuario(username)) {
             return ("El nombre de usuario ya está en uso.");
         }
 
@@ -76,13 +76,10 @@ public class UsuarioService implements UserDetailsService {
         nuevoUsuario.setPassword(passwordEncoder.encode(password));
         nuevoUsuario.setCentro(centro);
 
-        try {
-            repository.save(nuevoUsuario);
-//            emailService.sendRegistrationEmail(nuevoUsuario); //futuro
-            return "Exito";
-        } catch (DataIntegrityViolationException e) {
-            return "Error";
-        }
+        repository.save(nuevoUsuario);
+//      emailService.sendRegistrationEmail(nuevoUsuario); //futuro
+        return "Exito";
+
     }
 
     @Override
