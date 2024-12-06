@@ -22,4 +22,6 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long>, JpaSpec
     boolean existsByEmail(String email);
 
     void deleteByEmail(String email);//Elimina un usuario dado un email
+
+    List<Usuario> findByRolNot(Rol rol); // Buscar todos los usuarios excepto los de un tipo de rol concreto
 }

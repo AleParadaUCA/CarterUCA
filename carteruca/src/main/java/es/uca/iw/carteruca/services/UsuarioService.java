@@ -166,6 +166,25 @@ public class UsuarioService implements UserDetailsService {
         }
     }
 
+    public List<Usuario> findAllUsuariosExcludingAdmin(){
+        return repository.findByRolNot(Rol.Admin);
+    }
+
+    @Transactional
+    public Usuario updateUsuarioRol(Long userId, Rol rol){
+        Usuario usuario = repository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado."));
+        usuario.setRol(rol);
+        return repository.save(usuario);
+    }
+
+    public List<Rol> getRolesExcludingAdmin() {
+        return List.of(Rol.values()).stream()
+                .filter(rol -> rol != Rol.Admin) // Excluir Admin
+                .toList();
+    }
+
+
 
 
 }
