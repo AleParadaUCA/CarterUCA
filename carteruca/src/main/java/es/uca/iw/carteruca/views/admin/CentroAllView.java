@@ -1,6 +1,7 @@
 package es.uca.iw.carteruca.views.admin;
 
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import es.uca.iw.carteruca.models.usuario.Centro;
 import es.uca.iw.carteruca.services.CentroService;
@@ -48,11 +49,16 @@ public class CentroAllView extends Composite<VerticalLayout> {
         Button add_button = add_boton();  // Botón para agregar un nuevo centro
         Button volver_boton = addVolverButton(); // Botón de volver
 
-        layout.add(tabla_centros, add_button, volver_boton);  // Agregar los botones y la tabla al layout
+        HorizontalLayout volver = new HorizontalLayout(volver_boton);
+        volver.setWidthFull(); // Para que ocupe todo el ancho
+        volver.setJustifyContentMode(FlexComponent.JustifyContentMode.END); // Alinear a la izquierda
+        layout.add(volver, tabla_centros, add_button);  // Agregar los botones y la tabla al layout
         layout.setSpacing(true);
 
         getContent().add(layout);
+        getContent().add(volver);
     }
+
 
     private void configurar_tabla() {
         tabla_centros.removeAllColumns();
@@ -90,9 +96,10 @@ public class CentroAllView extends Composite<VerticalLayout> {
     }
 
     private Button addVolverButton() {
+
         Button volver = new Button("Volver", event -> {
             // Redirigir al usuario a la vista HomeAdminView
-            UI.getCurrent().navigate("HomeAdminView.class");
+            UI.getCurrent().navigate("/home-admin");
         });
         volver.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         volver.getElement().setAttribute("aria-label", "Volver");
