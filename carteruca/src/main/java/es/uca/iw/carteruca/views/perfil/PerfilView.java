@@ -31,6 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class PerfilView extends Composite<VerticalLayout> {
 
     private final UsuarioService usuarioService;
+    private AuthenticatedUser authenticatedUser;
     private Usuario currentUser;
 
     // Campos de la vista principal
@@ -43,6 +44,7 @@ public class PerfilView extends Composite<VerticalLayout> {
     @Autowired
     public PerfilView(AuthenticatedUser authenticatedUser, UsuarioService usuarioService) {
         this.usuarioService = usuarioService;
+        this.authenticatedUser = authenticatedUser;
 
         // Obtener el usuario actual de la sesión
         this.currentUser = authenticatedUser.get().get();
@@ -218,22 +220,16 @@ public class PerfilView extends Composite<VerticalLayout> {
         // Botones de acción
         Button eliminarButton = new Button("Eliminar");
         eliminarButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
-        /*
         eliminarButton.addClickListener(event -> {
             // Llamar al servicio para eliminar el usuario
             usuarioService.deleteUser(currentUser.getId());
             common.showSuccessNotification("Tu cuenta ha sido eliminada correctamente.");
 
-            // Cerrar sesión y redirigir al inicio
-            getUI().ifPresent(ui -> {
-                ui.getSession().close();
-                ui.navigate("");  // Redirige al inicio
-            });
+            authenticatedUser.logout();
 
             eliminarDialog.close();
         });
 
-         */
 
         Button volverButton = new Button("Volver");
         volverButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
