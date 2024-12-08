@@ -6,7 +6,8 @@ import com.vaadin.flow.component.avatar.Avatar;
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.contextmenu.SubMenu;
 import com.vaadin.flow.component.html.Anchor;
-import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.menubar.MenuBar;
@@ -44,14 +45,23 @@ public class Header extends Composite<VerticalLayout> {
     }
 
     private Anchor createLogo() {
-        Image logoImage = new Image("layout/Universidad_de_cadiz_2.0.png", "Foto UCA");
-        logoImage.getStyle()
-                .set("max-width", "75%")
-                .set("height", "auto")
-                .set("margin-right", "auto");
 
-        return new Anchor("https://www.uca.es", logoImage);
-    }
+    // Enlace principal con clase personalizada
+    Anchor link = new Anchor("https://www.uca.es/", "Universidad");
+    link.addClassName("header-brand-link");
+
+    // Subtítulo
+    Span smallText = new Span("de");
+    smallText.addClassName("header-brand-small");
+
+    // Texto final
+    Span finalText = new Span("Cádiz");
+
+    // Añadir spans al enlace
+    link.add(smallText, finalText);
+
+    return link;
+}
 
     private HorizontalLayout createIconsLayout() {
         HorizontalLayout iconsLayout = new HorizontalLayout();
@@ -64,6 +74,13 @@ public class Header extends Composite<VerticalLayout> {
         iconsLayout.add(languageIcon);
 
         if (authenticatedUser.get().isPresent()) {
+            //icono de notifcaciones
+            Icon bellIcon = new Icon(VaadinIcon.BELL);
+            bellIcon.setClassName("icon-button");
+            bellIcon.getStyle().set("margin-left", "10px");
+            bellIcon.addClickListener(e -> UI.getCurrent().navigate("/notificaciones"));
+            iconsLayout.add(bellIcon);
+
             // Obtén el usuario autenticado
             String userName = authenticatedUser.get().get().getNombre();
             String userSurname = authenticatedUser.get().get().getApellidos();

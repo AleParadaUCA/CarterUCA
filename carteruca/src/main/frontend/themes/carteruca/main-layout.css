@@ -1,9 +1,31 @@
-/* headder */
+/** headder **/
 .header {
   background-color: var(--lumo-primary-color);
   color: white;
   padding: 10px;
+  display: flex;
+  flex-direction: column;
 }
+/* Logo Responsiveness */
+.header-brand-small {
+  font-size: 0.65em;
+
+}
+
+.header-brand-link {
+  color: white;
+  font-size: 3vw;
+  text-decoration: none;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  flex-wrap: wrap; /* Ajusta el texto si el espacio es limitado */
+}
+
+.header-brand-link:hover {
+  text-decoration: none;
+}
+
 
 .menu-item{
   color: var(--lumo-primary-color);
