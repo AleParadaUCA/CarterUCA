@@ -4,6 +4,7 @@ import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
@@ -20,95 +21,118 @@ import es.uca.iw.carteruca.views.home.HomeAdminView;
 import es.uca.iw.carteruca.views.common.common;
 import es.uca.iw.carteruca.views.layout.MainLayout;
 import jakarta.annotation.security.RolesAllowed;
+import es.uca.iw.carteruca.services.UsuarioService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @PageTitle("Usuarios")
-@Route(value = "/usuario", layout = MainLayout.class)
+@Route(value = "/home-admin/usuario", layout = MainLayout.class)
 @RolesAllowed("Admin")
 public class UsuarioAllView extends Composite<VerticalLayout> {
 
-    private Grid<Usuario> tabla_usuarios = new Grid<>(Usuario.class);
-    private List<Usuario> usuarios = new ArrayList<>(); // Lista de usuarios
+    private final Grid<Usuario> tablaUsuarios = new Grid<>(Usuario.class);
+    private final UsuarioService usuarioService;
 
-    public UsuarioAllView() {
-        common.creartitulo("Usuarios",this);
-        configurarGrid(); // Configuración de la tabla
-        getContent().add(tabla_usuarios); // Mostrar la tabla
-        addBotones(); // Crear los botones
+    public UsuarioAllView(UsuarioService usuarioService) {
+        this.usuarioService = usuarioService;
+        configurarVista();
+    }
+
+    private void configurarVista() {
+        // Configurar el título
+        common.creartitulo("Usuarios", this);
+
+        // Configurar la tabla
+        configurarGrid();
+
+        // Añadir componentes al layout
+        getContent().add(tablaUsuarios);
+
+        addBotones();
     }
 
     private void configurarGrid() {
-        // Configurar la tabla (Grid)
-        tabla_usuarios.removeAllColumns(); // Limpiar las columnas previas
-        tabla_usuarios.addColumn(Usuario::getUsername).setHeader("Usuario").setSortable(true); // Columna de Usuario
-        tabla_usuarios.addColumn(Usuario::getNombre).setHeader("Nombre").setSortable(true); // Columna de Nombre
-        tabla_usuarios.addColumn(Usuario::getEmail).setHeader("Email").setSortable(true); // Columna de Email
+        tablaUsuarios.removeAllColumns();
 
-        // Columna para editar el rol
-        tabla_usuarios.addComponentColumn(usuario -> {
+        // Añadir columnas
+        tablaUsuarios.addColumn(Usuario::getUsername).setHeader("Usuario").setSortable(true);
+        tablaUsuarios.addColumn(Usuario::getNombre).setHeader("Nombre").setSortable(true);
+        tablaUsuarios.addColumn(Usuario::getEmail).setHeader("Email").setSortable(true);
+
+        // Columna para cambiar el rol
+        tablaUsuarios.addComponentColumn(usuario -> {
             Select<Rol> rolSelect = new Select<>();
-            rolSelect.setLabel("Rol");
-            rolSelect.setItems(getRolesExcludingAdmin()); // Mostrar todos los roles excepto Admin
-            rolSelect.setValue(usuario.getRol()); // Establecer el rol actual
+            rolSelect.setItems(usuarioService.getRolesExcludingAdmin());
+            rolSelect.setValue(usuario.getRol());
             rolSelect.addValueChangeListener(event -> {
-                usuario.setRol(event.getValue());
-                updateGrid(); // Actualizar la tabla con el nuevo rol
-                showSuccessNotification("Rol cambiado con éxito");
+                Rol nuevoRol = event.getValue();
+                if (nuevoRol != null) {
+                    mostrarDialogoConfirmacion(usuario, nuevoRol);
+                }
             });
-            rolSelect.getElement().setAttribute("aria-label", "Seleccionar rol para " + usuario.getUsername());
-
-            return rolSelect; // Retornar el selector de roles
+            return rolSelect;
         }).setHeader("Rol");
 
-        // Añadir los usuarios al grid
-        tabla_usuarios.setItems(usuarios); // Aquí se asignan los usuarios para ser mostrados
-        tabla_usuarios.getElement().setAttribute("aria-label", "Tabla de usuarios"); // Atributo aria-label para la tabla
+        // Filtrar usuarios con roles distintos a Admin
+        List<Usuario> usuarios = usuarioService.findAllUsuariosExcludingAdmin();
+        tablaUsuarios.setItems(usuarios);
     }
 
-    private void updateGrid() {
+    private void mostrarDialogoConfirmacion(Usuario usuario, Rol nuevoRol) {
+        Dialog dialogo = new Dialog();
 
-        tabla_usuarios.setItems(usuarios); // Actualizar la tabla con los usuarios
+        // Texto de confirmación
+        VerticalLayout contenido = new VerticalLayout();
+        contenido.add("¿Estás seguro de que deseas cambiar el rol del usuario " + usuario.getUsername() + " a " + nuevoRol + "?");
+
+        // Botones de acción
+        Button botonSi = new Button("Sí", e -> {
+            usuarioService.updateUsuarioRol(usuario.getId(), nuevoRol); // Actualizar rol
+            dialogo.close();
+            Notification.show("Rol actualizado con éxito.", 2000, Notification.Position.MIDDLE)
+                    .addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+            recargarTabla(); // Actualizar la tabla
+        });
+
+        Button botonNo = new Button("No", e -> dialogo.close());
+
+        // Estilo de los botones
+        botonSi.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        botonNo.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+
+        HorizontalLayout botones = new HorizontalLayout(botonSi, botonNo);
+        contenido.add(botones);
+        contenido.setAlignItems(FlexComponent.Alignment.CENTER);
+
+        dialogo.add(contenido);
+        dialogo.open();
     }
 
-    private void showSuccessNotification(String mensaje) {
-        // Notificación de éxito en verde
-        Notification exito_notificacion = new Notification(mensaje, 2000, Notification.Position.MIDDLE);
-        exito_notificacion.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
-        exito_notificacion.open();
+    private void recargarTabla() {
+        List<Usuario> usuarios = usuarioService.findAllUsuariosExcludingAdmin();
+        tablaUsuarios.setItems(usuarios);
     }
 
-    // Método para obtener los roles excluyendo Admin
-    private List<Rol> getRolesExcludingAdmin() {
-        List<Rol> roles = new ArrayList<>();
-        for (Rol rol : Rol.values()) {
-            if (rol != Rol.Admin) {
-                roles.add(rol); // Agregar todos los roles excepto Admin
-            }
-        }
-        return roles;
-    }
 
     private void addBotones() {
-        // Botón "Volver" redirigiendo a HomeAdminView
-        RouterLink link_volver = new RouterLink();
-        Button volver = new Button("Volver");
-        volver.addClickListener(e -> UI.getCurrent().navigate(HomeAdminView.class));
-        volver.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        link_volver.add(volver);
-        volver.getElement().setAttribute("aria-label", "Volver");
+            // Botón "Volver" redirigiendo a HomeAdminView
+            RouterLink link_volver = new RouterLink();
+            Button volver = new Button("Volver");
+            volver.addClickListener(e -> UI.getCurrent().navigate(HomeAdminView.class));
+            volver.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+            link_volver.add(volver);
+            volver.getElement().setAttribute("aria-label", "Volver");
 
-        link_volver.getElement().getStyle().set("margin-top", "8px");
-        link_volver.getElement().getStyle().set("text-decoration", "none");
+            link_volver.getElement().getStyle().set("margin-top", "8px");
+            link_volver.getElement().getStyle().set("text-decoration", "none");
 
-        // Layout para el botón de "Volver"
-        HorizontalLayout botones = new HorizontalLayout(link_volver);
-        botones.setWidthFull(); // Usar todo el ancho disponible
-        botones.setJustifyContentMode(FlexComponent.JustifyContentMode.END); // Alinear el botón al final
+            // Layout para el botón de "Volver"
+            HorizontalLayout botones = new HorizontalLayout(link_volver);
+            botones.setWidthFull(); // Usar todo el ancho disponible
+            botones.setJustifyContentMode(FlexComponent.JustifyContentMode.END); // Alinear el botón al final
 
-        // Añadir el botón al contenido
-        getContent().add(botones);
+            // Añadir el botón al contenido
+            getContent().add(botones);
     }
 }
 

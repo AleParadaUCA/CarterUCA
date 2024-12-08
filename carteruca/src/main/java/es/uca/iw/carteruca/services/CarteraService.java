@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,6 +46,27 @@ public class CarteraService {
         if(cartera.getFecha_cierre_solicitud() == null){
             throw new IllegalArgumentException("La fecha de cierre de envio de solicitudes es obligatorio");
         }
+
+        if(cartera.getFecha_apertura_evaluacion() == null){
+            throw new IllegalArgumentException("La fecha apertura evaluacion es obligatorio");
+        }
+
+        if(cartera.getFecha_cierre_evaluacion() == null){
+            throw new IllegalArgumentException("La fecha cierre evaluacion es obligatorio");
+        }
+
+        if(cartera.getN_max_tecnicos() <= 0) {
+            throw new IllegalArgumentException("El número de técnicos de la cartera es obligatorio y debe ser mayor que 0");
+        }
+
+        if(cartera.getPresupuesto_total() <= 0.0){
+            throw new IllegalArgumentException("El presupuesto es obligatirio ");
+        }
+
+        if(cartera.getN_horas() <= 0.0){
+            throw new IllegalArgumentException("El numero de horas es oblgatorio");
+        }
+
         logger.info("Nueva cartera agregada exitosamente: {}", cartera.getNombre());
         return carteraRepository.save(cartera);
     }
@@ -77,6 +99,31 @@ public class CarteraService {
             logger.info("Fecha de cierre de solicitudes actualizada a: {}", cartera.getFecha_cierre_solicitud());
         }
 
+        if(cartera.getFecha_apertura_evaluacion() == null){
+            cartera.setFecha_apertura_evaluacion(cartera.getFecha_apertura_evaluacion());
+            logger.info("La fecha apertura evaluacion es obligatorio a: {}", cartera.getFecha_apertura_evaluacion());
+        }
+
+        if(cartera.getFecha_cierre_evaluacion() == null){
+            cartera.setFecha_cierre_evaluacion(cartera.getFecha_cierre_evaluacion());
+            logger.info("La fecha apertura evaluacion es obligatorio a: {}", cartera.getFecha_cierre_evaluacion());
+        }
+
+        if(cartera.getN_max_tecnicos() <= 0) {
+            cartera.setN_max_tecnicos(cartera.getN_max_tecnicos());
+            logger.info("El número de técnicos ha sido actualizado a: {}", cartera.getN_max_tecnicos());
+        }
+
+        if(cartera.getPresupuesto_total() <= 0.0){
+            cartera.setPresupuesto_total(cartera.getPresupuesto_total());
+            logger.info("El presupuesto ha sido actualizado a: {}", cartera.getPresupuesto_total());
+        }
+
+        if(cartera.getN_horas() <= 0.0){
+            cartera.setN_horas(cartera.getN_horas());
+            logger.info("El numero de horas ha sido actualizado a: {}", cartera.getN_horas());
+        }
+
         // Guardar y devolver la cartera actualizada
         Cartera updatedCartera = carteraRepository.save(cartera);
         logger.info("Cartera actualizada exitosamente: {}", updatedCartera);
@@ -94,6 +141,8 @@ public class CarteraService {
         }
     }
 
-
-
+    public Optional<Cartera> getCarteraActual() {
+        LocalDateTime now = LocalDateTime.now();
+        return carteraRepository.findByFechaInicioLessThanEqualAndFechaFinGreaterThanEqual(now, now);
+    }
 }

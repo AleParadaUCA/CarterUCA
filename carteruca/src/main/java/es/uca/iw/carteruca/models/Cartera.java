@@ -35,6 +35,24 @@ public class Cartera {
     @Column(nullable = false)
     private LocalDateTime fecha_cierre_solicitud;
 
+    @Column(nullable = false)
+    private LocalDateTime fecha_apertura_evaluacion;
+
+    @Column(nullable = false)
+    private LocalDateTime fecha_cierre_evaluacion;
+
+    @Column(nullable = false)
+    float n_horas;
+
+    @Column(nullable = false)
+    int n_max_tecnicos;
+
+    @Column(nullable = false)
+    float presupuesto_total;
+
+
+
+
 
 //GETTERS Y SETTERS
     public Long getId() {return id;}
@@ -54,5 +72,36 @@ public class Cartera {
     public LocalDateTime getFecha_cierre_solicitud  () {return fecha_cierre_solicitud;}
     public void setFecha_cierre_solicitud(LocalDateTime fecha_cierre_solicitud){this.fecha_cierre_solicitud = fecha_cierre_solicitud;}
 
+    public float getN_horas() {return n_horas;}
+    public int getN_max_tecnicos() {return n_max_tecnicos;}
+    public float getPresupuesto_total() {return presupuesto_total;}
+
+    public LocalDateTime getFecha_apertura_evaluacion() {
+        return fecha_apertura_evaluacion;
+    }
+
+    public void setFecha_apertura_evaluacion(LocalDateTime fecha_apertura_evaluacion) {
+        this.fecha_apertura_evaluacion = fecha_apertura_evaluacion;
+    }
+
+    public LocalDateTime getFecha_cierre_evaluacion() {
+        return fecha_cierre_evaluacion;
+    }
+
+    public void setFecha_cierre_evaluacion(LocalDateTime fecha_cierre_evaluacion) {
+        this.fecha_cierre_evaluacion = fecha_cierre_evaluacion;
+    }
+
+    public void setN_horas(float n_horas) {
+        this.n_horas = n_horas;
+    }
+
+    public void setN_max_tecnicos (int n_max_tecnicos) {
+        this.n_max_tecnicos = n_max_tecnicos;
+    }
+
+    public void setPresupuesto_total(float presupuesto_total) {
+        this.presupuesto_total = presupuesto_total;
+    }
 
 }

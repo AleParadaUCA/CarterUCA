@@ -9,7 +9,7 @@ import org.checkerframework.common.aliasing.qual.Unique;
 public class Centro {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)

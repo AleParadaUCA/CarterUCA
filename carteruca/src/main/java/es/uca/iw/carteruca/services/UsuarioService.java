@@ -58,7 +58,7 @@ public class UsuarioService implements UserDetailsService {
         }
 
         // Comprobar si el usuario ya existe
-            if (repository.existsByUsuario(username)) {
+        if (repository.existsByUsuario(username)) {
             return ("El nombre de usuario ya está en uso.");
         }
 
@@ -76,13 +76,10 @@ public class UsuarioService implements UserDetailsService {
         nuevoUsuario.setPassword(passwordEncoder.encode(password));
         nuevoUsuario.setCentro(centro);
 
-        try {
-            repository.save(nuevoUsuario);
-//            emailService.sendRegistrationEmail(nuevoUsuario); //futuro
-            return "Exito";
-        } catch (DataIntegrityViolationException e) {
-            return "Error";
-        }
+        repository.save(nuevoUsuario);
+//      emailService.sendRegistrationEmail(nuevoUsuario); //futuro
+        return "Exito";
+
     }
 
     @Override
@@ -126,4 +123,65 @@ public class UsuarioService implements UserDetailsService {
     public void deleteUser(Long id) {
         repository.deleteById(id);
     }
+
+    @Transactional
+    public String updateUser(Long id, String nombre, String apellidos, String email) {
+        Optional<Usuario> userOptional = repository.findById(id);
+        if (userOptional.isEmpty()) {
+            System.out.println("Usuario no encontrado.");
+            return "Usuario no encontrado.";
+        }
+
+        Usuario usuario = userOptional.get();
+
+        if (!StringUtils.hasText(nombre) || !StringUtils.hasText(apellidos) || !StringUtils.hasText(email)) {
+            System.out.println("Faltan campos obligatorios.");
+            return "Todos los campos son obligatorios.";
+        }
+
+        if (!EMAIL_PATTERN.matcher(email).matches()) {
+            System.out.println("Correo no válido.");
+            return "El correo no es válido.";
+        }
+
+        if (!usuario.getEmail().equals(email) && repository.existsByEmail(email)) {
+            System.out.println("Correo ya está en uso.");
+            return "El correo ya está en uso.";
+        }
+
+        usuario.setNombre(nombre);
+        usuario.setApellidos(apellidos);
+        usuario.setEmail(email);
+
+        try {
+            repository.save(usuario);
+            System.out.println("Usuario actualizado correctamente.");
+            return "Usuario actualizado correctamente.";
+        } catch (DataIntegrityViolationException e) {
+            System.out.println("Error al guardar: " + e.getMessage());
+            return "Error al actualizar el usuario.";
+        }
+    }
+
+    public List<Usuario> findAllUsuariosExcludingAdmin(){
+        return repository.findByRolNot(Rol.Admin);
+    }
+
+    @Transactional
+    public Usuario updateUsuarioRol(Long userId, Rol rol){
+        Usuario usuario = repository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado."));
+        usuario.setRol(rol);
+        return repository.save(usuario);
+    }
+
+    public List<Rol> getRolesExcludingAdmin() {
+        return List.of(Rol.values()).stream()
+                .filter(rol -> rol != Rol.Admin) // Excluir Admin
+                .toList();
+    }
+
+
+
+
 }

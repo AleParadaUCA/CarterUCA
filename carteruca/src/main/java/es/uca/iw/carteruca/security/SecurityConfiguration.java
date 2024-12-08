@@ -37,8 +37,7 @@ public class SecurityConfiguration extends VaadinWebSecurity {
                         redirectUrl = "/home-admin";
                     }
 
-//                    authentication.getAuthorities().forEach(auth ->
-//                            System.out.println("Authority: " + auth.getAuthority())
+//                    authentication.getAuthorities().forEach(auth ->  System.out.println("Authority: " + auth.getAuthority())
 //                    ); //ver mi rol
                     response.sendRedirect(redirectUrl);
                 })

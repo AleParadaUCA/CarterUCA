@@ -1,109 +1,76 @@
 package es.uca.iw.carteruca.views.login;
 
-//import es.uca.iw.carteruca.security.AuthenticatedUser;
-//// import es.uca.iw.carteruca.views.home.HomeRegistradoView;
-//// import es.uca.iw.carteruca.views.registro.RegistroView;
-//// import com.vaadin.flow.component.UI;
-//// import com.vaadin.flow.component.button.Button;
-//import com.vaadin.flow.component.login.LoginForm;
-//import com.vaadin.flow.component.login.LoginI18n;
-//// import com.vaadin.flow.component.orderedlayout.FlexComponent;
-//// import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-//import com.vaadin.flow.component.login.LoginOverlay;
-//import com.vaadin.flow.router.BeforeEnterEvent;
-//import com.vaadin.flow.router.BeforeEnterObserver;
-//import com.vaadin.flow.router.internal.RouteUtil;
-//import com.vaadin.flow.server.VaadinService;
-//
-//import com.vaadin.flow.router.PageTitle;
-//import com.vaadin.flow.router.Route;
-//import com.vaadin.flow.server.auth.AnonymousAllowed;
-//@AnonymousAllowed
-//@PageTitle("Login")
-//@Route("/login")
-//
-//public class LoginView extends LoginOverlay implements BeforeEnterObserver {
-//
-//    private final AuthenticatedUser authenticatedUser;
-//    private LoginForm loginForm = new LoginForm();
-//
-//    public LoginView(AuthenticatedUser authenticatedUser) {
-//
-//        this.authenticatedUser = authenticatedUser;
-//        setAction(RouteUtil.getRoutePath(VaadinService.getCurrent().getContext(), getClass()));
-//        // Crear el formulario de login
-//
-//        // Configuración de traducciones para el formulario
-//        LoginI18n loginI18n = LoginI18n.createDefault();
-//        loginI18n.setHeader(new LoginI18n.Header());
-//        loginI18n.getHeader().setTitle("CarterUCA");
-//        setI18n(loginI18n);
-//        loginForm.setI18n(loginI18n);
-//
-//        setForgotPasswordButtonVisible(false);
-//        setOpened(true);
-//    }
-//
-//    @Override
-//    public void beforeEnter(BeforeEnterEvent event) {
-//        /*
-//
-//        //funcion no terminada
-//        if (authenticatedUser.get().isPresent()) {
-//            setOpened(false);
-//            event.forwardTo(HomeRegistradoView.class);
-//        }
-//
-//        setError(event.getLocation().getQueryParameters().getParameters().containsKey("error"));
-//        */
-//    }
-//
-//}
+import java.util.Optional;
 
-//login temporal
-
-import es.uca.iw.carteruca.models.Usuario;
-import es.uca.iw.carteruca.security.AuthenticatedUser;
+import com.vaadin.flow.component.Composite;
+import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.login.LoginForm;
 import com.vaadin.flow.component.login.LoginI18n;
-import com.vaadin.flow.component.login.LoginOverlay;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.router.internal.RouteUtil;
-import com.vaadin.flow.server.VaadinService;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 
-import java.util.Optional;
+import es.uca.iw.carteruca.models.usuario.Usuario;
+import es.uca.iw.carteruca.security.AuthenticatedUser;
+import es.uca.iw.carteruca.views.layout.MainLayout;
+import es.uca.iw.carteruca.views.registro.RegistroView;
 
 @AnonymousAllowed
 @PageTitle("Login")
-@Route(value = "login")
-public class LoginView extends LoginOverlay implements BeforeEnterObserver {
+@Route(value = "/login", layout = MainLayout.class)
+public class LoginView extends Composite<VerticalLayout> implements BeforeEnterObserver {
 
     private final AuthenticatedUser authenticatedUser;
+    private final LoginForm loginForm;
 
     public LoginView(AuthenticatedUser authenticatedUser) {
         this.authenticatedUser = authenticatedUser;
-        setAction(RouteUtil.getRoutePath(VaadinService.getCurrent().getContext(), getClass()));
 
-        LoginI18n i18n = LoginI18n.createDefault();
-        i18n.setHeader(new LoginI18n.Header());
-        i18n.getHeader().setTitle("Login");
-        i18n.getHeader().setDescription("Login using user/user or admin/admin");
-        i18n.setAdditionalInformation(null);
-        setI18n(i18n);
+        // Crear el formulario de login
+        loginForm = new LoginForm();
 
-        setForgotPasswordButtonVisible(false);
-        setOpened(true);
+        // Configurar el endpoint para las credenciales
+        loginForm.setAction("login");
 
-        getElement().setAttribute("aria-label", "Login");
+        // Configurar internacionalización
+        LoginI18n loginI18n = LoginI18n.createDefault();
+        loginI18n.getForm().setTitle("Iniciar sesión");
+        loginI18n.getForm().setUsername("Usuario");
+        loginI18n.getForm().setPassword("Contraseña");
+        loginI18n.getForm().setSubmit("Iniciar sesión");
+        loginI18n.getForm().setForgotPassword("¿Olvidó su contraseña?");
+        loginForm.setI18n(loginI18n);
+
+        // Diseño principal
+        VerticalLayout layout = new VerticalLayout(loginForm);
+        layout.setAlignItems(FlexComponent.Alignment.CENTER);
+
+        // Botón adicional (registrarse)
+        Button registroButton = new Button("Registrarse", e -> UI.getCurrent().navigate(RegistroView.class));
+        HorizontalLayout botonLayout = new HorizontalLayout(registroButton);
+        botonLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
+        botonLayout.setWidthFull();
+
+        // Añadir componentes al contenido principal
+        getContent().add(layout, botonLayout);
+        getContent().setSpacing(true);
     }
 
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
+        if (event.getLocation().getQueryParameters().getParameters().containsKey("error")) {
+            loginForm.setError(true); // Muestra mensaje de error si la autenticación falla
+        }
+
         Optional<Usuario> optionalUser = authenticatedUser.get();
+        if (optionalUser.isPresent()) {
+            event.forwardTo("home");
+        }
     }
-
 }
-

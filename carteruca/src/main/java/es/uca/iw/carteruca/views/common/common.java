@@ -121,4 +121,13 @@ public class common {
         errorNotification.open();
     }
 
+    public static String getColorFromName(String name) {
+        // Generar un valor de color hexadecimal basado en el hash del nombre
+        int hash = name.hashCode();
+        int r = (hash & 0xFF0000) >> 16;
+        int g = (hash & 0x00FF00) >> 8;
+        int b = hash & 0x0000FF;
+        return String.format("#%02X%02X%02X", r, g, b);
+    }
+
 }
