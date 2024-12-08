@@ -1,11 +1,9 @@
 package es.uca.iw.carteruca.repository;
 
-import es.uca.iw.carteruca.models.solicitud.Solicitud;
+import es.uca.iw.carteruca.models.Solicitud;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 import java.time.LocalDateTime;
-import org.springframework.data.jpa.repository.JpaRepository;
-import es.uca.iw.carteruca.models.solicitud.Solicitud;
 
 public interface SolicitudRepository extends JpaRepository<Solicitud, Long> {
 

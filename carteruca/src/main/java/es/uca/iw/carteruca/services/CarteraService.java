@@ -1,6 +1,6 @@
 package es.uca.iw.carteruca.services;
 
-import es.uca.iw.carteruca.models.cartera.Cartera;
+import es.uca.iw.carteruca.models.Cartera;
 import es.uca.iw.carteruca.repository.CarteraRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

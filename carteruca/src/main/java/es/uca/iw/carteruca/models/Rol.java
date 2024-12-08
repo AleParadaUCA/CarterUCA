@@ -1,4 +1,4 @@
-package es.uca.iw.carteruca.models.usuario;
+package es.uca.iw.carteruca.models;
 
 public enum Rol {
     CIO,

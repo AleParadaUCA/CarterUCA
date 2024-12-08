@@ -1,4 +1,4 @@
-package es.uca.iw.carteruca.models.cartera;
+package es.uca.iw.carteruca.models;
 
 import java.time.LocalDateTime;
 

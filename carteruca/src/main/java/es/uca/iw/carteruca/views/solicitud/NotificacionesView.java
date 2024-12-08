@@ -10,11 +10,8 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import es.uca.iw.carteruca.models.solicitud.Solicitud;
-import es.uca.iw.carteruca.views.home.HomeSolicitanteView;
+import es.uca.iw.carteruca.models.Solicitud;
 import jakarta.annotation.security.RolesAllowed;
-
-import java.util.List;
 
 @PageTitle("Notificaciones")
 @Route("/notificaciones")

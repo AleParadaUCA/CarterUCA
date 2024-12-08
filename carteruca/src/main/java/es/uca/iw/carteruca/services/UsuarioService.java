@@ -19,9 +19,9 @@ import org.springframework.util.StringUtils;
 
 import com.vaadin.hilla.ExplicitNullableTypeChecker;
 
-import es.uca.iw.carteruca.models.usuario.Centro;
-import es.uca.iw.carteruca.models.usuario.Rol;
-import es.uca.iw.carteruca.models.usuario.Usuario;
+import es.uca.iw.carteruca.models.Centro;
+import es.uca.iw.carteruca.models.Rol;
+import es.uca.iw.carteruca.models.Usuario;
 import es.uca.iw.carteruca.repository.UsuarioRepository;
 
 @Service

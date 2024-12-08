@@ -1,7 +1,5 @@
-package es.uca.iw.carteruca.models.solicitud;
+package es.uca.iw.carteruca.models;
 
-import es.uca.iw.carteruca.models.cartera.Cartera;
-import es.uca.iw.carteruca.models.usuario.Usuario;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 

@@ -14,12 +14,11 @@ import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouterLink;
-import es.uca.iw.carteruca.models.usuario.Usuario;
-import es.uca.iw.carteruca.models.usuario.Rol;
+import es.uca.iw.carteruca.models.Usuario;
+import es.uca.iw.carteruca.models.Rol;
 import es.uca.iw.carteruca.views.home.HomeAdminView;
 import es.uca.iw.carteruca.views.common.common;
 import es.uca.iw.carteruca.views.layout.MainLayout;
-import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 
 import java.util.ArrayList;

@@ -1,6 +1,6 @@
 package es.uca.iw.carteruca.services;
 
-import es.uca.iw.carteruca.models.usuario.Centro;
+import es.uca.iw.carteruca.models.Centro;
 import es.uca.iw.carteruca.repository.CentroRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

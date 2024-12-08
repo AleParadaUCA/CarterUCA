@@ -1,4 +1,4 @@
-package es.uca.iw.carteruca.models.usuario;
+package es.uca.iw.carteruca.models;
 
 import java.util.Collections;
 import java.util.List;
@@ -8,7 +8,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import es.uca.iw.carteruca.models.solicitud.Solicitud;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

@@ -1,7 +1,7 @@
 package es.uca.iw.carteruca.repository;
 
-import es.uca.iw.carteruca.models.usuario.Rol;
-import es.uca.iw.carteruca.models.usuario.Usuario;
+import es.uca.iw.carteruca.models.Rol;
+import es.uca.iw.carteruca.models.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import java.util.List;

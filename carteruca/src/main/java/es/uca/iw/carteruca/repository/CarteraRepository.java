@@ -1,12 +1,8 @@
 package es.uca.iw.carteruca.repository;
 
-import es.uca.iw.carteruca.models.cartera.Cartera;
+import es.uca.iw.carteruca.models.Cartera;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.time.LocalDateTime;
-
-import org.springframework.data.jpa.repository.JpaRepository;
-
-import es.uca.iw.carteruca.models.cartera.Cartera;
 
 
 public interface CarteraRepository extends JpaRepository<Cartera, Long> {

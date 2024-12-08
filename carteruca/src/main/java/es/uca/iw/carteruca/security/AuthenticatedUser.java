@@ -2,7 +2,7 @@ package es.uca.iw.carteruca.security;
 
 import com.vaadin.flow.spring.security.AuthenticationContext;
 
-import es.uca.iw.carteruca.models.usuario.Usuario;
+import es.uca.iw.carteruca.models.Usuario;
 import es.uca.iw.carteruca.repository.UsuarioRepository;
 
 import org.springframework.security.core.userdetails.UserDetails;

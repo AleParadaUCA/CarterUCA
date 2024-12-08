@@ -14,7 +14,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 
-import es.uca.iw.carteruca.models.usuario.Rol;
+import es.uca.iw.carteruca.models.Rol;
 import es.uca.iw.carteruca.security.AuthenticatedUser;
 
 public class Header extends Composite<VerticalLayout> {

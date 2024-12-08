@@ -1,8 +1,7 @@
 package es.uca.iw.carteruca.views.admin;
 
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
-import com.vaadin.flow.server.auth.AnonymousAllowed;
-import es.uca.iw.carteruca.models.usuario.Centro;
+import es.uca.iw.carteruca.models.Centro;
 import es.uca.iw.carteruca.services.CentroService;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.button.Button;
@@ -15,7 +14,6 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import es.uca.iw.carteruca.views.common.common;
 import es.uca.iw.carteruca.views.layout.MainLayout;
-import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
 

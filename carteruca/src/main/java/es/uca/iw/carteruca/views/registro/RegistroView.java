@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Objects;
 
 import com.vaadin.flow.data.binder.BeanValidationBinder;
-import es.uca.iw.carteruca.models.usuario.Centro;
+import es.uca.iw.carteruca.models.Centro;
 
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.UI;
@@ -26,7 +26,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 
-import es.uca.iw.carteruca.models.usuario.Usuario;
+import es.uca.iw.carteruca.models.Usuario;
 import es.uca.iw.carteruca.services.UsuarioService;
 import es.uca.iw.carteruca.services.CentroService;
 import es.uca.iw.carteruca.views.common.common;

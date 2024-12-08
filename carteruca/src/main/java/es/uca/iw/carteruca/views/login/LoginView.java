@@ -62,9 +62,7 @@ package es.uca.iw.carteruca.views.login;
 
 //login temporal
 
-import com.vaadin.flow.component.UI;
-import es.uca.iw.carteruca.models.usuario.Rol;
-import es.uca.iw.carteruca.models.usuario.Usuario;
+import es.uca.iw.carteruca.models.Usuario;
 import es.uca.iw.carteruca.security.AuthenticatedUser;
 import com.vaadin.flow.component.login.LoginI18n;
 import com.vaadin.flow.component.login.LoginOverlay;
