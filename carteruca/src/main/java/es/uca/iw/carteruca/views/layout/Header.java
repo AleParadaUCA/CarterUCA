@@ -20,6 +20,8 @@ import es.uca.iw.carteruca.models.usuario.Rol;
 import es.uca.iw.carteruca.security.AuthenticatedUser;
 import es.uca.iw.carteruca.views.common.common;
 
+import com.vaadin.flow.component.dialog.Dialog;
+
 public class Header extends Composite<VerticalLayout> {
 
     private final AuthenticatedUser authenticatedUser;
@@ -139,12 +141,14 @@ public class Header extends Composite<VerticalLayout> {
         bottomLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.BETWEEN);
 
         bottomLayout.add(createMenuBar(), createSearchField());
+        bottomLayout.add(createMenuBarMovil(), createSearchFieldMovil());
         return bottomLayout;
     }
 
     private MenuBar createMenuBar() {
         MenuBar menuBar = new MenuBar();
         menuBar.addClassName("rounded-menu-bar");
+        menuBar.addClassName("full-menu");
 
         menuBar.addItem("Proyectos", e -> UI.getCurrent().navigate("/"))
                 .getElement().getClassList().add("menu-item");
@@ -166,11 +170,59 @@ public class Header extends Composite<VerticalLayout> {
         return menuBar;
     }
 
+    private HorizontalLayout createMenuBarMovil() {
+        HorizontalLayout menuLayout = new HorizontalLayout();
+        menuLayout.setSpacing(false);
+        menuLayout.setPadding(false);
+        menuLayout.addClassName("compact-menu");
+
+        // Crear el icono de "hamburguesa"
+        Icon menuIcon = VaadinIcon.MENU.create();
+        menuIcon.setClassName("menu-item");
+        menuIcon.getStyle()
+                .set("font-size", "24px")
+                .set("cursor", "pointer")
+                .set("color", "white");
+
+        // Crear el popup para el menú
+        Dialog menuDialog = new Dialog();
+        menuDialog.setWidth("80%");
+        menuDialog.setCloseOnOutsideClick(true);
+
+        // Crear el menú dentro del popup
+        VerticalLayout menuItemsLayout = new VerticalLayout();
+        menuItemsLayout.addClassName("menu-popup");
+
+        menuItemsLayout.add(new Anchor("/", "Proyectos"));
+        if (authenticatedUser.get().isPresent()) {
+            if (authenticatedUser.get().get().getRol() == Rol.Admin) {
+                menuItemsLayout.add(new Anchor("/home-admin", "Home-Admin"));
+            } else {
+                menuItemsLayout.add(new Anchor("/home", "Home"));
+            }
+        }
+        menuItemsLayout.add(new Anchor("/cartera", "Cartera"));
+
+        // Añadir los elementos al diálogo
+        menuDialog.add(menuItemsLayout);
+
+        // Abrir el popup al hacer clic en el icono
+        menuIcon.addClickListener(e -> menuDialog.open());
+
+        // Añadir el icono al layout
+        menuLayout.add(menuIcon);
+        menuLayout.add(menuDialog);
+
+        return menuLayout;
+    }
+
+
     private TextField createSearchField() {
         TextField searchField = new TextField();
         searchField.setPlaceholder("Buscar...");
         searchField.setWidth("20%");
         searchField.addClassName("search-color");
+        searchField.addClassName("full-menu");
 
         Icon searchIcon = VaadinIcon.SEARCH.create();
         searchIcon.addClassName("menu-item");
@@ -178,4 +230,43 @@ public class Header extends Composite<VerticalLayout> {
 
         return searchField;
     }
+
+    private HorizontalLayout createSearchFieldMovil() {
+        HorizontalLayout searchLayout = new HorizontalLayout();
+        searchLayout.setSpacing(false);
+        searchLayout.setPadding(false);
+        searchLayout.addClassName("compact-menu");
+
+        // Crear el icono de búsqueda
+        Icon searchIcon = VaadinIcon.SEARCH.create();
+        searchIcon.setClassName("menu-item");
+        searchIcon.getStyle()
+                .set("font-size", "24px")
+                .set("cursor", "pointer")
+                .set("color", "white");
+
+        // Crear el popup para la barra de búsqueda
+        Dialog searchDialog = new Dialog();
+        searchDialog.setWidth("80%");
+        searchDialog.setCloseOnOutsideClick(true);
+
+        // Crear el campo de búsqueda dentro del popup
+        TextField searchField = new TextField("Buscar");
+        searchField.setWidthFull();
+        searchField.setPlaceholder("Introduce tu búsqueda...");
+        searchField.addClassName("search-color");
+
+        // Añadir la barra de búsqueda al diálogo
+        searchDialog.add(searchField);
+
+        // Abrir el popup al hacer clic en el icono
+        searchIcon.addClickListener(e -> searchDialog.open());
+
+        // Añadir el icono al layout
+        searchLayout.add(searchIcon);
+        searchLayout.add(searchDialog);
+
+        return searchLayout;
+    }
+
 }

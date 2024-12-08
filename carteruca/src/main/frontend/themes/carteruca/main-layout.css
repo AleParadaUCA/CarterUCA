@@ -44,6 +44,34 @@
   margin-bottom: 5px;
 }
 
+@media (min-width: 601px) {
+  .full-menu {
+    display: flex;
+  }
+  .compact-menu {
+    display: none;
+  }
+}
+
+/* Estilos para pantallas pequeñas */
+@media (max-width: 600px) {
+  .full-menu {
+    display: none;
+  }
+  .compact-menu {
+    display: flex;
+  }
+}
+/* Estilo para el popup del menú */
+.menu-popup a {
+  display: block;
+  text-decoration: none;
+  color: var(--lumo-primary-color);
+  font-size: 1.2em;
+  padding: 10px 0;
+  text-align: center;
+}
+
 /* footer */
 .footer {
   background-color: var(--lumo-primary-color);
