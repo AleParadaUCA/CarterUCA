@@ -54,6 +54,12 @@ public class Solicitud {
     @Column
     @Enumerated(EnumType.STRING)
     private Estado estado;
+
+    @Column
+    private Float puntuacion; // este se debe calcular mediante los criterios
+
+    @Column
+    private Float porcentaje; // este campo mostrará el porcentaje de avance del proyecto que este en marcha.
     // *hasta aqui lo rellena CIO y OTP
 
     @ManyToOne
@@ -125,4 +131,9 @@ public class Solicitud {
         this.estado = estado;
     }
 
+    public Float getPuntuacion() {return puntuacion;}
+    public void setPuntuacion(Float puntuacion) {this.puntuacion = puntuacion;}
+
+    public Float getPorcentaje() {return porcentaje;}
+    public void setPorcentaje(Float porcentaje) {this.porcentaje = porcentaje;}
 }

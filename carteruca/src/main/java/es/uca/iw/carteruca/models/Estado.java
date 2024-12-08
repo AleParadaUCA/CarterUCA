@@ -5,5 +5,5 @@ public enum Estado {
     RECHAZADO,
     EN_TRAMITE,
     EN_TRAMITE_AVALADO,
-    TERMINADO
+    TERMINADO 
 }
