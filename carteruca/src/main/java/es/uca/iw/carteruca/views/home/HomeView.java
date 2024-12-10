@@ -26,11 +26,15 @@ public class HomeView extends Composite<VerticalLayout> {
         VerticalLayout container = new VerticalLayout();
         container.addClassName("responsive-container");
 
+        // Crear cuadros con funcionalidad de navegación
+        Div proyectos = common.createSquare("Proyectos", VaadinIcon.FILE_TEXT);
+        proyectos.addClickListener(event -> getUI().ifPresent(ui -> ui.navigate("proyectos")));
+
+        Div cartera = common.createSquare("Cartera", VaadinIcon.CLIPBOARD);
+        cartera.addClickListener(event -> getUI().ifPresent(ui -> ui.navigate("cartera")));
+
         // Agregar los cuadros al contenedor
-        container.add(
-                common.createSquare("Proyectos", VaadinIcon.FILE_TEXT),
-                common.createSquare("Cartera", VaadinIcon.CLIPBOARD)
-        );
+        container.add(proyectos, cartera);
 
         // Agregar el contenedor al contenido principal
         getContent().add(container);
