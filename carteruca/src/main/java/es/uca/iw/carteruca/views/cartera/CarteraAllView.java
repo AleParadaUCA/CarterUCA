@@ -29,8 +29,7 @@ import java.util.List;
 
 @PageTitle("Carteras")
 @Route(value = "/home-admin/cartera", layout = MainLayout.class)
-//@RolesAllowed({"Admin","CIO"})
-@AnonymousAllowed
+@RolesAllowed({"Admin","CIO"})
 public class CarteraAllView extends VerticalLayout {
 
     @Autowired
