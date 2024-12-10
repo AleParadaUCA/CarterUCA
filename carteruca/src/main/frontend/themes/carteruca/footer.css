@@ -1,0 +1,29 @@
+.footer {
+    background-color: var(--lumo-primary-color);
+    color: white;
+    padding: 10px;
+    width: 100%;
+    text-align: center;
+    flex-wrap: wrap;
+}
+
+.column {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+}
+
+.column.extra {
+    font-size: 0.85rem;
+    flex-direction: column;
+    padding: 10px;
+}
+
+.column.border-right {
+    border-right: 2px solid white;
+}
+
+.column.width-20 {
+    width: 20%;
+}
