@@ -22,19 +22,17 @@ import es.uca.iw.carteruca.views.common.common;
 @AnonymousAllowed
 public class HomeView extends Composite<VerticalLayout> {
 
-    public HomeView(){
+    public HomeView() {
+        VerticalLayout container = new VerticalLayout();
+        container.addClassName("responsive-container");
 
-        Div proyectos = common.createSquare("Proyectos", VaadinIcon.FILE_O);
-        proyectos.getElement().setAttribute("aria-label", "Proyectos");
+        // Agregar los cuadros al contenedor
+        container.add(
+                common.createSquare("Proyectos", VaadinIcon.FILE_TEXT),
+                common.createSquare("Cartera", VaadinIcon.CLIPBOARD)
+        );
 
-        getContent().add(proyectos);
-
-        Div cartera = common.createSquare("Cartera", VaadinIcon.CLIPBOARD);
-        cartera.getElement().setAttribute("aria-label", "Cartera");
-        cartera.addClickListener(event -> UI.getCurrent().navigate(CarteraActualView.class));
-
-        getContent().add(cartera);
-
+        // Agregar el contenedor al contenido principal
+        getContent().add(container);
     }
-
 }
