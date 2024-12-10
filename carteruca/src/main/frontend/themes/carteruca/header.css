@@ -1,0 +1,73 @@
+/** headder **/
+.header {
+  background-color: var(--lumo-primary-color);
+  color: white;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+}
+/* Logo Responsiveness */
+.header-brand-small {
+  font-size: 0.65em;
+
+}
+
+.header-brand-link {
+  color: white;
+  font-size: 3vw;
+  text-decoration: none;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  flex-wrap: wrap; /* Ajusta el texto si el espacio es limitado */
+}
+
+.header-brand-link:hover {
+  text-decoration: none;
+}
+
+
+.menu-item{
+  color: var(--lumo-primary-color);
+  background-color: rgb(223, 223, 223);
+  cursor: pointer;
+}
+
+.search-color::part(input-field) {
+  color: var(--lumo-primary-color);
+  background-color: rgb(223, 223, 223);
+  --vaadin-input-field-placeholder-color: var(--lumo-primary-color);
+}
+
+.icon-button {
+  cursor: pointer;
+  margin-bottom: 5px;
+}
+
+@media (min-width: 601px) {
+  .full-menu {
+    display: flex;
+  }
+  .compact-menu {
+    display: none;
+  }
+}
+
+/* Estilos para pantallas pequeñas */
+@media (max-width: 600px) {
+  .full-menu {
+    display: none;
+  }
+  .compact-menu {
+    display: flex;
+  }
+}
+/* Estilo para el popup del menú */
+.menu-popup a {
+  display: block;
+  text-decoration: none;
+  color: var(--lumo-primary-color);
+  font-size: 1.2em;
+  padding: 10px 0;
+  text-align: center;
+}

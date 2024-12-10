@@ -34,10 +34,9 @@ public class Footer extends Composite<HorizontalLayout> {
 
         Div addressContainer = new Div(
                 locationIcon,
-                new Div(new Text("Centro Cultural Reina Sofía")),
-                new Div(new Text("C/ Paseo Carlos III, nº 9")),
-                new Div(new Text("11003, Cádiz")),
-                new Div(new Text("CÁDIZ"))
+                new Div(new Text("Reina Sofía")),
+                new Div(new Text("C/ Carlos III, nº 9")),
+                new Div(new Text("Cádiz"))
         );
         addressContainer.addClassName("border-right");
         addressContainer.addClassName("width-20");
@@ -56,9 +55,6 @@ public class Footer extends Composite<HorizontalLayout> {
         linksColumn.addClassName("border-right");
         linksColumn.getStyle().set("width", "10%");
 
-//        linksColumn.setAlignItems(FlexComponent.Alignment.CENTER); // Centra el contenido verticalmente
-//        linksColumn.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER); // Centra el contenido horizontalmente
-
         // 4ª Columna: Redes sociales
         HorizontalLayout socialLinks = new HorizontalLayout(
                 createSocialIcon("https://www.facebook.com/universidaddecadiz/", VaadinIcon.FACEBOOK, "Facebook"),
@@ -66,13 +62,11 @@ public class Footer extends Composite<HorizontalLayout> {
                 createSocialIcon("https://www.instagram.com/univcadiz/", "/layout/instagram.svg", "Instagram"),
                 createSocialIcon("http://www.youtube.com/user/videosUCA", VaadinIcon.YOUTUBE, "YouTube")
         );
+        socialLinks.addClassName("social-links"); // Añadir clase CSS
         socialLinks.getStyle()
-                .set("padding", "0 10px")
-                .set("margin-right", "20px")
-                .set("width", "20%")
-                .set("display", "flex")
-                .set("justify-content", "center")
-                .set("align-items", "center");
+                .set("padding", "0")
+                .set("margin", "0")
+                .set("width", "20%");
 
         // Layout del footer
         HorizontalLayout footerLayout = new HorizontalLayout(logoContainer, addressContainer, linksColumn, socialLinks);

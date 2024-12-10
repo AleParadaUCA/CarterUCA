@@ -55,8 +55,8 @@ public class Usuario implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Rol rol;
 
-    @Column(columnDefinition = "VARCHAR(255) DEFAULT 'icons/profile.svg'")
-    private String fotoPerfil = "icons/profile.svg";
+    // @Column(columnDefinition = "VARCHAR(255) DEFAULT 'icons/profile.svg'")
+    // private String fotoPerfil = "icons/profile.svg";
 
     public List<GrantedAuthority> getAuthorities() {
         return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + this.getRol().name()));
@@ -140,11 +140,11 @@ public class Usuario implements UserDetails {
         return centro;
     }
 
-    public String getFotoPerfil() { return fotoPerfil; }
+    // public String getFotoPerfil() { return fotoPerfil; }
 
-    public void setFotoPerfil(String fotoPerfil) {
-        this.fotoPerfil = fotoPerfil;
-    }
+    // public void setFotoPerfil(String fotoPerfil) {
+    //     this.fotoPerfil = fotoPerfil;
+    // }
 
     public void setCentro(Centro centro) {
         this.centro = centro;
