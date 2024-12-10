@@ -19,8 +19,7 @@ import es.uca.iw.carteruca.views.common.common;
 
 @PageTitle("Home")
 @Route(value = "/home", layout = MainLayout.class)
-//@RolesAllowed({"Solicitante", "CIO", "OTP", "Promotor"})
-@PermitAll
+@RolesAllowed({"Solicitante", "CIO", "OTP", "Promotor"})
 public class HomeSolicitanteView extends Composite<VerticalLayout>{
 
     Span mensaje_bienvenido = new Span();
