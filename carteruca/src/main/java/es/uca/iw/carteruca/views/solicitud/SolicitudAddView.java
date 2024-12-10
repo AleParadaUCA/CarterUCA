@@ -94,7 +94,6 @@ public class SolicitudAddView extends Composite<VerticalLayout> {
         normativa.setLabel("Normativa");
         normativa.getElement().setAttribute("aria-label", "Normativa");
 
-
         avalador.setLabel("Avalador");
         avalador.setPlaceholder("Seleccione Avalador:");
         avalador.getElement().setAttribute("aria-label", "Seleccione al avalador");
@@ -106,7 +105,7 @@ public class SolicitudAddView extends Composite<VerticalLayout> {
         fecha_puesta.setPlaceholder("Seleccione Fecha");
         fecha_puesta.getElement().setAttribute("aria-label", "Seleccione Fecha");
         fecha_puesta.setAutoOpen(false);
-        fecha_puesta.setHelperText("Fecha limite de puesta en marcha");
+        fecha_puesta.setHelperText("Fecha limite de puesta en marcha del proyecto");
 
         Span memoria = new Span("Memoria");
         memoria.getElement().setAttribute("aria-label", "Adjunte la memoria del proyecto");
@@ -221,11 +220,13 @@ public class SolicitudAddView extends Composite<VerticalLayout> {
             add();  // Llamar al método add() si el usuario acepta
             confirmDialog.close();  // Cerrar el diálogo
         });
+        acceptButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
         // Botón "Cancelar"
         Button cancelButton = new Button("Cancelar", event -> {
             confirmDialog.close();  // Solo cierra el diálogo sin realizar ninguna acción
         });
+        cancelButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
 
         // Agregar botones al pie del diálogo
         confirmDialog.getFooter().add(acceptButton, cancelButton);
