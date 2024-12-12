@@ -5,20 +5,23 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouterLink;
 import es.uca.iw.carteruca.models.Usuario;
 import es.uca.iw.carteruca.models.Rol;
-import es.uca.iw.carteruca.views.home.HomeAdminView;
 import es.uca.iw.carteruca.views.common.common;
+import es.uca.iw.carteruca.views.home.HomeAdminView;
 import es.uca.iw.carteruca.views.layout.MainLayout;
 import jakarta.annotation.security.RolesAllowed;
 import es.uca.iw.carteruca.services.UsuarioService;
@@ -73,6 +76,13 @@ public class UsuarioAllView extends Composite<VerticalLayout> {
             return rolSelect;
         }).setHeader("Rol");
 
+        tablaUsuarios.addComponentColumn(usuario -> {
+            Button editar = new Button(VaadinIcon.EDIT.create(), click -> openEditDialog(usuario));
+            editar.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+            editar.getElement().setAttribute("aria-label", "Editar");
+            return editar;
+        }).setHeader("Editar");
+
         // Filtrar usuarios con roles distintos a Admin
         List<Usuario> usuarios = usuarioService.findAllUsuariosExcludingAdmin();
         tablaUsuarios.setItems(usuarios);
@@ -80,9 +90,9 @@ public class UsuarioAllView extends Composite<VerticalLayout> {
 
     private void mostrarDialogoConfirmacion(Usuario usuario, Rol nuevoRol) {
         Dialog dialogo = new Dialog();
-
-        // Texto de confirmación
         VerticalLayout contenido = new VerticalLayout();
+
+        // Agregar solo una vez el contenido al dialogo
         contenido.add("¿Estás seguro de que deseas cambiar el rol del usuario " + usuario.getUsername() + " a " + nuevoRol + "?");
 
         // Botones de acción
@@ -104,7 +114,7 @@ public class UsuarioAllView extends Composite<VerticalLayout> {
         contenido.add(botones);
         contenido.setAlignItems(FlexComponent.Alignment.CENTER);
 
-        dialogo.add(contenido);
+        dialogo.add(contenido); // Añadir el contenido solo una vez
         dialogo.open();
     }
 
@@ -113,26 +123,95 @@ public class UsuarioAllView extends Composite<VerticalLayout> {
         tablaUsuarios.setItems(usuarios);
     }
 
-
     private void addBotones() {
-            // Botón "Volver" redirigiendo a HomeAdminView
-            RouterLink link_volver = new RouterLink();
-            Button volver = new Button("Volver");
-            volver.addClickListener(e -> UI.getCurrent().navigate(HomeAdminView.class));
-            volver.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-            link_volver.add(volver);
-            volver.getElement().setAttribute("aria-label", "Volver");
+        // Botón "Volver" redirigiendo a HomeAdminView
+        RouterLink link_volver = new RouterLink();
+        Button volver = new Button("Volver");
+        volver.addClickListener(e -> UI.getCurrent().navigate(HomeAdminView.class));
+        volver.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        link_volver.add(volver);
+        volver.getElement().setAttribute("aria-label", "Volver");
 
-            link_volver.getElement().getStyle().set("margin-top", "8px");
-            link_volver.getElement().getStyle().set("text-decoration", "none");
+        link_volver.getElement().getStyle().set("margin-top", "8px");
+        link_volver.getElement().getStyle().set("text-decoration", "none");
 
-            // Layout para el botón de "Volver"
-            HorizontalLayout botones = new HorizontalLayout(link_volver);
-            botones.setWidthFull(); // Usar todo el ancho disponible
-            botones.setJustifyContentMode(FlexComponent.JustifyContentMode.END); // Alinear el botón al final
+        // Layout para el botón de "Volver"
+        HorizontalLayout botones = new HorizontalLayout(link_volver);
+        botones.setWidthFull(); // Usar todo el ancho disponible
+        botones.setJustifyContentMode(FlexComponent.JustifyContentMode.END); // Alinear el botón al final
 
-            // Añadir el botón al contenido
-            getContent().add(botones);
+        // Añadir el botón al contenido
+        getContent().add(botones);
+    }
+
+    private void openEditDialog(Usuario usuario) {
+        Dialog dialogo = new Dialog();
+        FormLayout contenido = new FormLayout();
+
+        // Campos de edición
+        TextField nombreFieldDialog = new TextField("Nombre");
+        nombreFieldDialog.setValue(usuario.getNombre());
+
+        TextField apellidosFieldDialog = new TextField("Apellidos");
+        apellidosFieldDialog.setValue(usuario.getApellidos());
+
+        TextField emailFieldDialog = new TextField("Email");
+        emailFieldDialog.setValue(usuario.getEmail());
+
+        TextField usernameFieldDialog = new TextField("Usuario");
+        usernameFieldDialog.setValue(usuario.getUsername());
+
+        contenido.add(nombreFieldDialog, apellidosFieldDialog, emailFieldDialog, usernameFieldDialog);
+
+        Button saveButton = new Button("Guardar",  event -> {
+            String result = usuarioService.updateUser(
+                    usuario.getId(),
+                    nombreFieldDialog.getValue(),
+                    apellidosFieldDialog.getValue(),
+                    emailFieldDialog.getValue(),
+                    usernameFieldDialog.getValue()
+            );
+
+            if (result.equals("Usuario actualizado correctamente.")) {
+                // Actualizamos currentUser con los nuevos datos
+                usuario.setNombre(nombreFieldDialog.getValue());
+                usuario.setApellidos(apellidosFieldDialog.getValue());
+                usuario.setEmail(emailFieldDialog.getValue());
+                usuario.setUsername(usernameFieldDialog.getValue());
+
+                // Mostrar notificación
+                common.showSuccessNotification(result);
+                updateGrid();
+                dialogo.close();
+            } else {
+                // Notificación de error
+                common.showErrorNotification("Error: " + result);
+            }
+        });
+
+        // Botón para cancelar
+        Button cancelButton = new Button("Cancelar", event -> dialogo.close());
+        cancelButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
+
+        // Alinear los botones al final
+        HorizontalLayout buttonLayout = new HorizontalLayout(saveButton, cancelButton);
+        buttonLayout.setWidthFull();
+        buttonLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
+        buttonLayout.setAlignItems(FlexComponent.Alignment.END);
+
+        // Contenedor principal del diálogo
+        VerticalLayout dialogLayout = new VerticalLayout(contenido, buttonLayout);
+        dialogLayout.setSpacing(true);
+        dialogLayout.setPadding(true);
+
+        dialogo.add(dialogLayout); // Añadir solo una vez
+        dialogo.open();
+    }
+
+    private void updateGrid() {
+        List<Usuario> usuarios = usuarioService.findAllUsuariosExcludingAdmin();
+        tablaUsuarios.setItems(usuarios);
     }
 }
+
 
