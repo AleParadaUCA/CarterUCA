@@ -20,6 +20,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import es.uca.iw.carteruca.models.Cartera;
 import es.uca.iw.carteruca.services.CarteraService;
+import es.uca.iw.carteruca.views.common.common;
 import es.uca.iw.carteruca.views.home.HomeAdminView;
 import es.uca.iw.carteruca.views.layout.MainLayout;
 import jakarta.annotation.security.RolesAllowed;
@@ -88,7 +89,7 @@ public class CarteraAllView extends VerticalLayout {
             Button deleteButton = new Button(delete, click -> {
                 carteraService.deleteCartera(cartera.getId());
                 updateGrid();
-                Notification.show("Cartera eliminada con éxito");
+                common.showSuccessNotification("Cartera eliminada con éxito");
             });
             deleteButton.addThemeVariants(ButtonVariant.LUMO_ERROR, ButtonVariant.LUMO_TERTIARY);
             return deleteButton;
@@ -133,7 +134,7 @@ public class CarteraAllView extends VerticalLayout {
                 carteraService.addCartera(nuevaCartera);
                 updateGrid();
                 dialog.close();
-                Notification.show("Cartera agregada con éxito");
+                common.showSuccessNotification("Cartera agregada con éxito");
             } catch (IllegalArgumentException e) {
                 Notification.show("Error: " + e.getMessage(), 3000, Notification.Position.MIDDLE);
             }
@@ -198,7 +199,7 @@ public class CarteraAllView extends VerticalLayout {
                 carteraService.updateCartera(cartera.getId(), cartera);
                 updateGrid();
                 dialog.close();
-                Notification.show("Cartera actualizada con éxito");
+                common.showSuccessNotification("Cartera actualizada con éxito");
             } catch (IllegalArgumentException e) {
                 Notification.show("Error: " + e.getMessage(), 3000, Notification.Position.MIDDLE);
             }
