@@ -1,4 +1,5 @@
-@import "main-layout.css";
+@import "header.css";
+@import "footer.css";
 :root {
     --lumo-size-m: 2rem; /* Define un valor base */
 }
@@ -18,4 +19,20 @@ html {
     bottom: 195px;      /* Distancia desde la parte inferior */
     right: 20px;       /* Distancia desde el lado derecho */
     z-index: 1000;     /* Asegura que esté por encima de otros elementos */
+}
+
+.responsive-container {
+    display: flex;
+    flex-direction: column; /* Móvil: apilar cuadros */
+    align-items: center; /* Cuadros centrados en móvil */
+    gap: 20px;
+}
+
+@media (min-width: 768px) {
+    .responsive-container {
+        flex-direction: row; /* PC: cuadros en fila */
+        align-items: flex-start; /* Cuadros alineados al lado izquierdo */
+        justify-content: flex-start;
+        gap: 20px;
+    }
 }

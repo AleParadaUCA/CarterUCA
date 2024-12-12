@@ -6,7 +6,8 @@ import com.vaadin.flow.component.avatar.Avatar;
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.contextmenu.SubMenu;
 import com.vaadin.flow.component.html.Anchor;
-import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.menubar.MenuBar;
@@ -18,6 +19,8 @@ import com.vaadin.flow.component.textfield.TextField;
 import es.uca.iw.carteruca.models.Rol;
 import es.uca.iw.carteruca.security.AuthenticatedUser;
 import es.uca.iw.carteruca.views.common.common;
+
+import com.vaadin.flow.component.dialog.Dialog;
 
 public class Header extends Composite<VerticalLayout> {
 
@@ -44,14 +47,23 @@ public class Header extends Composite<VerticalLayout> {
     }
 
     private Anchor createLogo() {
-        Image logoImage = new Image("layout/Universidad_de_cadiz_2.0.png", "Foto UCA");
-        logoImage.getStyle()
-                .set("max-width", "75%")
-                .set("height", "auto")
-                .set("margin-right", "auto");
 
-        return new Anchor("https://www.uca.es", logoImage);
-    }
+    // Enlace principal con clase personalizada
+    Anchor link = new Anchor("https://www.uca.es/", "Universidad");
+    link.addClassName("header-brand-link");
+
+    // Subtítulo
+    Span smallText = new Span("de");
+    smallText.addClassName("header-brand-small");
+
+    // Texto final
+    Span finalText = new Span("Cádiz");
+
+    // Añadir spans al enlace
+    link.add(smallText, finalText);
+
+    return link;
+}
 
     private HorizontalLayout createIconsLayout() {
         HorizontalLayout iconsLayout = new HorizontalLayout();
@@ -64,6 +76,13 @@ public class Header extends Composite<VerticalLayout> {
         iconsLayout.add(languageIcon);
 
         if (authenticatedUser.get().isPresent()) {
+            //icono de notifcaciones
+            Icon bellIcon = new Icon(VaadinIcon.BELL);
+            bellIcon.setClassName("icon-button");
+            bellIcon.getStyle().set("margin-left", "10px");
+            bellIcon.addClickListener(e -> UI.getCurrent().navigate("/notificaciones"));
+            iconsLayout.add(bellIcon);
+
             // Obtén el usuario autenticado
             String userName = authenticatedUser.get().get().getNombre();
             String userSurname = authenticatedUser.get().get().getApellidos();
@@ -122,12 +141,14 @@ public class Header extends Composite<VerticalLayout> {
         bottomLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.BETWEEN);
 
         bottomLayout.add(createMenuBar(), createSearchField());
+        bottomLayout.add(createMenuBarMovil(), createSearchFieldMovil());
         return bottomLayout;
     }
 
     private MenuBar createMenuBar() {
         MenuBar menuBar = new MenuBar();
         menuBar.addClassName("rounded-menu-bar");
+        menuBar.addClassName("full-menu");
 
         menuBar.addItem("Proyectos", e -> UI.getCurrent().navigate("/"))
                 .getElement().getClassList().add("menu-item");
@@ -149,11 +170,59 @@ public class Header extends Composite<VerticalLayout> {
         return menuBar;
     }
 
+    private HorizontalLayout createMenuBarMovil() {
+        HorizontalLayout menuLayout = new HorizontalLayout();
+        menuLayout.setSpacing(false);
+        menuLayout.setPadding(false);
+        menuLayout.addClassName("compact-menu");
+
+        // Crear el icono de "hamburguesa"
+        Icon menuIcon = VaadinIcon.MENU.create();
+        menuIcon.setClassName("menu-item");
+        menuIcon.getStyle()
+                .set("font-size", "24px")
+                .set("cursor", "pointer")
+                .set("color", "white");
+
+        // Crear el popup para el menú
+        Dialog menuDialog = new Dialog();
+        menuDialog.setWidth("80%");
+        menuDialog.setCloseOnOutsideClick(true);
+
+        // Crear el menú dentro del popup
+        VerticalLayout menuItemsLayout = new VerticalLayout();
+        menuItemsLayout.addClassName("menu-popup");
+
+        menuItemsLayout.add(new Anchor("/", "Proyectos"));
+        if (authenticatedUser.get().isPresent()) {
+            if (authenticatedUser.get().get().getRol() == Rol.Admin) {
+                menuItemsLayout.add(new Anchor("/home-admin", "Home-Admin"));
+            } else {
+                menuItemsLayout.add(new Anchor("/home", "Home"));
+            }
+        }
+        menuItemsLayout.add(new Anchor("/cartera", "Cartera"));
+
+        // Añadir los elementos al diálogo
+        menuDialog.add(menuItemsLayout);
+
+        // Abrir el popup al hacer clic en el icono
+        menuIcon.addClickListener(e -> menuDialog.open());
+
+        // Añadir el icono al layout
+        menuLayout.add(menuIcon);
+        menuLayout.add(menuDialog);
+
+        return menuLayout;
+    }
+
+
     private TextField createSearchField() {
         TextField searchField = new TextField();
         searchField.setPlaceholder("Buscar...");
         searchField.setWidth("20%");
         searchField.addClassName("search-color");
+        searchField.addClassName("full-menu");
 
         Icon searchIcon = VaadinIcon.SEARCH.create();
         searchIcon.addClassName("menu-item");
@@ -161,4 +230,43 @@ public class Header extends Composite<VerticalLayout> {
 
         return searchField;
     }
+
+    private HorizontalLayout createSearchFieldMovil() {
+        HorizontalLayout searchLayout = new HorizontalLayout();
+        searchLayout.setSpacing(false);
+        searchLayout.setPadding(false);
+        searchLayout.addClassName("compact-menu");
+
+        // Crear el icono de búsqueda
+        Icon searchIcon = VaadinIcon.SEARCH.create();
+        searchIcon.setClassName("menu-item");
+        searchIcon.getStyle()
+                .set("font-size", "24px")
+                .set("cursor", "pointer")
+                .set("color", "white");
+
+        // Crear el popup para la barra de búsqueda
+        Dialog searchDialog = new Dialog();
+        searchDialog.setWidth("80%");
+        searchDialog.setCloseOnOutsideClick(true);
+
+        // Crear el campo de búsqueda dentro del popup
+        TextField searchField = new TextField("Buscar");
+        searchField.setWidthFull();
+        searchField.setPlaceholder("Introduce tu búsqueda...");
+        searchField.addClassName("search-color");
+
+        // Añadir la barra de búsqueda al diálogo
+        searchDialog.add(searchField);
+
+        // Abrir el popup al hacer clic en el icono
+        searchIcon.addClickListener(e -> searchDialog.open());
+
+        // Añadir el icono al layout
+        searchLayout.add(searchIcon);
+        searchLayout.add(searchDialog);
+
+        return searchLayout;
+    }
+
 }

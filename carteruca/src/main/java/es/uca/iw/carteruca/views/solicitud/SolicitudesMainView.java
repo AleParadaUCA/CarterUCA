@@ -23,8 +23,7 @@ import es.uca.iw.carteruca.views.common.common;
 
 @PageTitle("Solicitudes")
 @Route(value = "/solicitudes", layout = MainLayout.class)
-//@RolesAllowed({"Promotor","CIO","Solicitante"})
-@PermitAll
+@RolesAllowed({"Promotor","CIO","Solicitante"})
 public class SolicitudesMainView extends Composite<VerticalLayout> {
 
     public SolicitudesMainView() {

@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.GrantedAuthority;
@@ -16,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import com.vaadin.hilla.ExplicitNullableTypeChecker;
 
@@ -43,10 +47,19 @@ public class UsuarioService implements UserDetailsService {
 
     @Transactional
     public String createUser(String nombre, String apellidos, String username, String email, String password, Centro centro) {
+        // Eliminar espacios al inicio y al final de los campos
+        nombre = nombre != null ? nombre.trim() : "";
+        apellidos = apellidos != null ? apellidos.trim() : "";
+        username = username != null ? username.trim() : "";
+        email = email != null ? email.trim() : "";
+        password = password != null ? password.trim() : "";
+
         // Validar campos vacíos
-        if (!StringUtils.hasText(username) || !StringUtils.hasText(email) || !StringUtils.hasText(password) || !StringUtils.hasText(apellidos) || !StringUtils.hasText(nombre)) {
-            return ("Todos los campos son obligatorios.");
+        if (!StringUtils.hasText(username) || !StringUtils.hasText(email) || !StringUtils.hasText(password) ||
+                !StringUtils.hasText(apellidos) || !StringUtils.hasText(nombre)) {
+            return "Todos los campos son obligatorios.";
         }
+
         // Validar el centro
         if (centro == null || !StringUtils.hasText(centro.getNombre())) {
             return "Debe seleccionar un centro válido.";
@@ -54,17 +67,33 @@ public class UsuarioService implements UserDetailsService {
 
         // Validar formato del email
         if (!EMAIL_PATTERN.matcher(email).matches()) {
-            return ("El correo no es válido.");
+            return "El correo no es válido.";
         }
 
         // Comprobar si el usuario ya existe
         if (repository.existsByUsuario(username)) {
-            return ("El nombre de usuario ya está en uso.");
+            return "El nombre de usuario ya está en uso.";
+        }
+
+        // Validar que el nombre de usuario no contenga espacios
+        if (username.contains(" ")) {
+            return "El nombre de usuario no debe contener espacios.";
         }
 
         // Comprobar si el correo ya existe
         if (repository.existsByEmail(email)) {
-            return ("El correo ya está en uso.");
+            return "El correo ya está en uso.";
+        }
+
+        // Determinar el rol del usuario
+        Rol rol = Rol.Solicitante; // Valor predeterminado
+        try {
+            // Verificar si el usuario es un promotor mediante la API
+            if (esPromotor(nombre+" "+apellidos)) {
+                rol = Rol.Promotor;
+            }
+        } catch (Exception e) {
+            return "Error al verificar el rol: " + e.getMessage();
         }
 
         Usuario nuevoUsuario = new Usuario();
@@ -72,15 +101,45 @@ public class UsuarioService implements UserDetailsService {
         nuevoUsuario.setApellidos(apellidos);
         nuevoUsuario.setUsername(username);
         nuevoUsuario.setEmail(email);
-        nuevoUsuario.setRol(Rol.Solicitante);
+        nuevoUsuario.setRol(rol);
         nuevoUsuario.setPassword(passwordEncoder.encode(password));
         nuevoUsuario.setCentro(centro);
 
         repository.save(nuevoUsuario);
-//      emailService.sendRegistrationEmail(nuevoUsuario); //futuro
         return "Exito";
-
     }
+
+    private boolean esPromotor(String nombre) {
+        final String url = "https://e608f590-1a0b-43c5-b363-e5a883961765.mock.pstmn.io/sponsors";
+        WebClient webClient = WebClient.create();
+
+        System.out.println("Nombre: " + nombre);
+        // Realizar la solicitud
+        try {
+            String response = webClient.get()
+                    .uri(url)
+                    .retrieve()
+                    .bodyToMono(String.class)
+                    .block();
+
+            // Parsear el JSON y buscar el nombre
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode root = mapper.readTree(response);
+            JsonNode data = root.path("data");
+            for (JsonNode promotor : data) {
+                if (nombre.equalsIgnoreCase(promotor.path("nombre").asText())) {
+                    System.out.println("promotor\n");
+                    return true;
+                }
+
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Error al consultar la API de promotores", e);
+        }
+        System.out.println("no coincide con la lista\n");
+        return false;
+    }
+
 
     @Override
     @Transactional

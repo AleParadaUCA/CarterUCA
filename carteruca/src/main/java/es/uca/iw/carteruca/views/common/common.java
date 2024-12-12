@@ -22,15 +22,16 @@ public class common {
     public static Div createSquare(String text, VaadinIcon iconType) {
         Div square = new Div();
 
+        // Crear contenido
         HorizontalLayout content = new HorizontalLayout();
-        content.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
+        content.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.START);
 
         Icon icon = iconType.create();
         icon.setSize("40px");
         icon.getStyle().set("color", "hsl(214, 33%, 38%)");
 
         Span label = new Span(text);
-        label.getStyle().set("color","black");
+        label.getStyle().set("color", "black");
         label.getStyle().set("font-size", "24px");
 
         content.add(icon, label);
@@ -38,21 +39,26 @@ public class common {
         content.getStyle().set("justify-content", "flex-start");
 
         // Estilos del cuadrado
-        square.getStyle().set("width", "400px");
-        square.getStyle().set("height", "100px");
         square.getStyle().set("background-color", "#ffffff");
         square.getStyle().set("border", "1px solid #000");
         square.getStyle().set("display", "flex");
         square.getStyle().set("align-items", "center");
         square.getStyle().set("justify-content", "center");
         square.getStyle().set("cursor", "pointer");
-        square.getStyle().set("margin-left", "50px");
-        square.getStyle().set("margin-top", "20px");
+        square.getStyle().set("margin", "10px");
+        square.getStyle().set("transition", "all 0.3s ease-in-out");
 
+        // Estilos responsivos
+        square.getStyle().set("width", "100%"); // Ancho completo por defecto
+        square.getStyle().set("max-width", "400px"); // Limitar tamaño en pantallas grandes
+        square.getStyle().set("height", "100px");
+
+        // Agregar el contenido al cuadrado
         square.add(content);
 
         return square;
     }
+
 
     public static void creartitulo(String title, Composite<VerticalLayout> composite) {
         // Crear el título

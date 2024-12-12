@@ -13,28 +13,33 @@ import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
+import es.uca.iw.carteruca.models.usuario.Rol;
 import es.uca.iw.carteruca.views.cartera.CarteraActualView;
 import es.uca.iw.carteruca.views.layout.MainLayout;
 import es.uca.iw.carteruca.views.common.common;
+import jakarta.annotation.security.RolesAllowed;
+import org.springframework.context.annotation.Role;
 
 @PageTitle("CarterUCA")
 @Route(value = "", layout = MainLayout.class)
-@AnonymousAllowed
+@RolesAllowed({"Promotor","Solicitante","CIO","OTP" })
 public class HomeView extends Composite<VerticalLayout> {
 
-    public HomeView(){
+    public HomeView() {
+        VerticalLayout container = new VerticalLayout();
+        container.addClassName("responsive-container");
 
-        Div proyectos = common.createSquare("Proyectos", VaadinIcon.FILE_O);
-        proyectos.getElement().setAttribute("aria-label", "Proyectos");
-
-        getContent().add(proyectos);
+        // Crear cuadros con funcionalidad de navegación
+        Div proyectos = common.createSquare("Proyectos", VaadinIcon.FILE_TEXT);
+        proyectos.addClickListener(event -> getUI().ifPresent(ui -> ui.navigate("proyectos")));
 
         Div cartera = common.createSquare("Cartera", VaadinIcon.CLIPBOARD);
-        cartera.getElement().setAttribute("aria-label", "Cartera");
-        cartera.addClickListener(event -> UI.getCurrent().navigate(CarteraActualView.class));
+        cartera.addClickListener(event -> getUI().ifPresent(ui -> ui.navigate("cartera")));
 
-        getContent().add(cartera);
+        // Agregar los cuadros al contenedor
+        container.add(proyectos, cartera);
 
+        // Agregar el contenedor al contenido principal
+        getContent().add(container);
     }
-
 }

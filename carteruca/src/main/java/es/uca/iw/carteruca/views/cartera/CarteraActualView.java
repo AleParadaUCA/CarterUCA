@@ -41,9 +41,14 @@ public class CarteraActualView extends Composite<VerticalLayout> {
 
     private void loadCarteraActual() {
         carteraService.getCarteraActual().ifPresent(cartera -> {
-            // Mostrar los datos de la cartera
+            // Crear el FormLayout
             FormLayout formLayout = new FormLayout();
+            formLayout.setResponsiveSteps(
+                    new FormLayout.ResponsiveStep("0", 1), // Una columna para pantallas pequeñas
+                    new FormLayout.ResponsiveStep("600px", 2) // Dos columnas para pantallas más grandes
+            );
 
+            // Crear y configurar los campos
             TextField nombreField = new TextField("Nombre");
             nombreField.setValue(cartera.getNombre());
             nombreField.getElement().setAttribute("aria-label", "Nombre");
@@ -71,20 +76,20 @@ public class CarteraActualView extends Composite<VerticalLayout> {
 
             TextField nHorasField = new TextField("Número de Horas");
             nHorasField.setValue(String.valueOf(cartera.getN_horas()));
-            nHorasField.getElement().setAttribute("aria-label","Número de Horas");
+            nHorasField.getElement().setAttribute("aria-label", "Número de Horas");
             nHorasField.setReadOnly(true);
 
             TextField nMaxTecnicosField = new TextField("Número Máximo de Técnicos");
             nMaxTecnicosField.setValue(String.valueOf(cartera.getN_max_tecnicos()));
-            nMaxTecnicosField.getElement().setAttribute("aria-label","Número Máximo de Técnicos");
+            nMaxTecnicosField.getElement().setAttribute("aria-label", "Número Máximo de Técnicos");
             nMaxTecnicosField.setReadOnly(true);
 
             TextField presupuestoTotalField = new TextField("Presupuesto Total");
             presupuestoTotalField.setValue(String.valueOf(cartera.getPresupuesto_total()));
-            presupuestoTotalField.getElement().setAttribute("aria-label","Presupuesto Total");
+            presupuestoTotalField.getElement().setAttribute("aria-label", "Presupuesto Total");
             presupuestoTotalField.setReadOnly(true);
 
-            // Agregar los campos al layout
+            // Agregar los campos al FormLayout
             formLayout.add(
                     nombreField,
                     fechaInicioField,
@@ -96,7 +101,9 @@ public class CarteraActualView extends Composite<VerticalLayout> {
                     presupuestoTotalField
             );
 
+            // Agregar el FormLayout al contenido principal
             getContent().add(formLayout);
         });
     }
+
 }
