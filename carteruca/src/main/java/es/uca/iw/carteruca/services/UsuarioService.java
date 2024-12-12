@@ -239,6 +239,8 @@ public class UsuarioService implements UserDetailsService {
                 .toList();
     }
 
-
+    public List<Usuario> getAvaladores() {
+        return repository.findByRol(Rol.Promotor);
+    }
 
 }
