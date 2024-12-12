@@ -32,35 +32,20 @@ public class Solicitud {
     @Column
     private String alcance; // Cantidad y grupo de personas a las que beneficiará el proyecto
 
+    @Column
     private String normativa;//Codigo y/o descripcion de la normativa de aplicación obligatoria
 
     @Column
     private String memoria; //Por ahora usaremos una URL
     // *hasta aqui lo rellena el solicitante
-    //hasta aqui solicitud
-
 
     @Column
     private Integer importancia_promotor; // si el promotor tiene varios proyectos avalados el promotor tiene que indicar importancia de cada proyecto que avale
     //* hasta aqui rellena el avalador
 
-
-    @Column
-    private String presupuesto; // es un documento especificando la financiacion aportada
-
-    @Column
-    private String especificacion_tecnica;// es un documento con las especificaciones tecnologicas
-
     @Column
     @Enumerated(EnumType.STRING)
     private Estado estado;
-
-    @Column
-    private Float puntuacion; // este se debe calcular mediante los criterios
-
-    @Column
-    private Float porcentaje; // este campo mostrará el porcentaje de avance del proyecto que este en marcha.
-    // *hasta aqui lo rellena CIO y OTP
 
     @ManyToOne
     @JoinColumn(name = "solicitante_id") //FK hacia usuario solicitante
@@ -107,16 +92,9 @@ public class Solicitud {
     public Integer getImportancia_promotor() {return importancia_promotor;}
     public void setImportancia_promotor(Integer importancia_promotor) {this.importancia_promotor = importancia_promotor;}
 
-    public String getPresupuesto() {return presupuesto;}
-    public void setPresupuesto(String presupuesto) {this.presupuesto = presupuesto;}
-
-    public String getEspecificacion_tecnica() {return especificacion_tecnica;}
-    public void setEspecificacion_tecnica(String especificacion_tecnica) {this.especificacion_tecnica = especificacion_tecnica;}
-
     public Usuario getSolicitante() {return solicitante;}
     public void setSolicitante(Usuario solicitante) {this.solicitante = solicitante;}
 
-    //Hay que comprobar que sea avalador
     public Usuario getAvalador() {return promotor;}
     public void setAvalador(Usuario promotor) {this.promotor = this.promotor;}
     
@@ -126,14 +104,8 @@ public class Solicitud {
     public Estado getEstado() {
         return estado;
     }
-
     public void setEstado(Estado estado) {
         this.estado = estado;
     }
 
-    public Float getPuntuacion() {return puntuacion;}
-    public void setPuntuacion(Float puntuacion) {this.puntuacion = puntuacion;}
-
-    public Float getPorcentaje() {return porcentaje;}
-    public void setPorcentaje(Float porcentaje) {this.porcentaje = porcentaje;}
 }
