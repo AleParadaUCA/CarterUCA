@@ -23,7 +23,7 @@ import org.springframework.context.annotation.Role;
 
 @PageTitle("CarterUCA")
 @Route(value = "", layout = MainLayout.class)
-@RolesAllowed({"Promotor","Solicitante","CIO","OTP" })
+@AnonymousAllowed
 public class HomeView extends Composite<VerticalLayout> {
 
     public HomeView() {
