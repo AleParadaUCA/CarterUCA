@@ -33,8 +33,7 @@ import java.io.InputStreamReader;
 
 @PageTitle("Agregar Solicitud")
 @Route(value = "/solicitudes/agregar-solicitud", layout = MainLayout.class)
-@RolesAllowed({"Promotor","CIO","Solicitante"})
-//@PermitAll
+@RolesAllowed({"Promotor","CIO","Solicitante", "OTP"})
 public class SolicitudAddView extends Composite<VerticalLayout> {
 
     private final TextField titulo = new TextField();
