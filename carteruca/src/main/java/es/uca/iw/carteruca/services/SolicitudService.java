@@ -1,8 +1,8 @@
 package es.uca.iw.carteruca.services;
 
-import es.uca.iw.carteruca.models.solicitud.Solicitud;
-import es.uca.iw.carteruca.models.usuario.Rol;
-import es.uca.iw.carteruca.models.usuario.Usuario;
+import es.uca.iw.carteruca.models.Solicitud;
+import es.uca.iw.carteruca.models.Rol;
+import es.uca.iw.carteruca.models.Usuario;
 import es.uca.iw.carteruca.repository.SolicitudRepository;
 import es.uca.iw.carteruca.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;

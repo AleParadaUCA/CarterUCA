@@ -13,11 +13,12 @@ import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
-import es.uca.iw.carteruca.models.usuario.Rol;
+import es.uca.iw.carteruca.models.Rol;
 import es.uca.iw.carteruca.views.cartera.CarteraActualView;
 import es.uca.iw.carteruca.views.layout.MainLayout;
 import es.uca.iw.carteruca.views.common.common;
 import jakarta.annotation.security.RolesAllowed;
+import org.springframework.context.annotation.Role;
 import org.springframework.context.annotation.Role;
 
 @PageTitle("CarterUCA")
