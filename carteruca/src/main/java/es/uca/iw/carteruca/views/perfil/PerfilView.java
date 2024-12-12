@@ -22,12 +22,12 @@ import es.uca.iw.carteruca.views.common.common;
 import es.uca.iw.carteruca.views.home.HomeAdminView;
 import es.uca.iw.carteruca.views.layout.MainLayout;
 import es.uca.iw.carteruca.views.home.HomeSolicitanteView;
-import jakarta.annotation.security.RolesAllowed;
+import jakarta.annotation.security.PermitAll;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @PageTitle("Perfil")
 @Route(value = "/perfil", layout = MainLayout.class)
-@RolesAllowed({"Admin", "CIO", "Promotor", "Solicitante", "OTP"})
+@PermitAll
 public class PerfilView extends Composite<VerticalLayout> {
 
     private final UsuarioService usuarioService;

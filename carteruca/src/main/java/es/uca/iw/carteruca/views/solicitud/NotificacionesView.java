@@ -11,11 +11,11 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import es.uca.iw.carteruca.models.Solicitud;
-import jakarta.annotation.security.RolesAllowed;
+import jakarta.annotation.security.PermitAll;
 
 @PageTitle("Notificaciones")
 @Route("/notificaciones")
-@RolesAllowed({"Promotor","CIO","Solicitante"}) //no esta muy claro
+@PermitAll
 public class NotificacionesView extends Composite<VerticalLayout> {
 
     public NotificacionesView() {
