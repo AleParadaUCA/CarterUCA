@@ -164,8 +164,11 @@ public class PerfilView extends Composite<VerticalLayout> {
         TextField emailFieldDialog = new TextField("Email");
         emailFieldDialog.setValue(currentUser.getEmail());
 
+        TextField usernameFieldDialog = new TextField("Usuario");
+        usernameFieldDialog.setValue(currentUser.getUsername());
 
-        formLayout.add(nombreFieldDialog, apellidosFieldDialog, emailFieldDialog);
+
+        formLayout.add(nombreFieldDialog, apellidosFieldDialog, emailFieldDialog, usernameFieldDialog);
 
         // Botón para guardar los cambios
         Button saveButton = new Button("Guardar", event -> {
@@ -173,7 +176,8 @@ public class PerfilView extends Composite<VerticalLayout> {
                     currentUser.getId(),
                     nombreFieldDialog.getValue(),
                     apellidosFieldDialog.getValue(),
-                    emailFieldDialog.getValue()
+                    emailFieldDialog.getValue(),
+                    usernameFieldDialog.getValue()
             );
 
 
@@ -182,6 +186,7 @@ public class PerfilView extends Composite<VerticalLayout> {
                 currentUser.setNombre(nombreFieldDialog.getValue());
                 currentUser.setApellidos(apellidosFieldDialog.getValue());
                 currentUser.setEmail(emailFieldDialog.getValue());
+                currentUser.setUsername(usernameFieldDialog.getValue());
 
                 // **Actualizamos los campos de la vista principal directamente**
                 nombreField.setValue(currentUser.getNombre());
@@ -203,10 +208,18 @@ public class PerfilView extends Composite<VerticalLayout> {
         Button cancelButton = new Button("Cancelar", event -> editDialog.close());
         cancelButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
 
+        // Alinear los botones al final
         HorizontalLayout buttonLayout = new HorizontalLayout(saveButton, cancelButton);
+        buttonLayout.setWidthFull();
         buttonLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
+        buttonLayout.setAlignItems(FlexComponent.Alignment.END);
 
+        // Contenedor principal del diálogo
         VerticalLayout dialogLayout = new VerticalLayout(formLayout, buttonLayout);
+        dialogLayout.setSpacing(true);
+        dialogLayout.setPadding(true);
+
+        // Añadir diseño al diálogo
         editDialog.add(dialogLayout);
         editDialog.open();
     }
@@ -250,9 +263,6 @@ public class PerfilView extends Composite<VerticalLayout> {
         // Abrir el diálogo
         eliminarDialog.open();
     }
-
-
-
 
 }
 

@@ -184,40 +184,39 @@ public class UsuarioService implements UserDetailsService {
     }
 
     @Transactional
-    public String updateUser(Long id, String nombre, String apellidos, String email) {
+    public String updateUser(Long id, String nombre, String apellidos, String email, String username) {
         Optional<Usuario> userOptional = repository.findById(id);
         if (userOptional.isEmpty()) {
-            System.out.println("Usuario no encontrado.");
             return "Usuario no encontrado.";
         }
 
         Usuario usuario = userOptional.get();
 
         if (!StringUtils.hasText(nombre) || !StringUtils.hasText(apellidos) || !StringUtils.hasText(email)) {
-            System.out.println("Faltan campos obligatorios.");
             return "Todos los campos son obligatorios.";
         }
 
         if (!EMAIL_PATTERN.matcher(email).matches()) {
-            System.out.println("Correo no válido.");
             return "El correo no es válido.";
         }
 
         if (!usuario.getEmail().equals(email) && repository.existsByEmail(email)) {
-            System.out.println("Correo ya está en uso.");
             return "El correo ya está en uso.";
+        }
+
+        if(!usuario.getUsername().equals(username) && repository.existsByUsuario(username)){
+            return "El usuario ya esta en uso";
         }
 
         usuario.setNombre(nombre);
         usuario.setApellidos(apellidos);
         usuario.setEmail(email);
+        usuario.setUsername(username);
 
         try {
             repository.save(usuario);
-            System.out.println("Usuario actualizado correctamente.");
             return "Usuario actualizado correctamente.";
         } catch (DataIntegrityViolationException e) {
-            System.out.println("Error al guardar: " + e.getMessage());
             return "Error al actualizar el usuario.";
         }
     }
@@ -239,7 +238,6 @@ public class UsuarioService implements UserDetailsService {
                 .filter(rol -> rol != Rol.Admin) // Excluir Admin
                 .toList();
     }
-
 
 
 
