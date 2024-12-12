@@ -15,6 +15,7 @@ import com.vaadin.flow.server.auth.AnonymousAllowed;
 import es.uca.iw.carteruca.views.admin.CentroAllView;
 import es.uca.iw.carteruca.views.admin.UsuarioAllView;
 import es.uca.iw.carteruca.views.cartera.CarteraAllView;
+import es.uca.iw.carteruca.views.criterio.CriterioAllView;
 import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import es.uca.iw.carteruca.views.common.common;
@@ -44,6 +45,12 @@ public class HomeAdminView extends Composite<VerticalLayout> {
         cartera.addClickListener(e -> UI.getCurrent().navigate(CarteraAllView.class));
 
         getContent().add(cartera);
+
+        Div criterio = common.createSquare("Criterio", VaadinIcon.CHECK_CIRCLE);
+
+        criterio.addClickListener(e -> UI.getCurrent().navigate(CriterioAllView.class));
+
+        getContent().add(criterio);
     }
 
 }
