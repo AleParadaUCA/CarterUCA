@@ -31,6 +31,15 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import org.apache.commons.io.IOUtils;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
+
 @PageTitle("Agregar Solicitud")
 @Route(value = "/solicitudes/agregar-solicitud", layout = MainLayout.class)
 @RolesAllowed({"Promotor","CIO","Solicitante", "OTP"})
@@ -120,12 +129,31 @@ public class SolicitudAddView extends Composite<VerticalLayout> {
         upload.setAcceptedFileTypes(".pdf", ".word"); // Acepta archivos específicos opcionalmente
 
         // Listener para manejar el evento de subida exitosa
-        upload.addSucceededListener(event -> {
+
+        upload.addSucceededListener(event -> { //lo ideal es q quede pendeite y se guarde al darle a terminar
             String fileName = event.getFileName();
             InputStream inputStream = buffer.getInputStream(fileName);
 
-            // Procesar el archivo
-            processFile(inputStream, fileName);
+            // Define the target directory
+            File targetDir = new File("archivos");
+            if (!targetDir.exists()) {
+                targetDir.mkdirs(); // Create the directory if it doesn't exist
+            }
+
+                //habría q crear subcarpetas por cartera y solicitud....
+
+            // Define the target file
+            File targetFile = new File(targetDir, fileName);
+
+            // Write the uploaded file to the target directory
+            try (FileOutputStream outputStream = new FileOutputStream(targetFile)) {
+                IOUtils.copy(inputStream, outputStream);
+                Notification.show("Archivo guardado en: " + targetFile.getAbsolutePath(), 5000, Notification.Position.MIDDLE);
+            } catch (IOException e) {
+                Notification.show("Error al guardar el archivo: " + e.getMessage(), 5000, Notification.Position.MIDDLE);
+            }
+
+
         });
 
         upload.addFileRejectedListener(event -> {
@@ -239,16 +267,16 @@ public class SolicitudAddView extends Composite<VerticalLayout> {
         Notification.show("Solicitud guardada exitosamente.");
     }
 
-    private void processFile(InputStream inputStream, String fileName) {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
-            System.out.println("Contenido del archivo " + fileName + ":");
-            String line;
-            while ((line = reader.readLine()) != null) {
-                System.out.println(line); // Procesamiento o impresión de las líneas
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+//    private void processFile(InputStream inputStream, String fileName) {
+//        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
+//            System.out.println("Contenido del archivo " + fileName + ":");
+//            String line;
+//            while ((line = reader.readLine()) != null) {
+//                System.out.println(line); // Procesamiento o impresión de las líneas
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 
 }
