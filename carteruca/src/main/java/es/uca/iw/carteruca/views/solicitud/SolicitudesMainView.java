@@ -49,6 +49,7 @@ public class SolicitudesMainView extends Composite<VerticalLayout> {
 
         // Ver Solicitudes
         Div solicitudes = common.createSquare("Ver Solicitudes", VaadinIcon.SEARCH);
+        solicitudes.addClickListener(e -> UI.getCurrent().navigate(SolicitudSeeView.class));
 
         // Agregar elementos a las dos columnas
         VerticalLayout column1 = new VerticalLayout(añadir, modificar);
