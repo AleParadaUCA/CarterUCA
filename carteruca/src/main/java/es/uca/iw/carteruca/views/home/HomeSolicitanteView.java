@@ -4,16 +4,14 @@ import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Span;
-import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.orderedlayout.FlexComponent;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import es.uca.iw.carteruca.models.Rol;
+import es.uca.iw.carteruca.security.AuthenticatedUser;
 import es.uca.iw.carteruca.views.layout.MainLayout;
 import es.uca.iw.carteruca.views.solicitud.SolicitudesMainView;
-import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import es.uca.iw.carteruca.views.common.common;
 
@@ -22,10 +20,12 @@ import es.uca.iw.carteruca.views.common.common;
 @RolesAllowed({"Solicitante", "CIO", "OTP", "Promotor"})
 public class HomeSolicitanteView extends Composite<VerticalLayout>{
 
-    Span mensaje_bienvenido = new Span();
+    private final Rol userRol;
 
-    public HomeSolicitanteView() {
+    public HomeSolicitanteView( AuthenticatedUser authenticatedUser) {
+        this.userRol = authenticatedUser.get().get().getRol();
 
+        Span mensaje_bienvenido = new Span();
         mensaje_bienvenido.setText("Bienvenido, usuario");
         mensaje_bienvenido.getElement().setAttribute("aria-label", "Bienvenido, usuario");
         mensaje_bienvenido.getStyle().set("color", "blue");
@@ -39,9 +39,12 @@ public class HomeSolicitanteView extends Composite<VerticalLayout>{
 
         getContent().add(solicitudes);
 
-        Div avalar = common.createSquare("Avalar Solicitudes", VaadinIcon.BOOK);
-        avalar.getElement().setAttribute("aria-label", "Avalar Solicitudes");
-        getContent().add(avalar);
+        if (userRol == Rol.Promotor) {
+
+            Div avalar = common.createSquare("Avalar Solicitudes", VaadinIcon.BOOK);
+            avalar.getElement().setAttribute("aria-label", "Avalar Solicitudes");
+            getContent().add(avalar);
+        }
 
     }
 
