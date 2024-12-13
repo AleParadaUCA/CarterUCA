@@ -8,8 +8,6 @@ public interface CriterioRepository extends JpaRepository<Criterio, Long> {
 
     Criterio findByDescripcion(String descripcion);
 
-    List<Float> findAllPeso();//Devuelve el peso dado un id (esto servirá para el calculo de puntuación)
-
     void deleteById(Long id);
 
 }
