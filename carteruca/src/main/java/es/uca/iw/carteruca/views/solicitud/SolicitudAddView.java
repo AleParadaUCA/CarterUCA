@@ -1,5 +1,8 @@
 package es.uca.iw.carteruca.views.solicitud;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 import com.vaadin.flow.component.AbstractField;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.HasValue;
@@ -18,10 +21,10 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer;
-
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+
 import es.uca.iw.carteruca.models.Cartera;
 import es.uca.iw.carteruca.models.Solicitud;
 import es.uca.iw.carteruca.models.Usuario;
@@ -29,14 +32,9 @@ import es.uca.iw.carteruca.security.AuthenticatedUser;
 import es.uca.iw.carteruca.services.CarteraService;
 import es.uca.iw.carteruca.services.SolicitudService;
 import es.uca.iw.carteruca.services.UsuarioService;
+import es.uca.iw.carteruca.views.common.common;
 import es.uca.iw.carteruca.views.layout.MainLayout;
 import jakarta.annotation.security.RolesAllowed;
-
-import java.time.LocalDateTime;
-import java.util.List;
-
-import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.notification.NotificationVariant;
 
 @PageTitle("Agregar Solicitud")
 @Route(value = "/solicitudes/agregar-solicitud", layout = MainLayout.class)
@@ -62,17 +60,13 @@ public class SolicitudAddView extends Composite<VerticalLayout> {
         this.carteraActual = carteraService.getCarteraActual().orElse(null);
 
         if (carteraActual == null) {
-            Notification notification = Notification.show("No hay Cartera disponible"); // llamar a común
-            notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
-
+            common.showErrorNotification("No hay Cartera disponible");
             UI.getCurrent().access(() -> UI.getCurrent().navigate("/home"));
             return;
         }
 
         if ( LocalDateTime.now().isAfter(carteraActual.getFecha_cierre_solicitud().toLocalDate().atStartOfDay())){
-            Notification notification = Notification.show("El plazo de solicitud está cerrado."); // llamar a común
-            notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
-
+            common.showErrorNotification("El plazo de solicitud está cerrado.");
             UI.getCurrent().access(() -> UI.getCurrent().navigate("/home") );
             return;
         }
@@ -158,13 +152,13 @@ public class SolicitudAddView extends Composite<VerticalLayout> {
         upload.setAcceptedFileTypes(".pdf", ".word"); // Acepta archivos específicos opcionalmente
         upload.setMaxFileSize(20 * 1024 * 1024); // Tamaño máximo de archivo en bytes (20 MB)
 
-        upload.addFileRejectedListener(event -> {
-            String errorMessage = event.getErrorMessage();
+        // upload.addFileRejectedListener(event -> {
+        //     String errorMessage = event.getErrorMessage();
 
-            Notification notification = Notification.show(errorMessage, 5000,
-                    Notification.Position.MIDDLE);
-            notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
-        });
+        //     // Notification notification = Notification.show(errorMessage, 5000,
+        //     //         Notification.Position.MIDDLE);
+        //     // notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+        // });
 
         // Componentes del formulario
         form.add(titulo, nombre, interesados, objetivos, alcance, normativa, avalador, fecha_puesta, memoria, upload);
@@ -281,6 +275,6 @@ public class SolicitudAddView extends Composite<VerticalLayout> {
                 authenticatedUser.get().get(),
                 carteraActual
         );
-        Notification.show("Solicitud guardada exitosamente.");
+        common.showSuccessNotification("Solicitud guardada exitosamente.");
     }
 }
