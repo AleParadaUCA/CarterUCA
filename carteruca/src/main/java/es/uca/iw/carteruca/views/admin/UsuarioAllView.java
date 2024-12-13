@@ -51,7 +51,7 @@ public class UsuarioAllView extends Composite<VerticalLayout> {
         // Añadir componentes al layout
         getContent().add(tablaUsuarios);
 
-        addBotones();
+        getContent().add(common.botones_Admin());
     }
 
     private void configurarGrid() {
@@ -123,26 +123,7 @@ public class UsuarioAllView extends Composite<VerticalLayout> {
         tablaUsuarios.setItems(usuarios);
     }
 
-    private void addBotones() {
-        // Botón "Volver" redirigiendo a HomeAdminView
-        RouterLink link_volver = new RouterLink();
-        Button volver = new Button("Volver");
-        volver.addClickListener(e -> UI.getCurrent().navigate(HomeAdminView.class));
-        volver.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-        link_volver.add(volver);
-        volver.getElement().setAttribute("aria-label", "Volver");
 
-        link_volver.getElement().getStyle().set("margin-top", "8px");
-        link_volver.getElement().getStyle().set("text-decoration", "none");
-
-        // Layout para el botón de "Volver"
-        HorizontalLayout botones = new HorizontalLayout(link_volver);
-        botones.setWidthFull(); // Usar todo el ancho disponible
-        botones.setJustifyContentMode(FlexComponent.JustifyContentMode.END); // Alinear el botón al final
-
-        // Añadir el botón al contenido
-        getContent().add(botones);
-    }
 
     private void openEditDialog(Usuario usuario) {
         Dialog dialogo = new Dialog();

@@ -42,16 +42,8 @@ public class CriterioAllView extends VerticalLayout {
         setSpacing(true);
         setPadding(true);
 
-        crearTitulo("Criterios");
+        common.crearTitulo("Criterios",this);
         configurartabla();
-        crearvista();
-
-    }
-    private void crearTitulo(String titulo) {
-        add(new com.vaadin.flow.component.html.H1(titulo));
-    }
-
-    private void crearvista() {
 
         HorizontalLayout add = new HorizontalLayout();
         Button addButton = new Button("Agregar Criterio",click -> openAddDialog());
@@ -59,15 +51,16 @@ public class CriterioAllView extends VerticalLayout {
         add.add(addButton);
         add.setWidthFull();
         add.setJustifyContentMode(JustifyContentMode.CENTER);
-        HorizontalLayout volver = new HorizontalLayout();
-        Button volverButton = new Button("Volver", e -> UI.getCurrent().navigate(HomeAdminView.class));
-        volverButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-        volver.add(volverButton);
-        volver.setWidthFull();
-        volver.setJustifyContentMode(JustifyContentMode.END);
 
-        add(tabla_criterio, add, volver);
+        add(tabla_criterio, add);
+
+        add(common.botones_Admin());
+
     }
+    private void crearTitulo(String titulo) {
+        add(new com.vaadin.flow.component.html.H1(titulo));
+    }
+
 
     private void configurartabla(){
         tabla_criterio.removeAllColumns();

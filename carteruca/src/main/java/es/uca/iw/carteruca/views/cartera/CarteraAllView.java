@@ -45,32 +45,22 @@ public class CarteraAllView extends VerticalLayout {
         setSpacing(true);
         setPadding(true);
 
-        crearTitulo("Carteras");
+        common.crearTitulo("Carteras",this);
         configurarTabla();
-        crearVista();
-    }
-
-    private void crearTitulo(String titulo) {
-        add(new com.vaadin.flow.component.html.H1(titulo));
-    }
-
-    private void crearVista() {
-
         HorizontalLayout boton_agregar = new HorizontalLayout();
         Button addButton = new Button("Agregar Cartera", click -> openAddDialog());
         addButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         boton_agregar.add(addButton);
         boton_agregar.setWidthFull();
         boton_agregar.setJustifyContentMode(JustifyContentMode.CENTER);
-        HorizontalLayout boton_volver = new HorizontalLayout();
-        Button volverButton = new Button("Volver", e-> UI.getCurrent().navigate(HomeAdminView.class));
-        volverButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-        boton_volver.add(volverButton);
-        boton_volver.setWidthFull();
-        boton_volver.setJustifyContentMode(JustifyContentMode.END);
 
-        add(tablaCarteras, boton_agregar, boton_volver);
+        add(tablaCarteras, boton_agregar);
+
+        add(common.botones_Admin());
     }
+
+
+
 
     private void configurarTabla() {
         tablaCarteras.removeAllColumns();

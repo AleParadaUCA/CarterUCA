@@ -1,6 +1,7 @@
 package es.uca.iw.carteruca.views.common;
 
 import com.vaadin.flow.component.Composite;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
@@ -69,6 +70,12 @@ public class common {
         composite.getContent().add(titulo);
     }
 
+    public static void crearTitulo(String title, VerticalLayout layout) {
+        H2 titulo = new H2(title);
+        titulo.getElement().setAttribute("aria-label", title);
+        layout.add(titulo);
+    }
+
     // Método estático para abrir el diázlogo de crear/editar
     public static void openDialog(String title, String nombreCentro, String acronimoCentro, Centro centro, boolean isEdit,
                                   CentroService centroService, Runnable updateGrid) {
@@ -134,6 +141,24 @@ public class common {
         int g = (hash & 0x00FF00) >> 8;
         int b = hash & 0x0000FF;
         return String.format("#%02X%02X%02X", r, g, b);
+    }
+
+    public static HorizontalLayout botones_Admin(){
+
+        HorizontalLayout botones = new HorizontalLayout();
+        botones.setWidthFull();
+        botones.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
+
+
+        Button volver = new Button("Volver", event -> {
+            // Redirigir al usuario a la vista HomeAdminView
+            UI.getCurrent().navigate("/home-admin");
+        });
+        volver.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        volver.getElement().setAttribute("aria-label", "Volver");
+
+        botones.add(volver);
+        return botones;
     }
 
 }

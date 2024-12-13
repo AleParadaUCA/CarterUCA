@@ -46,16 +46,12 @@ public class CentroAllView extends Composite<VerticalLayout> {
         layout.setAlignItems(FlexComponent.Alignment.CENTER);
 
         Button add_button = add_boton();  // Botón para agregar un nuevo centro
-        Button volver_boton = addVolverButton(); // Botón de volver
 
-        HorizontalLayout volver = new HorizontalLayout(volver_boton);
-        volver.setWidthFull(); // Para que ocupe todo el ancho
-        volver.setJustifyContentMode(FlexComponent.JustifyContentMode.END); // Alinear a la izquierda
-        layout.add(volver, tabla_centros, add_button);  // Agregar los botones y la tabla al layout
+        layout.add(tabla_centros, add_button);  // Agregar los botones y la tabla al layout
         layout.setSpacing(true);
 
         getContent().add(layout);
-        getContent().add(volver);
+        getContent().add(common.botones_Admin());
     }
 
 
@@ -94,16 +90,7 @@ public class CentroAllView extends Composite<VerticalLayout> {
         return add;
     }
 
-    private Button addVolverButton() {
 
-        Button volver = new Button("Volver", event -> {
-            // Redirigir al usuario a la vista HomeAdminView
-            UI.getCurrent().navigate("/home-admin");
-        });
-        volver.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-        volver.getElement().setAttribute("aria-label", "Volver");
-        return volver;
-    }
 
     // Método para abrir el diálogo de agregar centro
     private void openAddDialog() {
