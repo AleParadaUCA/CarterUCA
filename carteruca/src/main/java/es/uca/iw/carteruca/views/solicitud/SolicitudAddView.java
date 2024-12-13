@@ -1,5 +1,8 @@
 package es.uca.iw.carteruca.views.solicitud;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 import com.vaadin.flow.component.AbstractField;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.HasValue;
@@ -12,24 +15,26 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Span;
-import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer;
-
+import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import es.uca.iw.carteruca.views.layout.MainLayout;
-import jakarta.annotation.security.PermitAll;
-import jakarta.annotation.security.RolesAllowed;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import es.uca.iw.carteruca.models.Cartera;
+import es.uca.iw.carteruca.models.Solicitud;
+import es.uca.iw.carteruca.models.Usuario;
+import es.uca.iw.carteruca.security.AuthenticatedUser;
+import es.uca.iw.carteruca.services.CarteraService;
+import es.uca.iw.carteruca.services.SolicitudService;
+import es.uca.iw.carteruca.services.UsuarioService;
+import es.uca.iw.carteruca.views.common.common;
+import es.uca.iw.carteruca.views.layout.MainLayout;
+import jakarta.annotation.security.RolesAllowed;
 
 @PageTitle("Agregar Solicitud")
 @Route(value = "/solicitudes/agregar-solicitud", layout = MainLayout.class)
@@ -44,9 +49,27 @@ public class SolicitudAddView extends Composite<VerticalLayout> {
     private final TextField normativa = new TextField();
     private final DatePicker fecha_puesta = new DatePicker();
     private final MultiFileMemoryBuffer buffer = new MultiFileMemoryBuffer();
-    private final ComboBox<String> avalador = new ComboBox<>();
+    private final ComboBox<Usuario> avalador = new ComboBox<>();
+    private final SolicitudService solicitudService;
+    private final AuthenticatedUser authenticatedUser;
+    private final Cartera carteraActual;
 
-    public SolicitudAddView() {
+    public SolicitudAddView(AuthenticatedUser authenticatedUser, SolicitudService solicitudService, UsuarioService usuarioService, CarteraService carteraService) {
+        this.authenticatedUser = authenticatedUser;
+        this.solicitudService = solicitudService;
+        this.carteraActual = carteraService.getCarteraActual().orElse(null);
+
+        if (carteraActual == null) {
+            common.showErrorNotification("No hay Cartera disponible");
+            UI.getCurrent().access(() -> UI.getCurrent().navigate("/home"));
+            return;
+        }
+
+        if ( LocalDateTime.now().isAfter(carteraActual.getFecha_cierre_solicitud().toLocalDate().atStartOfDay())){
+            common.showErrorNotification("El plazo de solicitud está cerrado.");
+            UI.getCurrent().access(() -> UI.getCurrent().navigate("/home") );
+            return;
+        }
 
         // Alineación del layout principal para centrar el contenido
         getContent().setWidth("100%");
@@ -68,7 +91,7 @@ public class SolicitudAddView extends Composite<VerticalLayout> {
         FormLayout form = new FormLayout();
         form.setWidthFull(); // El formulario ocupará todo el ancho disponible
 
-	    //Configuracion de los diferentes componentes del formulario
+        //Configuración de los diferentes componentes del formulario
         titulo.setId("Titulo");
         titulo.setLabel("Titulo");
         titulo.getElement().setAttribute("aria-label", "Introduzca el titulo");
@@ -93,11 +116,20 @@ public class SolicitudAddView extends Composite<VerticalLayout> {
         normativa.setLabel("Normativa");
         normativa.getElement().setAttribute("aria-label", "Normativa");
 
+        avalador.setId("Avalador");
         avalador.setLabel("Avalador");
-        avalador.setPlaceholder("Seleccione Avalador:");
+        avalador.setPlaceholder("Seleccione Avalador");
         avalador.getElement().setAttribute("aria-label", "Seleccione al avalador");
-        //FAÑTA LA LOGICA INTERNA POR ROL Y CON LOS ARIA-LABEL
-        //funcion que tenga todos los avaladores que hay por su rol
+
+        List<Usuario> avaladores = usuarioService.getAvaladores();
+        avalador.setItems(avaladores);
+        avalador.setItemLabelGenerator(Usuario::getNombre);
+
+        // Configuración del Binder
+        BeanValidationBinder<Solicitud> binder = new BeanValidationBinder<>(Solicitud.class);
+        binder.forField(avalador)
+                .asRequired("Debe seleccionar un Avalador")
+                .bind(Solicitud::getAvalador, Solicitud::setAvalador);
 
 
         fecha_puesta.setLabel("Fecha");
@@ -106,7 +138,7 @@ public class SolicitudAddView extends Composite<VerticalLayout> {
         fecha_puesta.setAutoOpen(false);
         fecha_puesta.setHelperText("Fecha limite de puesta en marcha del proyecto");
 
-        Span memoria = new Span("Memoria");
+        Span memoria = new Span("Memoria(20MB)");
         memoria.getElement().setAttribute("aria-label", "Adjunte la memoria del proyecto");
         memoria.getStyle()
                 .set("font-size", "14px") // Tamaño de fuente
@@ -118,23 +150,15 @@ public class SolicitudAddView extends Composite<VerticalLayout> {
         upload.setDropLabel(new com.vaadin.flow.component.html.Span("Arrastra tus archivos aquí o haz clic para cargar"));
         upload.setMaxFiles(1); // Límite opcional del número de archivos
         upload.setAcceptedFileTypes(".pdf", ".word"); // Acepta archivos específicos opcionalmente
+        upload.setMaxFileSize(20 * 1024 * 1024); // Tamaño máximo de archivo en bytes (20 MB)
 
-        // Listener para manejar el evento de subida exitosa
-        upload.addSucceededListener(event -> {
-            String fileName = event.getFileName();
-            InputStream inputStream = buffer.getInputStream(fileName);
+        // upload.addFileRejectedListener(event -> {
+        //     String errorMessage = event.getErrorMessage();
 
-            // Procesar el archivo
-            processFile(inputStream, fileName);
-        });
-
-        upload.addFileRejectedListener(event -> {
-            String errorMessage = event.getErrorMessage();
-
-            Notification notification = Notification.show(errorMessage, 5000,
-                    Notification.Position.MIDDLE);
-            notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
-        });
+        //     // Notification notification = Notification.show(errorMessage, 5000,
+        //     //         Notification.Position.MIDDLE);
+        //     // notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+        // });
 
         // Componentes del formulario
         form.add(titulo, nombre, interesados, objetivos, alcance, normativa, avalador, fecha_puesta, memoria, upload);
@@ -163,7 +187,9 @@ public class SolicitudAddView extends Composite<VerticalLayout> {
                     !alcance.isEmpty() &&
                     normativa.getValue() != null &&
                     avalador.getValue() != null &&
-                    fecha_puesta.getValue() != null;
+                    fecha_puesta.getValue() != null &&
+                    buffer.getFiles().isEmpty();
+
             guardar.setEnabled(allFilled);
         };
 
@@ -216,7 +242,7 @@ public class SolicitudAddView extends Composite<VerticalLayout> {
 
         // Botón "Aceptar"
         Button acceptButton = new Button("Aceptar", event -> {
-            add();  // Llamar al método add() si el usuario acepta
+            guardar();  // Llamar al método guardar() si el usuario acepta
             confirmDialog.close();  // Cerrar el diálogo
         });
         acceptButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
@@ -234,21 +260,21 @@ public class SolicitudAddView extends Composite<VerticalLayout> {
         confirmDialog.open();
     }
 
-    private void add(){
+    private void guardar(){
 
-        Notification.show("Solicitud guardada exitosamente.");
+        solicitudService.guardar(
+                titulo.getValue(),
+                nombre.getValue(),
+                fecha_puesta.getValue().atStartOfDay(),
+                interesados.getValue(),
+                objetivos.getValue(),
+                alcance.getValue(),
+                normativa.getValue(),
+                buffer,
+                avalador.getValue(),
+                authenticatedUser.get().get(),
+                carteraActual
+        );
+        common.showSuccessNotification("Solicitud guardada exitosamente.");
     }
-
-    private void processFile(InputStream inputStream, String fileName) {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
-            System.out.println("Contenido del archivo " + fileName + ":");
-            String line;
-            while ((line = reader.readLine()) != null) {
-                System.out.println(line); // Procesamiento o impresión de las líneas
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
 }
