@@ -16,7 +16,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -46,9 +45,6 @@ public class Usuario implements UserDetails {
 
     @ManyToOne
     private Centro centro;
-
-    @OneToMany
-    private List<Solicitud> solicitudes;
 
     @Column(columnDefinition = "VARCHAR(255) DEFAULT 'Solicitante'")
     @Enumerated(EnumType.STRING)
@@ -139,21 +135,8 @@ public class Usuario implements UserDetails {
         return centro;
     }
 
-    // public String getFotoPerfil() { return fotoPerfil; }
-
-    // public void setFotoPerfil(String fotoPerfil) {
-    //     this.fotoPerfil = fotoPerfil;
-    // }
-
     public void setCentro(Centro centro) {
         this.centro = centro;
     }
 
-    public List<Solicitud> getSolicitudes() {
-        return solicitudes;
-    }
-
-    public void setSolicitudes(List<Solicitud> solicitudes) {
-        this.solicitudes = solicitudes;
-    }
 }
