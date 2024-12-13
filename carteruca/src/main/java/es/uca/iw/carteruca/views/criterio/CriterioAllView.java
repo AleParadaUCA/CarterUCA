@@ -139,44 +139,61 @@ public class CriterioAllView extends VerticalLayout {
     }
 
     private void openEditDialog(Criterio criterio) {
-
+        // Crear el diálogo y el formulario
         Dialog dialog = new Dialog();
         FormLayout form = new FormLayout();
 
-        TextField descripcion = new TextField("Descripcion", criterio.getDescripcion());
-        // Crear el campo de número con el label "Peso"
-        NumberField peso = new NumberField("Peso");
-        peso.setValue(criterio.getPeso().doubleValue());
+        // Campo de texto para la descripción
+        TextField descripcionField = new TextField("Descripción");
+        descripcionField.setValue(criterio.getDescripcion());
 
-        form.add(descripcion, peso);
+        // Campo numérico para el peso
+        NumberField pesoField = new NumberField("Peso");
+        if (criterio.getPeso() != null) {
+            pesoField.setValue(criterio.getPeso().doubleValue());
+        }
 
+        // Agregar campos al formulario
+        form.add(descripcionField, pesoField);
+
+        // Botón de guardar con acción
         Button saveButton = new Button("Guardar", event -> {
             try {
-                criterio.setDescripcion(descripcion.getValue());
-                criterio.setPeso(peso.getValue().floatValue());
+                // Validar y actualizar valores del criterio
+                criterio.setDescripcion(descripcionField.getValue());
+                if (pesoField.getValue() == null) {
+                    throw new IllegalArgumentException("El campo 'Peso' no puede estar vacío.");
+                }
+                criterio.setPeso(pesoField.getValue().floatValue());
 
+                // Actualizar en el servicio
                 criterioService.updateCriterio(criterio);
+
+                // Actualizar la tabla y cerrar el diálogo
                 updateGrid();
                 dialog.close();
-                common.showSuccessNotification("Criterio editado");
-            }catch (IllegalArgumentException e){
-                common.showErrorNotification("Error " + e.getMessage());
+                common.showSuccessNotification("Criterio actualizado con éxito");
+            } catch (IllegalArgumentException e) {
+                common.showErrorNotification("Error: " + e.getMessage());
             }
         });
 
-        HorizontalLayout layout = new HorizontalLayout();
-        saveButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-
+        // Botón de cancelar
         Button cancelButton = new Button("Cancelar", event -> dialog.close());
+
+        // Estilizar botones
+        saveButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         cancelButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
 
-        layout.add(saveButton, cancelButton);
+        // Contenedor para los botones
+        HorizontalLayout buttonLayout = new HorizontalLayout(saveButton, cancelButton);
+        buttonLayout.setJustifyContentMode(JustifyContentMode.END);
 
-        layout.setJustifyContentMode(JustifyContentMode.END);
-        dialog.add(form,layout);
+        // Agregar formulario y botones al diálogo
+        dialog.add(form, buttonLayout);
         dialog.open();
-        
     }
+
 
 
 }

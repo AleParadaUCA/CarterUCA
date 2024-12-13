@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -71,64 +72,64 @@ public class CarteraService {
         return carteraRepository.save(cartera);
     }
 
-    //Actualizar una cartera existente
+    @Transactional
     public Cartera updateCartera(Long id, Cartera cartera) {
-        // Actualizar solo los campos que no sean nulos
-        if (cartera.getNombre() != null && !cartera.getNombre().trim().isEmpty()) {
-            cartera.setNombre(cartera.getNombre());
-            logger.info("Nombre actualizado a: {}", cartera.getNombre());
+        // Obtener la cartera original de la base de datos
+        Cartera originalCartera = carteraRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Cartera no encontrada"));
+
+        // Solo actualizamos los campos si los nuevos valores son diferentes a los actuales
+
+        if (cartera.getNombre() != null && !cartera.getNombre().trim().isEmpty() && !cartera.getNombre().equals(originalCartera.getNombre())) {
+            originalCartera.setNombre(cartera.getNombre());
         }
 
-        if (cartera.getFecha_inicio() != null) {
-            cartera.setFecha_inicio(cartera.getFecha_inicio());
-            logger.info("Fecha de inicio actualizada a: {}", cartera.getFecha_inicio());
+        if (cartera.getFecha_inicio() != null && !cartera.getFecha_inicio().equals(originalCartera.getFecha_inicio())) {
+            originalCartera.setFecha_inicio(cartera.getFecha_inicio());
         }
 
-        if (cartera.getFecha_fin() != null) {
-            cartera.setFecha_fin(cartera.getFecha_fin());
-            logger.info("Fecha de fin actualizada a: {}", cartera.getFecha_fin());
+        if (cartera.getFecha_fin() != null && !cartera.getFecha_fin().equals(originalCartera.getFecha_fin())) {
+            originalCartera.setFecha_fin(cartera.getFecha_fin());
         }
 
-        if (cartera.getFecha_apertura_solicitud() != null) {
-            cartera.setFecha_apertura_solicitud(cartera.getFecha_apertura_solicitud());
-            logger.info("Fecha de apertura de solicitudes actualizada a: {}", cartera.getFecha_apertura_solicitud());
+        if (cartera.getFecha_apertura_solicitud() != null && !cartera.getFecha_apertura_solicitud().equals(originalCartera.getFecha_apertura_solicitud())) {
+            originalCartera.setFecha_apertura_solicitud(cartera.getFecha_apertura_solicitud());
         }
 
-        if (cartera.getFecha_cierre_solicitud() != null) {
-            cartera.setFecha_cierre_solicitud(cartera.getFecha_cierre_solicitud());
-            logger.info("Fecha de cierre de solicitudes actualizada a: {}", cartera.getFecha_cierre_solicitud());
+        if (cartera.getFecha_cierre_solicitud() != null && !cartera.getFecha_cierre_solicitud().equals(originalCartera.getFecha_cierre_solicitud())) {
+            originalCartera.setFecha_cierre_solicitud(cartera.getFecha_cierre_solicitud());
         }
 
-        if(cartera.getFecha_apertura_evaluacion() == null){
-            cartera.setFecha_apertura_evaluacion(cartera.getFecha_apertura_evaluacion());
-            logger.info("La fecha apertura evaluacion es obligatorio a: {}", cartera.getFecha_apertura_evaluacion());
+        if (cartera.getFecha_apertura_evaluacion() != null && !cartera.getFecha_apertura_evaluacion().equals(originalCartera.getFecha_apertura_evaluacion())) {
+            originalCartera.setFecha_apertura_evaluacion(cartera.getFecha_apertura_evaluacion());
         }
 
-        if(cartera.getFecha_cierre_evaluacion() == null){
-            cartera.setFecha_cierre_evaluacion(cartera.getFecha_cierre_evaluacion());
-            logger.info("La fecha apertura evaluacion es obligatorio a: {}", cartera.getFecha_cierre_evaluacion());
+        if (cartera.getFecha_cierre_evaluacion() != null && !cartera.getFecha_cierre_evaluacion().equals(originalCartera.getFecha_cierre_evaluacion())) {
+            originalCartera.setFecha_cierre_evaluacion(cartera.getFecha_cierre_evaluacion());
         }
 
-        if(cartera.getN_max_tecnicos() <= 0) {
-            cartera.setN_max_tecnicos(cartera.getN_max_tecnicos());
-            logger.info("El número de técnicos ha sido actualizado a: {}", cartera.getN_max_tecnicos());
+        // Comparar y actualizar el valor de n_max_tecnicos, solo si el valor ha cambiado
+        if (cartera.getN_max_tecnicos() != 0 && cartera.getN_max_tecnicos() != originalCartera.getN_max_tecnicos()) {
+            originalCartera.setN_max_tecnicos(cartera.getN_max_tecnicos());
         }
 
-        if(cartera.getPresupuesto_total() <= 0.0){
-            cartera.setPresupuesto_total(cartera.getPresupuesto_total());
-            logger.info("El presupuesto ha sido actualizado a: {}", cartera.getPresupuesto_total());
+        // Comparar y actualizar el valor de n_horas, solo si el valor ha cambiado
+        if (cartera.getN_horas() != 0 && cartera.getN_horas() != originalCartera.getN_horas()) {
+            originalCartera.setN_horas(cartera.getN_horas());
         }
 
-        if(cartera.getN_horas() <= 0.0){
-            cartera.setN_horas(cartera.getN_horas());
-            logger.info("El numero de horas ha sido actualizado a: {}", cartera.getN_horas());
+        // Comparar y actualizar el valor de presupuesto_total, solo si el valor ha cambiado
+        if (cartera.getPresupuesto_total() != 0 && cartera.getPresupuesto_total() != originalCartera.getPresupuesto_total()) {
+            originalCartera.setPresupuesto_total(cartera.getPresupuesto_total());
         }
 
-        // Guardar y devolver la cartera actualizada
-        Cartera updatedCartera = carteraRepository.save(cartera);
+        // Guardar la cartera actualizada si hay algún cambio
+        Cartera updatedCartera = carteraRepository.save(originalCartera);
         logger.info("Cartera actualizada exitosamente: {}", updatedCartera);
         return updatedCartera;
     }
+
+
+
 
     //Eliminar un centro
     public void deleteCartera(Long id) {
