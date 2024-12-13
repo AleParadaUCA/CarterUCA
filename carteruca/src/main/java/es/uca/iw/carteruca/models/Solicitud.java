@@ -32,6 +32,7 @@ public class Solicitud {
     @Column
     private String alcance; // Cantidad y grupo de personas a las que beneficiará el proyecto
 
+    @Column
     private String normativa;//Codigo y/o descripcion de la normativa de aplicación obligatoria
 
     @Column
@@ -118,7 +119,7 @@ public class Solicitud {
 
     //Hay que comprobar que sea avalador
     public Usuario getAvalador() {return promotor;}
-    public void setAvalador(Usuario promotor) {this.promotor = this.promotor;}
+    public void setAvalador(Usuario promotor) {this.promotor = promotor;}
     
     public Cartera getCartera() {return cartera;}
     public void setCartera(Cartera cartera) {this.cartera = cartera;}
