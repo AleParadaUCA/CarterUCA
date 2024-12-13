@@ -161,4 +161,34 @@ public class common {
         return botones;
     }
 
+    public static HorizontalLayout botones_Registrado(){
+        HorizontalLayout botones = new HorizontalLayout();
+        botones.setWidthFull();
+        botones.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
+
+        Button volver = new Button("Volver", event -> {
+            UI.getCurrent().navigate("/home");
+        });
+
+        volver.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+
+        botones.add(volver);
+        return botones;
+    }
+
+    public static HorizontalLayout botones_solicitud(){
+        HorizontalLayout botones = new HorizontalLayout();
+        botones.setWidthFull();
+        botones.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
+
+        Button volver = new Button("Volver", event -> {
+            UI.getCurrent().navigate("/solicitudes");
+        });
+
+        volver.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+
+        botones.add(volver);
+        return botones;
+    }
+
 }
