@@ -79,4 +79,9 @@ public class SolicitudService {
 
         repository.save(solicitud);
     }
+
+    public List<Solicitud> getSolicitudesByUsuario(Usuario usuario) {
+        // Consultar todas las solicitudes asociadas a este usuario, basándonos en los proyectos y estados que tiene
+        return repository.findBySolicitante(usuario);
+    }
 }

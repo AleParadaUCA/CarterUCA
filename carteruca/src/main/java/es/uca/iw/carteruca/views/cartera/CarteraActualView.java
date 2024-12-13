@@ -92,11 +92,11 @@ public class CarteraActualView extends Composite<VerticalLayout> {
             // Agregar los campos al FormLayout
             formLayout.add(
                     nombreField,
+                    nHorasField,
                     fechaInicioField,
                     fechaFinField,
                     fechaAperturaSolicitudField,
                     fechaCierreSolicitudField,
-                    nHorasField,
                     nMaxTecnicosField,
                     presupuestoTotalField
             );
