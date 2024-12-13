@@ -29,7 +29,6 @@ public class SolicitudService {
         this.repository = repository;
     }
 
-//    public void guardar(String titulo, String nombre, LocalDateTime fechaPuesta, String interesados, String alineamiento, String alcance, String normativa, MultiFileMemoryBuffer buffer, Usuario avalador, String presupuesto, Usuario solictante) {
     public void guardar(String titulo, String nombre, LocalDateTime fechaPuesta, String interesados, String alineamiento, String alcance, String normativa, MultiFileMemoryBuffer buffer, Usuario avalador, Usuario solictante, Cartera cartera) {
         AtomicReference<String> memoria = new AtomicReference<>("");
 
@@ -68,12 +67,7 @@ public class SolicitudService {
         solicitud.setAlcance(alcance);
         solicitud.setNormativa(normativa);
         solicitud.setMemoria(memoria.get()); //path
-        //solicitud.setImportancia_promotor(importanciaPromotor); //esto que es?
-        //solicitud.setPresupuesto(presupuesto);
-        //solicitud.setEspecificacion_tecnica(especificacionTecnica);
         solicitud.setEstado(Estado.EN_TRAMITE);
-        //puntuacion se quita
-        //porcentaje se quita
         solicitud.setSolicitante(solictante);
         solicitud.setAvalador(avalador);
         solicitud.setCartera(cartera);
