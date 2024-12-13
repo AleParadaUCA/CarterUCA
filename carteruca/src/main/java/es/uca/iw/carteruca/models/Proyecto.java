@@ -25,7 +25,13 @@ public class Proyecto {
 
     @Column
     private Float porcentaje; // este campo mostrará el porcentaje de avance del proyecto que este en marcha.
-    // *hasta aqui lo rellena CIO y OTP
+
+    @Column
+    private String director_de_proyecto;
+
+    @ManyToOne
+    @JoinColumn(name = "jefe_id")
+    private Usuario jefe;
 
     public String getPresupuesto() {return presupuesto;}
     public void setPresupuesto(String presupuesto) {this.presupuesto = presupuesto;}
@@ -39,4 +45,9 @@ public class Proyecto {
     public Float getPorcentaje() {return porcentaje;}
     public void setPorcentaje(Float porcentaje) {this.porcentaje = porcentaje;}
 
+    public String getDirector_de_proyecto() {return director_de_proyecto;}
+    public void setDirector_de_proyecto(String director_de_proyecto) {this.director_de_proyecto = director_de_proyecto;}
+
+    public Usuario getJefe() {return jefe;}
+    public void setJefe(Usuario jefe) {this.jefe = jefe;}
 }
