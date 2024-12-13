@@ -96,8 +96,11 @@ public class Solicitud {
     public void setSolicitante(Usuario solicitante) {this.solicitante = solicitante;}
 
     public Usuario getAvalador() {return promotor;}
-    public void setAvalador(Usuario promotor) {this.promotor = this.promotor;}
-    
+    public void setAvalador(Usuario promotor) {
+        if(promotor.getRol() != Rol.Promotor)  throw new IllegalArgumentException("El usuario no tiene el rol de promotor");
+        this.promotor = promotor;
+    }
+
     public Cartera getCartera() {return cartera;}
     public void setCartera(Cartera cartera) {this.cartera = cartera;}
 
