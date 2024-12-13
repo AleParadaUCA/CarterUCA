@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.concurrent.atomic.AtomicReference;
 
+import es.uca.iw.carteruca.models.Cartera;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +29,7 @@ public class SolicitudService {
     }
 
 //    public void guardar(String titulo, String nombre, LocalDateTime fechaPuesta, String interesados, String alineamiento, String alcance, String normativa, MultiFileMemoryBuffer buffer, Usuario avalador, String presupuesto, Usuario solictante) {
-    public void guardar(String titulo, String nombre, LocalDateTime fechaPuesta, String interesados, String alineamiento, String alcance, String normativa, MultiFileMemoryBuffer buffer, Usuario avalador, Usuario solictante) {
+    public void guardar(String titulo, String nombre, LocalDateTime fechaPuesta, String interesados, String alineamiento, String alcance, String normativa, MultiFileMemoryBuffer buffer, Usuario avalador, Usuario solictante, Cartera cartera) {
         AtomicReference<String> memoria = new AtomicReference<>("");
 
         //Faltan commprobaciones..
@@ -74,7 +75,7 @@ public class SolicitudService {
         //porcentaje se quita
         solicitud.setSolicitante(solictante);
         solicitud.setAvalador(avalador);
-        //cartera
+        solicitud.setCartera(cartera);
 
         repository.save(solicitud);
     }

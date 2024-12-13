@@ -22,14 +22,17 @@ import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import es.uca.iw.carteruca.models.Cartera;
 import es.uca.iw.carteruca.models.Solicitud;
 import es.uca.iw.carteruca.models.Usuario;
 import es.uca.iw.carteruca.security.AuthenticatedUser;
+import es.uca.iw.carteruca.services.CarteraService;
 import es.uca.iw.carteruca.services.SolicitudService;
 import es.uca.iw.carteruca.services.UsuarioService;
 import es.uca.iw.carteruca.views.layout.MainLayout;
 import jakarta.annotation.security.RolesAllowed;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.vaadin.flow.component.notification.Notification;
@@ -51,10 +54,28 @@ public class SolicitudAddView extends Composite<VerticalLayout> {
     private final ComboBox<Usuario> avalador = new ComboBox<>();
     private final SolicitudService solicitudService;
     private final AuthenticatedUser authenticatedUser;
+    private final Cartera carteraActual;
 
-    public SolicitudAddView(AuthenticatedUser authenticatedUser, SolicitudService solicitudService, UsuarioService usuarioService) {
+    public SolicitudAddView(AuthenticatedUser authenticatedUser, SolicitudService solicitudService, UsuarioService usuarioService, CarteraService carteraService) {
         this.authenticatedUser = authenticatedUser;
         this.solicitudService = solicitudService;
+        this.carteraActual = carteraService.getCarteraActual().orElse(null);
+
+        if (carteraActual == null) {
+            Notification notification = Notification.show("No hay Cartera disponible"); // llamar a común
+            notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+
+            UI.getCurrent().access(() -> UI.getCurrent().navigate("/home"));
+            return;
+        }
+
+        if ( LocalDateTime.now().isAfter(carteraActual.getFecha_cierre_solicitud().toLocalDate().atStartOfDay())){
+            Notification notification = Notification.show("El plazo de solicitud está cerrado."); // llamar a común
+            notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+
+            UI.getCurrent().access(() -> UI.getCurrent().navigate("/home") );
+            return;
+        }
 
         // Alineación del layout principal para centrar el contenido
         getContent().setWidth("100%");
@@ -76,7 +97,7 @@ public class SolicitudAddView extends Composite<VerticalLayout> {
         FormLayout form = new FormLayout();
         form.setWidthFull(); // El formulario ocupará todo el ancho disponible
 
-        //Configuracion de los diferentes componentes del formulario
+        //Configuración de los diferentes componentes del formulario
         titulo.setId("Titulo");
         titulo.setLabel("Titulo");
         titulo.getElement().setAttribute("aria-label", "Introduzca el titulo");
@@ -257,7 +278,8 @@ public class SolicitudAddView extends Composite<VerticalLayout> {
                 normativa.getValue(),
                 buffer,
                 avalador.getValue(),
-                authenticatedUser.get().get()
+                authenticatedUser.get().get(),
+                carteraActual
         );
         Notification.show("Solicitud guardada exitosamente.");
     }
