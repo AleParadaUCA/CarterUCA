@@ -66,7 +66,7 @@ public class SolicitudSeeView extends Composite<VerticalLayout> {
         // Agregar la columna de Estado con el Badge filtrado por usuario
         solicitudes.addColumn(new ComponentRenderer<>(solicitud -> {
             return createBadgeForEstado(solicitud.getEstado()); // Devuelve el componente Span
-        })).setHeader("Estado");
+        }));
 
         // Agregar un botón para alternar detalles
         solicitudes.addColumn(createToggleDetailsRenderer(solicitudes)).setHeader("Detalles");
