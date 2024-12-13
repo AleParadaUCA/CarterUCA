@@ -86,7 +86,10 @@ public class UsuarioService implements UserDetailsService {
         }
 
 
-        Rol rol= ObtenerRol(nombre+" "+apellidos);
+        Rol rol= ObtenerRol(nombre+" "+apellidos); //cuando el json sea formato u.....
+//        Rol rol= ObtenerRol(usuario); 
+
+
 
         Usuario nuevoUsuario = new Usuario();
         nuevoUsuario.setNombre(nombre);
