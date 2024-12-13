@@ -51,11 +51,11 @@ public class Solicitud {
     @JoinColumn(name = "solicitante_id") //FK hacia usuario solicitante
     private Usuario solicitante;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "promotor_id")// FK hacia usuario promotor
     private Usuario promotor;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "cartera_id")// FK hacia cartera
     private Cartera cartera;// referencia a la cartera a la que pertenece
 
@@ -96,7 +96,7 @@ public class Solicitud {
     public void setSolicitante(Usuario solicitante) {this.solicitante = solicitante;}
 
     public Usuario getAvalador() {return promotor;}
-    public void setAvalador(Usuario promotor) {this.promotor = promotor;}
+    public void setAvalador(Usuario promotor) {this.promotor = this.promotor;}
     
     public Cartera getCartera() {return cartera;}
     public void setCartera(Cartera cartera) {this.cartera = cartera;}
