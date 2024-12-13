@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 import es.uca.iw.carteruca.models.Cartera;
