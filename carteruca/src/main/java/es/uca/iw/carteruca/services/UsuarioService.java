@@ -85,16 +85,8 @@ public class UsuarioService implements UserDetailsService {
             return "El correo ya está en uso.";
         }
 
-        // Determinar el rol del usuario
-        Rol rol = Rol.Solicitante; // Valor predeterminado
-        try {
-            // Verificar si el usuario es un promotor mediante la API
-            if (esPromotor(nombre+" "+apellidos)) {
-                rol = Rol.Promotor;
-            }
-        } catch (Exception e) {
-            return "Error al verificar el rol: " + e.getMessage();
-        }
+
+        Rol rol= ObtenerRol(nombre+" "+apellidos);
 
         Usuario nuevoUsuario = new Usuario();
         nuevoUsuario.setNombre(nombre);
@@ -109,8 +101,9 @@ public class UsuarioService implements UserDetailsService {
         return "Exito";
     }
 
-    private boolean esPromotor(String nombre) {
+    private Rol ObtenerRol(String nombre) {
         final String url = "https://e608f590-1a0b-43c5-b363-e5a883961765.mock.pstmn.io/sponsors";
+        Rol rol=Rol.Solicitante;
         WebClient webClient = WebClient.create();
 
         System.out.println("Nombre: " + nombre);
@@ -129,7 +122,7 @@ public class UsuarioService implements UserDetailsService {
             for (JsonNode promotor : data) {
                 if (nombre.equalsIgnoreCase(promotor.path("nombre").asText())) {
                     System.out.println("promotor\n");
-                    return true;
+                    rol=Rol.Promotor;
                 }
 
             }
@@ -137,7 +130,7 @@ public class UsuarioService implements UserDetailsService {
             throw new RuntimeException("Error al consultar la API de promotores", e);
         }
         System.out.println("no coincide con la lista\n");
-        return false;
+        return  rol;
     }
 
 
