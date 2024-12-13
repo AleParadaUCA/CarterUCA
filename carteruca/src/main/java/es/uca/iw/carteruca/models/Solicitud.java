@@ -119,8 +119,11 @@ public class Solicitud {
 
     //Hay que comprobar que sea avalador
     public Usuario getAvalador() {return promotor;}
-    public void setAvalador(Usuario promotor) {this.promotor = promotor;}
-    
+    public void setAvalador(Usuario promotor) {
+        if(promotor.getRol() != Rol.Promotor)  throw new IllegalArgumentException("El usuario no tiene el rol de promotor");
+        this.promotor = promotor;
+    }
+
     public Cartera getCartera() {return cartera;}
     public void setCartera(Cartera cartera) {this.cartera = cartera;}
 
