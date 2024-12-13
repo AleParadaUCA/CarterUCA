@@ -188,13 +188,11 @@ public class CarteraAllView extends VerticalLayout {
         presupuestoField.setValue(Double.valueOf(cartera.getPresupuesto_total()));
 
         formLayout.add(nombreField, n_tecnicosField, fechaInicioField, fechaFinField, aperturaSolicitudField, cierreSolicitudField,
-                aperturaEvaluacionField, cierreEvaluacionField, n_tecnicosField, n_horasField, presupuestoField);
+                aperturaEvaluacionField, cierreEvaluacionField, n_horasField, presupuestoField);
 
         Button saveButton = new Button("Guardar", event -> {
             try {
                 cartera.setNombre(nombreField.getValue());
-
-                // Convertir LocalDate a LocalDateTime para guardar en Cartera
                 cartera.setFecha_inicio(fechaInicioField.getValue() != null ? fechaInicioField.getValue().atStartOfDay() : null);
                 cartera.setFecha_fin(fechaFinField.getValue() != null ? fechaFinField.getValue().atStartOfDay() : null);
                 cartera.setFecha_apertura_solicitud(aperturaSolicitudField.getValue() != null ? aperturaSolicitudField.getValue().atStartOfDay() : null);
@@ -202,14 +200,23 @@ public class CarteraAllView extends VerticalLayout {
                 cartera.setFecha_apertura_evaluacion(aperturaEvaluacionField.getValue() != null ? aperturaEvaluacionField.getValue().atStartOfDay() : null);
                 cartera.setFecha_cierre_evaluacion(cierreEvaluacionField.getValue() != null ? cierreEvaluacionField.getValue().atStartOfDay() : null);
 
+                cartera.setPresupuesto_total(presupuestoField.getValue().floatValue());
+                cartera.setN_max_tecnicos(n_tecnicosField.getValue());
+                cartera.setN_horas(n_horasField.getValue().floatValue());
+
+                // Actualiza la cartera en la base de datos
                 carteraService.updateCartera(cartera.getId(), cartera);
+
+                // Actualiza toda la tabla
                 updateGrid();
+
                 dialog.close();
                 common.showSuccessNotification("Cartera actualizada con éxito");
             } catch (IllegalArgumentException e) {
                 Notification.show("Error: " + e.getMessage(), 3000, Notification.Position.MIDDLE);
             }
         });
+
         HorizontalLayout layout = new HorizontalLayout();
 
         saveButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
