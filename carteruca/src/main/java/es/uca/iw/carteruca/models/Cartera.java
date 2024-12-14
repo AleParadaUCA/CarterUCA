@@ -50,10 +50,6 @@ public class Cartera {
     @Column(nullable = false)
     float presupuesto_total;
 
-
-
-
-
 //GETTERS Y SETTERS
     public Long getId() {return id;}
 

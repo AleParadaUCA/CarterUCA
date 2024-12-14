@@ -69,6 +69,13 @@ public class CarteraService {
         }
 
         logger.info("Nueva cartera agregada exitosamente: {}", cartera.getNombre());
+
+        // Comprobar si ya existe una cartera con la misma tupla única
+        Optional<Cartera> existingCartera = carteraRepository.findByFechaInicioAndFechaFin(  cartera.getFecha_inicio(), cartera.getFecha_fin());
+        if (existingCartera.isPresent()) {
+            throw new IllegalArgumentException("Ya existe una cartera con el mismo nombre, fecha de inicio y fecha de fin");
+        }
+
         return carteraRepository.save(cartera);
     }
 
@@ -120,6 +127,12 @@ public class CarteraService {
         // Comparar y actualizar el valor de presupuesto_total, solo si el valor ha cambiado
         if (cartera.getPresupuesto_total() != 0 && cartera.getPresupuesto_total() != originalCartera.getPresupuesto_total()) {
             originalCartera.setPresupuesto_total(cartera.getPresupuesto_total());
+        }
+
+        // Comprobar si ya existe una cartera con la misma tupla única
+        Optional<Cartera> existingCartera = carteraRepository.findByFechaInicioAndFechaFin(  cartera.getFecha_inicio(), cartera.getFecha_fin());
+        if (existingCartera.isPresent() && !existingCartera.get().getId().equals(id)) {
+            throw new IllegalArgumentException("Ya existe una cartera con el mismo nombre, fecha de inicio y fecha de fin");
         }
 
         // Guardar la cartera actualizada si hay algún cambio

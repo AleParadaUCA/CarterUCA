@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface CarteraRepository extends JpaRepository<Cartera, Long> {
 
-    //se puede usar Optional<clase> por si no existe la instancia de esa clase devolver error
+    Optional<Cartera> findByFechaInicioAndFechaFin(LocalDateTime inicio, LocalDateTime end);
 
     Cartera findByFechaInicio(LocalDateTime fecha_inicio);//Busca una Cartera que tenga una fecha_inicio x
 

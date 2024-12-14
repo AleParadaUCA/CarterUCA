@@ -1,6 +1,5 @@
 package es.uca.iw.carteruca.views.cartera;
 
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.icon.Icon;
@@ -17,11 +16,9 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.server.auth.AnonymousAllowed;
 import es.uca.iw.carteruca.models.Cartera;
 import es.uca.iw.carteruca.services.CarteraService;
 import es.uca.iw.carteruca.views.common.common;
-import es.uca.iw.carteruca.views.home.HomeAdminView;
 import es.uca.iw.carteruca.views.layout.MainLayout;
 import jakarta.annotation.security.RolesAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -113,10 +110,21 @@ public class CarteraAllView extends VerticalLayout {
 
         Button saveButton = new Button("Guardar", event -> {
             try {
+                if (fechaInicioField.getValue().isAfter(fechaFinField.getValue())) {
+                    common.showErrorNotification("La fecha de inicio debe ser anterior a la fecha de fin");
+                    return;
+                }
+
+                if (aperturaSolicitudField.getValue().isBefore(fechaInicioField.getValue()) || aperturaSolicitudField.getValue().isAfter(fechaFinField.getValue()) ||
+                    cierreSolicitudField.getValue().isBefore(fechaInicioField.getValue()) || cierreSolicitudField.getValue().isAfter(fechaFinField.getValue()) ||
+                    aperturaEvaluacionField.getValue().isBefore(fechaInicioField.getValue()) || aperturaEvaluacionField.getValue().isAfter(fechaFinField.getValue()) ||
+                    cierreEvaluacionField.getValue().isBefore(fechaInicioField.getValue()) || cierreEvaluacionField.getValue().isAfter(fechaFinField.getValue())) {
+                    common.showErrorNotification("Todas las fechas deben estar entre la fecha de inicio y la fecha de fin");
+                    return;
+                }
+
                 Cartera nuevaCartera = new Cartera();
                 nuevaCartera.setNombre(nombreField.getValue());
-
-                // Convertir LocalDate a LocalDateTime
                 nuevaCartera.setFecha_inicio(fechaInicioField.getValue().atStartOfDay());
                 nuevaCartera.setFecha_fin(fechaFinField.getValue().atStartOfDay());
                 nuevaCartera.setFecha_apertura_solicitud(aperturaSolicitudField.getValue().atStartOfDay());
@@ -125,7 +133,7 @@ public class CarteraAllView extends VerticalLayout {
                 nuevaCartera.setFecha_cierre_evaluacion(cierreEvaluacionField.getValue().atStartOfDay());
                 nuevaCartera.setN_horas(n_horasField.getValue().floatValue());
                 nuevaCartera.setPresupuesto_total(presupuestoField.getValue().floatValue());
-                nuevaCartera.setN_max_tecnicos(n_tecnicosField.getValue().intValue());
+                nuevaCartera.setN_max_tecnicos(n_tecnicosField.getValue());
 
                 carteraService.addCartera(nuevaCartera);
                 updateGrid();
@@ -154,8 +162,6 @@ public class CarteraAllView extends VerticalLayout {
         FormLayout formLayout = new FormLayout();
 
         TextField nombreField = new TextField("Nombre", cartera.getNombre());
-
-
         DatePicker fechaInicioField = new DatePicker("Fecha Inicio de Plazo",
                 cartera.getFecha_inicio() != null ? cartera.getFecha_inicio().toLocalDate() : null);
         DatePicker fechaFinField = new DatePicker("Fecha Fin de Plazo",
@@ -182,6 +188,19 @@ public class CarteraAllView extends VerticalLayout {
 
         Button saveButton = new Button("Guardar", event -> {
             try {
+                if (fechaInicioField.getValue().isAfter(fechaFinField.getValue())) {
+                    common.showErrorNotification("La fecha de inicio debe ser anterior a la fecha de fin");
+                    return;
+                }
+
+                if (aperturaSolicitudField.getValue().isBefore(fechaInicioField.getValue()) || aperturaSolicitudField.getValue().isAfter(fechaFinField.getValue()) ||
+                    cierreSolicitudField.getValue().isBefore(fechaInicioField.getValue()) || cierreSolicitudField.getValue().isAfter(fechaFinField.getValue()) ||
+                    aperturaEvaluacionField.getValue().isBefore(fechaInicioField.getValue()) || aperturaEvaluacionField.getValue().isAfter(fechaFinField.getValue()) ||
+                    cierreEvaluacionField.getValue().isBefore(fechaInicioField.getValue()) || cierreEvaluacionField.getValue().isAfter(fechaFinField.getValue())) {
+                    common.showErrorNotification("Todas las fechas deben estar entre la fecha de inicio y la fecha de fin");
+                    return;
+                }
+
                 cartera.setNombre(nombreField.getValue());
                 cartera.setFecha_inicio(fechaInicioField.getValue() != null ? fechaInicioField.getValue().atStartOfDay() : null);
                 cartera.setFecha_fin(fechaFinField.getValue() != null ? fechaFinField.getValue().atStartOfDay() : null);
@@ -196,8 +215,6 @@ public class CarteraAllView extends VerticalLayout {
 
                 // Actualiza la cartera en la base de datos
                 carteraService.updateCartera(cartera.getId(), cartera);
-
-                // Actualiza toda la tabla
                 updateGrid();
 
                 dialog.close();
