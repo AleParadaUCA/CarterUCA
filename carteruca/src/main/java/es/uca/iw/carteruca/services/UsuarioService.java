@@ -46,7 +46,7 @@ public class UsuarioService implements UserDetailsService {
     }
 
     @Transactional
-    public String createUser(String nombre, String apellidos, String username, String email, String password, Centro centro) throws JsonProcessingException {
+    public String createUser(String nombre, String apellidos, String username, String email, String password, Centro centro) {
         // Eliminar espacios al inicio y al final de los campos
         nombre = nombre != null ? nombre.trim() : "";
         apellidos = apellidos != null ? apellidos.trim() : "";
@@ -86,9 +86,13 @@ public class UsuarioService implements UserDetailsService {
         }
 
 
-        Rol rol= ObtenerRol(nombre+" "+apellidos); //cuando el json sea formato u.....
-//        Rol rol= ObtenerRol(usuario); 
-
+        Rol rol;
+        try {
+            rol = ObtenerRol(nombre+" "+apellidos);
+        } catch (JsonProcessingException e) {
+            //error al acceder al json
+            throw new RuntimeException(e);
+        }
 
 
         Usuario nuevoUsuario = new Usuario();
@@ -157,12 +161,8 @@ public class UsuarioService implements UserDetailsService {
         return repository.findById(id);
     }
 
-    public Usuario getUserByEmail(String email) {
-        return repository.findByEmail(email);
-    }
-
-    public Usuario getUserByUsername(String username) {
-        return repository.findByUsuario(username).get();
+    public Optional<Usuario> getUserByUsername(String username) {
+        return repository.findByUsuario(username);
     }
 
     public void deleteUser(Long id) {

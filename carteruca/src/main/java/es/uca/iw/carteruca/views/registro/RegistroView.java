@@ -47,7 +47,6 @@ public class RegistroView extends Composite<VerticalLayout> {
     private final PasswordField password = new PasswordField();
     private final PasswordField repetir_password = new PasswordField();
     private final ComboBox<Centro> centro = new ComboBox<>();
-    private final BeanValidationBinder<Usuario> binder;
     Button guardar = new Button("Guardar");
     Button volver = new Button("Volver");
 
@@ -84,7 +83,7 @@ public class RegistroView extends Composite<VerticalLayout> {
 
         password.setMinLength(6);
         password.setMaxLength(20);
-        password.setHelperText("6-20 letras y numeros");
+        password.setHelperText("6-20 letras y números");
 
         repetir_password.setMinLength(6);
         repetir_password.setMaxLength(20);
@@ -127,7 +126,7 @@ public class RegistroView extends Composite<VerticalLayout> {
         centro.setPlaceholder("Seleccione un centro");
 
         // Configuración del Binder
-        binder = new BeanValidationBinder<>(Usuario.class);
+        BeanValidationBinder<Usuario> binder = new BeanValidationBinder<>(Usuario.class);
         binder.forField(centro)
                 .asRequired("Debe seleccionar un centro")
                 .bind(Usuario::getCentro, Usuario::setCentro);
@@ -135,7 +134,7 @@ public class RegistroView extends Composite<VerticalLayout> {
 
         // Checkbox para términos y condiciones
         Checkbox checkbox = new Checkbox("He podido leer y entiendo la Política de Privacidad y Cookies");
-        checkbox.getElement().setAttribute("aria-label","He podido leer y entiendo la Política de Provacidad y Cookies");
+        checkbox.getElement().setAttribute("aria-label","He podido leer y entiendo la Política de Privacidad y Cookies");
 
         // Agregar campos al formulario
         formLayout2Col.add(nombre, apellidos, usuario, email, centro, password, repetir_password);
