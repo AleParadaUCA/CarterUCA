@@ -5,9 +5,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.GrantedAuthority;
@@ -21,6 +18,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vaadin.hilla.ExplicitNullableTypeChecker;
 
 import es.uca.iw.carteruca.models.Centro;
@@ -46,7 +46,7 @@ public class UsuarioService implements UserDetailsService {
     }
 
     @Transactional
-    public String createUser(String nombre, String apellidos, String username, String email, String password, Centro centro) {
+    public String createUser(String nombre, String apellidos, String username, String email, String password, Centro centro) throws JsonProcessingException {
         // Eliminar espacios al inicio y al final de los campos
         nombre = nombre != null ? nombre.trim() : "";
         apellidos = apellidos != null ? apellidos.trim() : "";
@@ -104,35 +104,25 @@ public class UsuarioService implements UserDetailsService {
         return "Exito";
     }
 
-    private Rol ObtenerRol(String nombre) {
+    private Rol ObtenerRol(String nombre) throws JsonProcessingException {
         final String url = "https://e608f590-1a0b-43c5-b363-e5a883961765.mock.pstmn.io/sponsors";
         Rol rol=Rol.Solicitante;
         WebClient webClient = WebClient.create();
-
-        System.out.println("Nombre: " + nombre);
+        
         // Realizar la solicitud
-        try {
-            String response = webClient.get()
-                    .uri(url)
-                    .retrieve()
-                    .bodyToMono(String.class)
-                    .block();
+        String response = webClient.get()
+            .uri(url)
+            .retrieve()
+            .bodyToMono(String.class)
+            .block();
 
-            // Parsear el JSON y buscar el nombre
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode root = mapper.readTree(response);
-            JsonNode data = root.path("data");
-            for (JsonNode promotor : data) {
-                if (nombre.equalsIgnoreCase(promotor.path("nombre").asText())) {
-                    System.out.println("promotor\n");
-                    rol=Rol.Promotor;
-                }
-
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("Error al consultar la API de promotores", e);
+        // Parsear el JSON y buscar el nombre
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode root = mapper.readTree(response);
+        JsonNode data = root.path("data");
+        for (JsonNode promotor : data) {
+            if (nombre.equalsIgnoreCase(promotor.path("nombre").asText())) rol=Rol.Promotor;
         }
-        System.out.println("no coincide con la lista\n");
         return  rol;
     }
 

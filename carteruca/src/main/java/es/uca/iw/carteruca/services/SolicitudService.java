@@ -8,13 +8,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
-import es.uca.iw.carteruca.models.Cartera;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer;
 
+import es.uca.iw.carteruca.models.Cartera;
 import es.uca.iw.carteruca.models.Estado;
 import es.uca.iw.carteruca.models.Solicitud;
 import es.uca.iw.carteruca.models.Usuario;
@@ -56,7 +56,6 @@ public class SolicitudService {
             Notification.show("Error al leer el archivo: " + e.getMessage(), 5000, Notification.Position.MIDDLE);
         }
     });
-        System.out.println("name "+ avalador.getId());
         Solicitud solicitud = new Solicitud();
         solicitud.setTitulo(titulo);
         solicitud.setNombre(nombre);
