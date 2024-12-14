@@ -11,6 +11,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import es.uca.iw.carteruca.models.Solicitud;
+import es.uca.iw.carteruca.views.common.common;
 import jakarta.annotation.security.PermitAll;
 
 @PageTitle("Notificaciones")
@@ -29,19 +30,7 @@ public class NotificacionesView extends Composite<VerticalLayout> {
 
         solicitudes.setEmptyStateText("No hay solicitudes");
 
-        Button volver = new Button("Volver");
-        volver.setWidth("min-content");
-        volver.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        volver.addClickListener(e -> UI.getCurrent().navigate("HomeSolicitanteView.class"));
-
-        // Layout para el footer con el botón
-        HorizontalLayout footer = new HorizontalLayout(volver);
-        footer.setWidthFull();
-        footer.add(volver);
-        footer.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
-
-
         getContent().add(solicitudes);
-        getContent().add(footer);
+        getContent().add(common.botones_Registrado());
     }
 }

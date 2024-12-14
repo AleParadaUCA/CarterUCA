@@ -3,6 +3,7 @@ package es.uca.iw.carteruca.views.registro;
 import java.util.List;
 import java.util.Objects;
 
+import com.vaadin.flow.component.shared.Tooltip;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import es.uca.iw.carteruca.models.Centro;
 
@@ -92,8 +93,23 @@ public class RegistroView extends Composite<VerticalLayout> {
         nombre.getElement().setAttribute("aria-label", "Introduzca su nombre");
         apellidos.setLabel("Apellidos");
         apellidos.getElement().setAttribute("aria-label", "Introduzca su apellido");
+
         usuario.setLabel("Usuario");
+        usuario.setTooltipText("El usuario debe ser 'u' + DNI pero sin la letra");  // Tooltip para el TextField de usuario
         usuario.getElement().setAttribute("aria-label", "Introduzca su usuario");
+
+        // Crear el botón para alternar la visibilidad del tooltip
+        Button usuario_toggleTooltip = new Button("Mostrar/Ocultar Tooltip");
+
+        // Configurar el comportamiento del botón
+        usuario_toggleTooltip.addClickListener(event -> {
+            // Alternar la visibilidad del tooltip
+            Tooltip usuarioTooltip = usuario.getTooltip();
+            if (usuarioTooltip != null) {
+                usuarioTooltip.setOpened(!usuarioTooltip.isOpened());
+            }
+        });
+
         email.setLabel("Email");
         email.getElement().setAttribute("aria-label", "Introduzca su email");
         password.setLabel("Contraseña");

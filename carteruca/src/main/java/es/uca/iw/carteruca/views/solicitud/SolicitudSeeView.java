@@ -21,6 +21,7 @@ import es.uca.iw.carteruca.models.Solicitud;
 import es.uca.iw.carteruca.models.Usuario;
 import es.uca.iw.carteruca.security.AuthenticatedUser;
 import es.uca.iw.carteruca.services.SolicitudService;
+import es.uca.iw.carteruca.views.common.common;
 import es.uca.iw.carteruca.views.layout.MainLayout;
 import jakarta.annotation.security.RolesAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,18 +45,11 @@ public class SolicitudSeeView extends Composite<VerticalLayout> {
         this.authenticatedUser = authenticatedUser;
         this.usuario = authenticatedUser.get().get();
 
-        crearTitulo("Solicitudes");
+        common.creartitulo("Ver Solicitudes",this);
         crearTabla();  // Descomentado para que se ejecute
-        botones();
+        getContent().add(common.botones_solicitud());
     }
 
-    private void crearTitulo(String titulo) {
-        VerticalLayout title = new VerticalLayout();
-        H2 titulo_nombre = new H2(titulo);
-        title.add(titulo_nombre);
-        title.setJustifyContentMode(FlexComponent.JustifyContentMode.START);
-        getContent().add(title);  // Cambiar add() por getContent().add()
-    }
 
     private void crearTabla() {
         solicitudes.setEmptyStateText("No hay solicitudes");
@@ -96,11 +90,11 @@ public class SolicitudSeeView extends Composite<VerticalLayout> {
                 badge.getStyle().set("background-color", "#dc3545"); // Rojo
                 badge.getStyle().set("color", "#ffffff");           // Texto blanco
                 break;
-            case EN_TRAMITE_AVALADO:
+            case EN_TRAMITE:
                 badge.getStyle().set("background-color", "violet"); // Amarillo
                 badge.getStyle().set("color", "#000000");           // Texto negro
                 break;
-            case EN_TRAMITE:
+            case EN_TRAMITE_AVALADO:
                 badge.getStyle().set("background-color", "orange");
                 badge.getStyle().set("color", "#ff0000");
                 break;
@@ -191,17 +185,6 @@ public class SolicitudSeeView extends Composite<VerticalLayout> {
         });
     }
 
-    private void botones() {
-        HorizontalLayout botones = new HorizontalLayout();
-        botones.setWidthFull();
-        Button volver = new Button("Volver");
-        volver.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        volver.addClickListener(e -> UI.getCurrent().navigate(SolicitudesMainView.class));
-        botones.add(volver);
-        botones.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
-        botones.setVerticalComponentAlignment(FlexComponent.Alignment.END);
-        getContent().add(botones);
-    }
 }
 
 

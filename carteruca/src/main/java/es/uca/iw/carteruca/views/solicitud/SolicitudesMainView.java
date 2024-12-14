@@ -28,8 +28,13 @@ public class SolicitudesMainView extends Composite<VerticalLayout> {
 
     public SolicitudesMainView() {
 
+        //common.creartitulo("Solicitudes",this);
+
+
         VerticalLayout mainLayout = getContent();
-        mainLayout.setDefaultHorizontalComponentAlignment(FlexComponent.Alignment.CENTER);
+        common.crearTitulo("Solicitudes",mainLayout);
+        mainLayout.setDefaultHorizontalComponentAlignment(FlexComponent.Alignment.START);
+        mainLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
 
         // Contenedor para dos columnas
         HorizontalLayout twoColumnsLayout = new HorizontalLayout();
@@ -65,19 +70,10 @@ public class SolicitudesMainView extends Composite<VerticalLayout> {
         // Agregar columnas al contenedor
         twoColumnsLayout.add(column1, column2);
 
-        Button volver = new Button("Volver");
-        volver.setWidth("min-content");
-        volver.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        volver.addClickListener(e -> UI.getCurrent().navigate(HomeSolicitanteView.class));
-
-        // Footer layout con margen superior
-        HorizontalLayout footer = new HorizontalLayout(volver);
-        footer.setWidthFull();
-        footer.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
-        footer.getStyle().set("margin-top", "50px");
 
         // Añadir todo al layout principal
-        mainLayout.add(twoColumnsLayout, footer);
+        mainLayout.add(twoColumnsLayout);
+        mainLayout.add(common.botones_Registrado());
     }
 }
 

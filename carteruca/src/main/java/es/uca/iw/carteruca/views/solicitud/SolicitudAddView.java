@@ -79,13 +79,10 @@ public class SolicitudAddView extends Composite<VerticalLayout> {
 
         // Layout principal
         VerticalLayout principal = new VerticalLayout();
+        common.crearTitulo("Agregar Solicitud",principal);
         principal.setWidth("100%");
         principal.setMaxWidth("800px"); // Limitar el ancho del formulario para mejorar su presentación
 
-        // Título
-        H2 h2 = new H2("Agregar Solicitud");
-        h2.getElement().setAttribute("aria-label","Agregar Solicitud");
-        h2.getStyle().set("text-align", "center");  // Alineamos el título al centro
 
         // Formulario
         FormLayout form = new FormLayout();
@@ -209,24 +206,12 @@ public class SolicitudAddView extends Composite<VerticalLayout> {
         guardarLayout.setAlignItems(FlexComponent.Alignment.CENTER);
 
 
-        // Botón "Volver"
-        Button volver = new Button("Volver");
-        volver.setWidth("min-content");
-        volver.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        volver.addClickListener(e -> UI.getCurrent().navigate("/solicitudes"));
-        volver.getElement().setAttribute("aria-label", "Volver");
-
-        // Layout para el footer con el botón
-        HorizontalLayout footer = new HorizontalLayout(volver);
-        footer.setWidthFull();
-        footer.add(volver);
-        footer.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
 
         // Agregar el formulario y el botón al layout principal
-        principal.add(h2, form);
+        principal.add(form);
 
         // Agregar el layout principal al contenido
-        getContent().add(principal,guardar,footer);
+        getContent().add(principal,guardar,common.botones_solicitud());
     }
 
     private void showConfirmDialog() {
