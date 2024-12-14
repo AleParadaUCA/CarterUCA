@@ -13,7 +13,6 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
-import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -149,14 +148,6 @@ public class SolicitudAddView extends Composite<VerticalLayout> {
         upload.setAcceptedFileTypes(".pdf", ".word"); // Acepta archivos específicos opcionalmente
         upload.setMaxFileSize(20 * 1024 * 1024); // Tamaño máximo de archivo en bytes (20 MB)
 
-        // upload.addFileRejectedListener(event -> {
-        //     String errorMessage = event.getErrorMessage();
-
-        //     // Notification notification = Notification.show(errorMessage, 5000,
-        //     //         Notification.Position.MIDDLE);
-        //     // notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
-        // });
-
         // Componentes del formulario
         form.add(titulo, nombre, interesados, objetivos, alcance, normativa, avalador, fecha_puesta, memoria, upload);
 
@@ -182,10 +173,10 @@ public class SolicitudAddView extends Composite<VerticalLayout> {
                     !interesados.isEmpty() &&
                     !objetivos.isEmpty() &&
                     !alcance.isEmpty() &&
-                    normativa.getValue() != null &&
+                    !normativa.isEmpty() &&
                     avalador.getValue() != null &&
                     fecha_puesta.getValue() != null &&
-                    buffer.getFiles().isEmpty();
+                    !buffer.getFiles().isEmpty();
 
             guardar.setEnabled(allFilled);
         };
@@ -199,6 +190,7 @@ public class SolicitudAddView extends Composite<VerticalLayout> {
         normativa.addValueChangeListener(changeListener);
         avalador.addValueChangeListener(changeListener);
         fecha_puesta.addValueChangeListener(changeListener);
+        upload.addSucceededListener(event -> changeListener.valueChanged(null));
 
         HorizontalLayout guardarLayout = new HorizontalLayout();
         guardarLayout.setWidth("min-content");
