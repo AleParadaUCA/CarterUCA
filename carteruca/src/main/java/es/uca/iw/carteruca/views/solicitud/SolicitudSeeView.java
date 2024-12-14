@@ -1,21 +1,20 @@
 package es.uca.iw.carteruca.views.solicitud;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+
 import com.vaadin.flow.component.Composite;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Span;
-import com.vaadin.flow.component.orderedlayout.FlexComponent;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+
 import es.uca.iw.carteruca.models.Estado;
 import es.uca.iw.carteruca.models.Solicitud;
 import es.uca.iw.carteruca.models.Usuario;
@@ -24,9 +23,14 @@ import es.uca.iw.carteruca.services.SolicitudService;
 import es.uca.iw.carteruca.views.common.common;
 import es.uca.iw.carteruca.views.layout.MainLayout;
 import jakarta.annotation.security.RolesAllowed;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+
+import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.html.Anchor;
+import com.vaadin.flow.server.StreamResource;
 
 @PageTitle("Ver Solicitudes")
 @Route(value = "/solicitudes/all-solicitudes", layout = MainLayout.class)
@@ -34,22 +38,19 @@ import java.util.List;
 public class SolicitudSeeView extends Composite<VerticalLayout> {
 
     private final SolicitudService solicitudService;
-    private AuthenticatedUser authenticatedUser;
-    private Usuario usuario;
+    private final Usuario usuario;
 
-    private Grid<Solicitud> solicitudes = new Grid<>(Solicitud.class, false);
+    private final Grid<Solicitud> solicitudes = new Grid<>(Solicitud.class, false);
 
     @Autowired
     public SolicitudSeeView(SolicitudService solicitudService, AuthenticatedUser authenticatedUser) {
         this.solicitudService = solicitudService;
-        this.authenticatedUser = authenticatedUser;
         this.usuario = authenticatedUser.get().get();
 
         common.creartitulo("Ver Solicitudes",this);
-        crearTabla();  // Descomentado para que se ejecute
+        crearTabla();
         getContent().add(common.botones_solicitud());
     }
-
 
     private void crearTabla() {
         solicitudes.setEmptyStateText("No hay solicitudes");
@@ -117,7 +118,7 @@ public class SolicitudSeeView extends Composite<VerticalLayout> {
         return badge;
     }
 
-    // Crear el renderizador para alternar los detalles
+    // Crear el renderizado para alternar los detalles
     private ComponentRenderer<Button, Solicitud> createToggleDetailsRenderer(Grid<Solicitud> grid) {
         return new ComponentRenderer<>(solicitud -> {
             Button toggleButton = new Button("Detalles", e -> {
@@ -180,6 +181,32 @@ public class SolicitudSeeView extends Composite<VerticalLayout> {
             // Crear el layout final para los detalles
             Div detailsLayout = new Div();
             detailsLayout.add(formLayout);
+
+            // Botón para descargar el archivo de memoria
+            Button descargarMemoriaButton = new Button("Descargar Memoria");
+            descargarMemoriaButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+
+            String memoriaPath = solicitud.getMemoria();
+            if (memoriaPath != null && !memoriaPath.isEmpty()) {
+                StreamResource resource = new StreamResource(memoriaPath, () -> {
+                    try {
+                        return new FileInputStream(memoriaPath);
+                    } catch (FileNotFoundException e) {
+                        return null;
+                    }
+                });
+
+                Anchor anchor = new Anchor(resource, "");
+                anchor.getElement().setAttribute("download", true);
+                anchor.add(descargarMemoriaButton);
+
+                formLayout.add(anchor);
+            } else {
+                descargarMemoriaButton.addClassName("disabled-button");
+                formLayout.add(descargarMemoriaButton);
+                descargarMemoriaButton.setEnabled(false);
+            }
+            detailsLayout.add(formLayout);            
 
             return detailsLayout;
         });
