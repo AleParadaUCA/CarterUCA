@@ -2,8 +2,10 @@ package es.uca.iw.carteruca.services;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -153,10 +155,6 @@ public class UsuarioService implements UserDetailsService {
         );
     }
 
-//    public Usuario saveUser(Usuario usuario) {
-//        return repository.save(usuario);
-//    }
-
     public Optional<Usuario> getUserById(Long id) {
         return repository.findById(id);
     }
@@ -220,7 +218,7 @@ public class UsuarioService implements UserDetailsService {
     }
 
     public List<Rol> getRolesExcludingAdmin() {
-        return List.of(Rol.values()).stream()
+        return Stream.of(Rol.values())
                 .filter(rol -> rol != Rol.Admin) // Excluir Admin
                 .toList();
     }
@@ -229,4 +227,12 @@ public class UsuarioService implements UserDetailsService {
         return repository.findByRol(Rol.Promotor);
     }
 
+    public boolean checkPassword(Usuario currentUser, String value) {
+        return passwordEncoder.matches(value, currentUser.getPassword());
+    }
+
+    public void updatePassword(Usuario currentUser, String value) {
+        currentUser.setPassword(passwordEncoder.encode(value));
+        repository.save(currentUser);
+    }
 }

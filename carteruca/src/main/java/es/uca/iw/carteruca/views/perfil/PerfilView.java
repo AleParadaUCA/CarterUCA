@@ -15,6 +15,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+
 import es.uca.iw.carteruca.models.Usuario;
 import es.uca.iw.carteruca.security.AuthenticatedUser;
 import es.uca.iw.carteruca.services.UsuarioService;
@@ -23,7 +24,10 @@ import es.uca.iw.carteruca.views.home.HomeAdminView;
 import es.uca.iw.carteruca.views.layout.MainLayout;
 import es.uca.iw.carteruca.views.home.HomeSolicitanteView;
 import jakarta.annotation.security.PermitAll;
+
 import org.springframework.beans.factory.annotation.Autowired;
+
+import com.vaadin.flow.component.textfield.PasswordField;
 
 @PageTitle("Perfil")
 @Route(value = "/perfil", layout = MainLayout.class)
@@ -31,8 +35,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class PerfilView extends Composite<VerticalLayout> {
 
     private final UsuarioService usuarioService;
-    private AuthenticatedUser authenticatedUser;
-    private Usuario currentUser;
+    private final AuthenticatedUser authenticatedUser;
+    private final Usuario currentUser;
 
     // Campos de la vista principal
     private TextField nombreField;
@@ -45,8 +49,6 @@ public class PerfilView extends Composite<VerticalLayout> {
     public PerfilView(AuthenticatedUser authenticatedUser, UsuarioService usuarioService) {
         this.usuarioService = usuarioService;
         this.authenticatedUser = authenticatedUser;
-
-        // Obtener el usuario actual de la sesión
         this.currentUser = authenticatedUser.get().get();
 
         if (currentUser == null) {
@@ -120,7 +122,10 @@ public class PerfilView extends Composite<VerticalLayout> {
         modificar.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         modificar.addClickListener(e -> openEditDialog());
 
-        buttonLayout.add(modificar, eliminar);
+        Button cambiarContraseñaButton = new Button("Cambiar Contraseña", e -> openChangePasswordDialog());
+        cambiarContraseñaButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+
+        buttonLayout.add(cambiarContraseñaButton, modificar, eliminar);
         buttonLayout.setWidthFull(); // Asegúrate de que ocupe todo el ancho disponible
         buttonLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER); // Centra los botones horizontalmente
         buttonLayout.setAlignItems(FlexComponent.Alignment.CENTER); // Centra los botones verticalmente (opcional)
@@ -264,6 +269,41 @@ public class PerfilView extends Composite<VerticalLayout> {
         eliminarDialog.open();
     }
 
+ private void openChangePasswordDialog() {
+        Dialog changePasswordDialog = new Dialog();
+        changePasswordDialog.setWidth("400px");
+
+        PasswordField currentPasswordField = new PasswordField("Contraseña Actual");
+        PasswordField newPasswordField = new PasswordField("Nueva Contraseña");
+        PasswordField confirmPasswordField = new PasswordField("Confirmar Nueva Contraseña");
+
+        Button saveButton = new Button("Cambiar Contraseña", event -> {
+            if (!usuarioService.checkPassword(currentUser, currentPasswordField.getValue())) {
+                common.showErrorNotification("Contraseña actual incorrecta");
+                return;
+            }
+            if (!newPasswordField.getValue().equals(confirmPasswordField.getValue())) {
+                common.showErrorNotification("Las nuevas contraseñas no coinciden");
+                return;
+            }
+            usuarioService.updatePassword(currentUser, newPasswordField.getValue());
+            common.showSuccessNotification("Contraseña actualizada correctamente");
+            changePasswordDialog.close();
+        });
+
+        Button cancelButton = new Button("Volver", event -> changePasswordDialog.close());
+        cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+
+        HorizontalLayout buttonLayout = new HorizontalLayout(saveButton, cancelButton);
+        buttonLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
+
+        VerticalLayout dialogLayout = new VerticalLayout(currentPasswordField, newPasswordField, confirmPasswordField, buttonLayout);
+        dialogLayout.setSpacing(true);
+        dialogLayout.setPadding(true);
+
+        changePasswordDialog.add(dialogLayout);
+        changePasswordDialog.open();
+    }
 }
 
 
