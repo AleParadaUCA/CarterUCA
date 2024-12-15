@@ -8,7 +8,6 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.H4;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -51,21 +50,20 @@ public class PerfilView extends Composite<VerticalLayout> {
         this.authenticatedUser = authenticatedUser;
         this.currentUser = authenticatedUser.get().get();
 
-        if (currentUser == null) {
-            // Si no se encuentra un usuario, redirigir al login
-            getUI().ifPresent(ui -> ui.navigate(""));
-            Notification.show("Sesión expirada o no autenticado. Vuelve a iniciar sesión.", 3000, Notification.Position.MIDDLE);
-            return; // No se debe cargar la vista si la sesión está expirada
-        }
-
-        // Construcción de la vista
-        createHeader();
-        createProfileForm();
-        createButton();
-        createFooter();
+        crearPerfilForm();
+        BotonesConfiguracion();
+        botonVolver();
     }
 
-    private void createHeader() {
+    private TextField LecturaTextField(String label, String value) {
+        TextField textField = new TextField(label);
+        textField.setValue(value);
+        textField.setReadOnly(true);
+        return textField;
+    }
+
+    private void crearPerfilForm() {
+
         H2 header = new H2("Datos Personales");
 
         Avatar avatar = new Avatar(currentUser.getNombre() + " " + currentUser.getApellidos());
@@ -76,31 +74,15 @@ public class PerfilView extends Composite<VerticalLayout> {
         HorizontalLayout headerLayout = new HorizontalLayout(avatar, header);
         headerLayout.setAlignItems(FlexComponent.Alignment.CENTER);
         getContent().add(headerLayout);
-    }
 
-    private void createProfileForm() {
         FormLayout formLayout = new FormLayout();
 
         // Crear los campos de la vista principal
-        nombreField = new TextField("Nombre");
-        nombreField.setValue(currentUser.getNombre());
-        nombreField.setReadOnly(true);
-
-        apellidosField = new TextField("Apellidos");
-        apellidosField.setValue(currentUser.getApellidos());
-        apellidosField.setReadOnly(true);
-
-        emailField = new TextField("Email");
-        emailField.setValue(currentUser.getEmail());
-        emailField.setReadOnly(true);
-
-        usernameField = new TextField("Usuario");
-        usernameField.setValue(currentUser.getUsername());
-        usernameField.setReadOnly(true);
-
-        rolField = new TextField("Rol");
-        rolField.setValue(currentUser.getRol().name());
-        rolField.setReadOnly(true);
+        nombreField = LecturaTextField("Nombre", currentUser.getNombre());
+        apellidosField = LecturaTextField("Apellidos", currentUser.getApellidos());
+        emailField = LecturaTextField("Email", currentUser.getEmail());
+        usernameField = LecturaTextField("Usuario", currentUser.getUsername());
+        rolField = LecturaTextField("Rol", currentUser.getRol().name());
 
         formLayout.add(nombreField, apellidosField, emailField, usernameField, rolField);
         formLayout.setResponsiveSteps(
@@ -111,7 +93,7 @@ public class PerfilView extends Composite<VerticalLayout> {
         getContent().add(formLayout);
     }
 
-    private void createButton() {
+    private void BotonesConfiguracion() {
         HorizontalLayout buttonLayout = new HorizontalLayout();
 
         Button eliminar = new Button("Eliminar");
@@ -120,12 +102,12 @@ public class PerfilView extends Composite<VerticalLayout> {
 
         Button modificar = new Button("Modificar");
         modificar.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        modificar.addClickListener(e -> openEditDialog());
+        modificar.addClickListener(e -> openEditarDialog());
 
-        Button cambiarContraseñaButton = new Button("Cambiar Contraseña", e -> openChangePasswordDialog());
-        cambiarContraseñaButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        Button cambiarPasswordButton = new Button("Cambiar Contraseña", e -> openCambiarPasswordDialog());
+        cambiarPasswordButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
-        buttonLayout.add(cambiarContraseñaButton, modificar, eliminar);
+        buttonLayout.add(cambiarPasswordButton, modificar, eliminar);
         buttonLayout.setWidthFull(); // Asegúrate de que ocupe todo el ancho disponible
         buttonLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER); // Centra los botones horizontalmente
         buttonLayout.setAlignItems(FlexComponent.Alignment.CENTER); // Centra los botones verticalmente (opcional)
@@ -133,11 +115,16 @@ public class PerfilView extends Composite<VerticalLayout> {
         getContent().add(buttonLayout);
     }
 
-    private void createFooter() {
+    private void botonVolver() {
         Button volverButton = new Button("Volver");
         volverButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
-        volverButton.addClickListener(e -> volver());
+        volverButton.addClickListener(e -> {
+            if (currentUser.getRol().name().equals("Admin")) {
+            getUI().ifPresent(ui -> ui.navigate(HomeAdminView.class));
+            } else {
+                getUI().ifPresent(ui -> ui.navigate(HomeSolicitanteView.class));
+            }});
 
         HorizontalLayout footerLayout = new HorizontalLayout(volverButton);
         footerLayout.setWidthFull();
@@ -146,16 +133,7 @@ public class PerfilView extends Composite<VerticalLayout> {
         getContent().add(footerLayout);
     }
 
-    private void volver() {
-        // Redirigir según el rol del usuario
-        if (currentUser.getRol().name().equals("Admin")) {
-            getUI().ifPresent(ui -> ui.navigate(HomeAdminView.class));
-        } else {
-            getUI().ifPresent(ui -> ui.navigate(HomeSolicitanteView.class));
-        }
-    }
-
-    private void openEditDialog() {
+    private void openEditarDialog() {
         Dialog editDialog = new Dialog();
         FormLayout formLayout = new FormLayout();
 
@@ -269,7 +247,7 @@ public class PerfilView extends Composite<VerticalLayout> {
         eliminarDialog.open();
     }
 
- private void openChangePasswordDialog() {
+    private void openCambiarPasswordDialog() {
         Dialog changePasswordDialog = new Dialog();
         changePasswordDialog.setWidth("400px");
 
