@@ -1,6 +1,13 @@
 package es.uca.iw.carteruca.models;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 
 @Entity
 @Table
@@ -27,6 +34,8 @@ public class Proyecto {
     private Float porcentaje; // este campo mostrará el porcentaje de avance del proyecto que este en marcha.
     // *hasta aqui lo rellena CIO y OTP
 
+    public Long getId() {return id; }
+
     public String getPresupuesto() {return presupuesto;}
     public void setPresupuesto(String presupuesto) {this.presupuesto = presupuesto;}
 
@@ -39,4 +48,6 @@ public class Proyecto {
     public Float getPorcentaje() {return porcentaje;}
     public void setPorcentaje(Float porcentaje) {this.porcentaje = porcentaje;}
 
+    public Solicitud getSolicitud() {return solicitud;}
+    public void setSolicitud(Solicitud solicitud) {this.solicitud = solicitud;}
 }

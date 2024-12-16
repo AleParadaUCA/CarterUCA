@@ -1,5 +1,14 @@
 package es.uca.iw.carteruca.views.common;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.io.IOUtils;
+
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -16,6 +25,7 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer;
 
 import es.uca.iw.carteruca.models.Centro;
 import es.uca.iw.carteruca.services.CentroService;
@@ -190,6 +200,34 @@ public class common {
 
         botones.add(volver);
         return botones;
+    }
+
+public static List<String> guardarFiles(MultiFileMemoryBuffer buffer, String targetDirPath) {
+        List<String> filePaths = new ArrayList<>();
+
+        buffer.getFiles().forEach(fileName -> {
+            try (InputStream inputStream = buffer.getInputStream(fileName)) {
+                // Define the target directory
+                File targetDir = new File(targetDirPath);
+                if (!targetDir.exists()) {
+                    targetDir.mkdirs(); // Create the directory if it doesn't exist
+                }
+
+                // Define the target file
+                File targetFile = new File(targetDir, fileName);
+
+                // Write the uploaded file to the target directory
+                try (FileOutputStream outputStream = new FileOutputStream(targetFile)) {
+                    IOUtils.copy(inputStream, outputStream);
+                    filePaths.add(targetFile.getPath());
+                } catch (IOException e) {
+                    showErrorNotification("Error al guardar el archivo: " + e.getMessage());
+                }
+            } catch (IOException e) {
+                showErrorNotification("Error al leer el archivo: " + e.getMessage());
+            }
+        });
+        return filePaths;
     }
 
 }
