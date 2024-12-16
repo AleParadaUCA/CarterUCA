@@ -1,17 +1,11 @@
 package es.uca.iw.carteruca.services;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer;
 
 import es.uca.iw.carteruca.models.Cartera;
@@ -19,6 +13,7 @@ import es.uca.iw.carteruca.models.Estado;
 import es.uca.iw.carteruca.models.Solicitud;
 import es.uca.iw.carteruca.models.Usuario;
 import es.uca.iw.carteruca.repository.SolicitudRepository;
+import es.uca.iw.carteruca.views.common.common;
 
 @Service
 public class SolicitudService {
@@ -30,32 +25,11 @@ public class SolicitudService {
     }
 
     public void guardar(String titulo, String nombre, LocalDateTime fechaPuesta, String interesados, String alineamiento, String alcance, String normativa, MultiFileMemoryBuffer buffer, Usuario avalador, Usuario solictante, Cartera cartera) {
-        AtomicReference<String> memoria = new AtomicReference<>("");
+        
+        //Faltan comprobaciones...
 
-        //Faltan commprobaciones..
-
-        buffer.getFiles().forEach(fileName -> {
-            try (InputStream inputStream = buffer.getInputStream(fileName)) {
-                // Define the target directory
-                File targetDir = new File("../archivos");
-                if (!targetDir.exists()) {
-                    targetDir.mkdirs(); // Create the directory if it doesn't exist
-                }
-
-                // Define the target file
-                File targetFile = new File(targetDir, fileName);
-
-                // Write the uploaded file to the target directory
-                try (FileOutputStream outputStream = new FileOutputStream(targetFile)) {
-                    org.apache.commons.io.IOUtils.copy(inputStream, outputStream);
-                    memoria.set(targetFile.getPath());
-                } catch (IOException e) {
-                    Notification.show("Error al guardar el archivo: " + e.getMessage(), 5000, Notification.Position.MIDDLE);
-                }
-            } catch (IOException e) {
-                Notification.show("Error al leer el archivo: " + e.getMessage(), 5000, Notification.Position.MIDDLE);
-            }
-        });
+        List<String> memoria = common.guardarFiles(buffer, "../"+ cartera.getNombre());
+        
         Solicitud solicitud = new Solicitud();
         solicitud.setTitulo(titulo);
         solicitud.setNombre(nombre);
@@ -65,7 +39,7 @@ public class SolicitudService {
         solicitud.setAlineamiento(alineamiento);
         solicitud.setAlcance(alcance);
         solicitud.setNormativa(normativa);
-        solicitud.setMemoria(memoria.get()); //path
+        solicitud.setMemoria(memoria.get(0)); //path
         solicitud.setEstado(Estado.EN_TRAMITE);
         solicitud.setSolicitante(solictante);
         solicitud.setAvalador(avalador);
