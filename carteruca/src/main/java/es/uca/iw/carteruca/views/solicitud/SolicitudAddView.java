@@ -145,7 +145,7 @@ public class SolicitudAddView extends Composite<VerticalLayout> {
         Upload upload = new Upload(buffer);
         upload.setDropLabel(new com.vaadin.flow.component.html.Span("Arrastra tus archivos aquí o haz clic para cargar"));
         upload.setMaxFiles(1); // Límite opcional del número de archivos
-        upload.setAcceptedFileTypes(".pdf", ".word"); // Acepta archivos específicos opcionalmente
+        upload.setAcceptedFileTypes(".pdf");
         upload.setMaxFileSize(20 * 1024 * 1024); // Tamaño máximo de archivo en bytes (20 MB)
 
         // Componentes del formulario
