@@ -93,45 +93,6 @@ public class PerfilView extends Composite<VerticalLayout> {
         getContent().add(formLayout);
     }
 
-    private void BotonesConfiguracion() {
-        HorizontalLayout buttonLayout = new HorizontalLayout();
-
-        Button eliminar = new Button("Eliminar");
-        eliminar.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-        eliminar.addClickListener(e -> openEliminarDialog());
-
-        Button modificar = new Button("Modificar");
-        modificar.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        modificar.addClickListener(e -> openEditarDialog());
-
-        Button cambiarPasswordButton = new Button("Cambiar Contraseña", e -> openCambiarPasswordDialog());
-        cambiarPasswordButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-
-        buttonLayout.add(cambiarPasswordButton, modificar, eliminar);
-        buttonLayout.setWidthFull(); // Asegúrate de que ocupe todo el ancho disponible
-        buttonLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER); // Centra los botones horizontalmente
-        buttonLayout.setAlignItems(FlexComponent.Alignment.CENTER); // Centra los botones verticalmente (opcional)
-
-        getContent().add(buttonLayout);
-    }
-
-    private void botonVolver() {
-        Button volverButton = new Button("Volver");
-        volverButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-
-        volverButton.addClickListener(e -> {
-            if (currentUser.getRol().name().equals("Admin")) {
-            getUI().ifPresent(ui -> ui.navigate(HomeAdminView.class));
-            } else {
-                getUI().ifPresent(ui -> ui.navigate(HomeSolicitanteView.class));
-            }});
-
-        HorizontalLayout footerLayout = new HorizontalLayout(volverButton);
-        footerLayout.setWidthFull();
-        footerLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
-
-        getContent().add(footerLayout);
-    }
 
     private void openEditarDialog() {
         Dialog editDialog = new Dialog();
@@ -281,6 +242,46 @@ public class PerfilView extends Composite<VerticalLayout> {
 
         changePasswordDialog.add(dialogLayout);
         changePasswordDialog.open();
+    }
+
+    private void BotonesConfiguracion() {
+        HorizontalLayout buttonLayout = new HorizontalLayout();
+
+        Button eliminar = new Button("Eliminar");
+        eliminar.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        eliminar.addClickListener(e -> openEliminarDialog());
+
+        Button modificar = new Button("Modificar");
+        modificar.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        modificar.addClickListener(e -> openEditarDialog());
+
+        Button cambiarPasswordButton = new Button("Cambiar Contraseña", e -> openCambiarPasswordDialog());
+        cambiarPasswordButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+
+        buttonLayout.add(cambiarPasswordButton, modificar, eliminar);
+        buttonLayout.setWidthFull(); // Asegúrate de que ocupe todo el ancho disponible
+        buttonLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER); // Centra los botones horizontalmente
+        buttonLayout.setAlignItems(FlexComponent.Alignment.CENTER); // Centra los botones verticalmente (opcional)
+
+        getContent().add(buttonLayout);
+    }
+
+    private void botonVolver() {
+        Button volverButton = new Button("Volver");
+        volverButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+
+        volverButton.addClickListener(e -> {
+            if (currentUser.getRol().name().equals("Admin")) {
+                getUI().ifPresent(ui -> ui.navigate(HomeAdminView.class));
+            } else {
+                getUI().ifPresent(ui -> ui.navigate(HomeSolicitanteView.class));
+            }});
+
+        HorizontalLayout footerLayout = new HorizontalLayout(volverButton);
+        footerLayout.setWidthFull();
+        footerLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
+
+        getContent().add(footerLayout);
     }
 }
 
