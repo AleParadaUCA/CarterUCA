@@ -1,6 +1,8 @@
 package es.uca.iw.carteruca.views.common;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,6 +16,7 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Span;
@@ -26,6 +29,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer;
+import com.vaadin.flow.server.StreamResource;
 
 import es.uca.iw.carteruca.models.Centro;
 import es.uca.iw.carteruca.services.CentroService;
@@ -202,7 +206,7 @@ public class common {
         return botones;
     }
 
-public static List<String> guardarFiles(MultiFileMemoryBuffer buffer, String targetDirPath) {
+    public static List<String> guardarFiles(MultiFileMemoryBuffer buffer, String targetDirPath) {
         List<String> filePaths = new ArrayList<>();
 
         buffer.getFiles().forEach(fileName -> {
@@ -230,4 +234,25 @@ public static List<String> guardarFiles(MultiFileMemoryBuffer buffer, String tar
         return filePaths;
     }
 
+    public static Anchor descargarFile(String filePath, String buttonText) {
+        Button downloadButton = new Button(buttonText);
+        downloadButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+
+        String[] parts = filePath.split("\\\\");
+        String fileName = parts[parts.length - 1];
+
+        StreamResource resource = new StreamResource(fileName, () -> {
+            try {
+                return new FileInputStream(filePath);
+            } catch (FileNotFoundException e) {
+                return null;
+            }
+        });
+
+        Anchor anchor = new Anchor(resource, "");
+        anchor.getElement().setAttribute("download", true);
+        anchor.add(downloadButton);
+
+        return anchor;
+    }
 }

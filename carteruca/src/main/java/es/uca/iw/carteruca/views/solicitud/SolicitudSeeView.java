@@ -1,8 +1,5 @@
 package es.uca.iw.carteruca.views.solicitud;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.formlayout.FormLayout;
@@ -30,7 +27,6 @@ import java.util.List;
 
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.Anchor;
-import com.vaadin.flow.server.StreamResource;
 
 @PageTitle("Ver Solicitudes")
 @Route(value = "/solicitudes/all-solicitudes", layout = MainLayout.class)
@@ -183,30 +179,18 @@ public class SolicitudSeeView extends Composite<VerticalLayout> {
             detailsLayout.add(formLayout);
 
             // Botón para descargar el archivo de memoria
-            Button descargarMemoriaButton = new Button("Descargar Memoria");
-            descargarMemoriaButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-
             String memoriaPath = solicitud.getMemoria();
             if (memoriaPath != null && !memoriaPath.isEmpty()) {
-                StreamResource resource = new StreamResource(memoriaPath, () -> {
-                    try {
-                        return new FileInputStream(memoriaPath);
-                    } catch (FileNotFoundException e) {
-                        return null;
-                    }
-                });
-
-                Anchor anchor = new Anchor(resource, "");
-                anchor.getElement().setAttribute("download", true);
-                anchor.add(descargarMemoriaButton);
-
-                formLayout.add(anchor);
+                Anchor downloadAnchor = common.descargarFile(memoriaPath, "Descargar Memoria");
+                formLayout.add(downloadAnchor);
             } else {
+                Button descargarMemoriaButton = new Button("Descargar Memoria");
+                descargarMemoriaButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
                 descargarMemoriaButton.addClassName("disabled-button");
                 formLayout.add(descargarMemoriaButton);
                 descargarMemoriaButton.setEnabled(false);
             }
-            detailsLayout.add(formLayout);            
+            detailsLayout.add(formLayout);    
 
             return detailsLayout;
         });
