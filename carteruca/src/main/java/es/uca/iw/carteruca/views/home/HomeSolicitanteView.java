@@ -20,10 +20,8 @@ import es.uca.iw.carteruca.views.common.common;
 @RolesAllowed({"Solicitante", "CIO", "OTP", "Promotor"})
 public class HomeSolicitanteView extends Composite<VerticalLayout>{
 
-    private final Rol userRol;
-
     public HomeSolicitanteView( AuthenticatedUser authenticatedUser) {
-        this.userRol = authenticatedUser.get().get().getRol();
+        Rol userRol = authenticatedUser.get().get().getRol();
 
         Span mensaje_bienvenido = new Span();
         mensaje_bienvenido.setText("Bienvenido, usuario");

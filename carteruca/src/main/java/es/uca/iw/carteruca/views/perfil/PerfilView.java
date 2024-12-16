@@ -1,5 +1,7 @@
 package es.uca.iw.carteruca.views.perfil;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.avatar.Avatar;
 import com.vaadin.flow.component.button.Button;
@@ -11,6 +13,7 @@ import com.vaadin.flow.component.html.H4;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
@@ -20,13 +23,9 @@ import es.uca.iw.carteruca.security.AuthenticatedUser;
 import es.uca.iw.carteruca.services.UsuarioService;
 import es.uca.iw.carteruca.views.common.common;
 import es.uca.iw.carteruca.views.home.HomeAdminView;
-import es.uca.iw.carteruca.views.layout.MainLayout;
 import es.uca.iw.carteruca.views.home.HomeSolicitanteView;
+import es.uca.iw.carteruca.views.layout.MainLayout;
 import jakarta.annotation.security.PermitAll;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.vaadin.flow.component.textfield.PasswordField;
 
 @PageTitle("Perfil")
 @Route(value = "/perfil", layout = MainLayout.class)

@@ -3,22 +3,17 @@ package es.uca.iw.carteruca.views.home;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.Span;
-import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.orderedlayout.FlexComponent;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.server.auth.AnonymousAllowed;
+
 import es.uca.iw.carteruca.views.admin.CentroAllView;
 import es.uca.iw.carteruca.views.admin.UsuarioAllView;
 import es.uca.iw.carteruca.views.cartera.CarteraAllView;
-import es.uca.iw.carteruca.views.criterio.CriterioAllView;
-import jakarta.annotation.security.PermitAll;
-import jakarta.annotation.security.RolesAllowed;
 import es.uca.iw.carteruca.views.common.common;
+import es.uca.iw.carteruca.views.criterio.CriterioAllView;
+import jakarta.annotation.security.RolesAllowed;
 
 @Route("/home-admin")
 @PageTitle("Home")

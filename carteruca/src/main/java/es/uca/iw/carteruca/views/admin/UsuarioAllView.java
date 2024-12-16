@@ -1,7 +1,8 @@
 package es.uca.iw.carteruca.views.admin;
 
+import java.util.List;
+
 import com.vaadin.flow.component.Composite;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
@@ -17,16 +18,13 @@ import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.router.RouterLink;
-import es.uca.iw.carteruca.models.Usuario;
+
 import es.uca.iw.carteruca.models.Rol;
+import es.uca.iw.carteruca.models.Usuario;
+import es.uca.iw.carteruca.services.UsuarioService;
 import es.uca.iw.carteruca.views.common.common;
-import es.uca.iw.carteruca.views.home.HomeAdminView;
 import es.uca.iw.carteruca.views.layout.MainLayout;
 import jakarta.annotation.security.RolesAllowed;
-import es.uca.iw.carteruca.services.UsuarioService;
-
-import java.util.List;
 
 @PageTitle("Usuarios")
 @Route(value = "/home-admin/usuario", layout = MainLayout.class)
@@ -50,7 +48,6 @@ public class UsuarioAllView extends Composite<VerticalLayout> {
 
         // Añadir componentes al layout
         getContent().add(tablaUsuarios);
-
         getContent().add(common.botones_Admin());
     }
 

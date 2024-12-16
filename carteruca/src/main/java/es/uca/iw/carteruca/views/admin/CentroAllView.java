@@ -1,8 +1,6 @@
 package es.uca.iw.carteruca.views.admin;
 
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.server.auth.AnonymousAllowed;
 import es.uca.iw.carteruca.models.Centro;
 import es.uca.iw.carteruca.services.CentroService;
 import com.vaadin.flow.component.Composite;
@@ -17,9 +15,6 @@ import com.vaadin.flow.router.Route;
 import es.uca.iw.carteruca.views.common.common;
 import es.uca.iw.carteruca.views.layout.MainLayout;
 import jakarta.annotation.security.RolesAllowed;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.vaadin.flow.component.UI;
 
 import java.util.List;
 
@@ -28,10 +23,9 @@ import java.util.List;
 @RolesAllowed("Admin")
 public class CentroAllView extends Composite<VerticalLayout> {
 
-    @Autowired
     private final CentroService centroService;
 
-    private Grid<Centro> tabla_centros = new Grid<>(Centro.class);
+    private final Grid<Centro> tabla_centros = new Grid<>(Centro.class);
 
     public CentroAllView(CentroService centroService) {
         this.centroService = centroService;
