@@ -13,7 +13,7 @@ import es.uca.iw.carteruca.models.Estado;
 import es.uca.iw.carteruca.models.Solicitud;
 import es.uca.iw.carteruca.models.Usuario;
 import es.uca.iw.carteruca.repository.SolicitudRepository;
-import es.uca.iw.carteruca.views.common.common;
+import es.uca.iw.carteruca.services.commonService;
 
 @Service
 public class SolicitudService {
@@ -28,7 +28,7 @@ public class SolicitudService {
         
         //Faltan comprobaciones...
 
-        List<String> memoria = common.guardarFiles(buffer, "../"+ cartera.getNombre());
+        List<String> memoria = commonService.guardarFiles(buffer, "../"+ cartera.getNombre());
         
         Solicitud solicitud = new Solicitud();
         solicitud.setTitulo(titulo);

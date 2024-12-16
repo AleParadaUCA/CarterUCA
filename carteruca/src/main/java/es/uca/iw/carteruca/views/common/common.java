@@ -1,15 +1,6 @@
 package es.uca.iw.carteruca.views.common;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
 
-import org.apache.commons.io.IOUtils;
 
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.UI;
@@ -91,7 +82,7 @@ public class common {
         layout.add(titulo);
     }
 
-    // Método estático para abrir el diázlogo de crear/editar
+    // Metodo estático para abrir el diálogo de crear/editar
     public static void openDialog(String title, String nombreCentro, String acronimoCentro, Centro centro, boolean isEdit,
                                   CentroService centroService, Runnable updateGrid) {
         Dialog dialog = new Dialog();
@@ -206,53 +197,5 @@ public class common {
         return botones;
     }
 
-    public static List<String> guardarFiles(MultiFileMemoryBuffer buffer, String targetDirPath) {
-        List<String> filePaths = new ArrayList<>();
 
-        buffer.getFiles().forEach(fileName -> {
-            try (InputStream inputStream = buffer.getInputStream(fileName)) {
-                // Define the target directory
-                File targetDir = new File(targetDirPath);
-                if (!targetDir.exists()) {
-                    targetDir.mkdirs(); // Create the directory if it doesn't exist
-                }
-
-                // Define the target file
-                File targetFile = new File(targetDir, fileName);
-
-                // Write the uploaded file to the target directory
-                try (FileOutputStream outputStream = new FileOutputStream(targetFile)) {
-                    IOUtils.copy(inputStream, outputStream);
-                    filePaths.add(targetFile.getPath());
-                } catch (IOException e) {
-                    showErrorNotification("Error al guardar el archivo: " + e.getMessage());
-                }
-            } catch (IOException e) {
-                showErrorNotification("Error al leer el archivo: " + e.getMessage());
-            }
-        });
-        return filePaths;
-    }
-
-    public static Anchor descargarFile(String filePath, String buttonText) {
-        Button downloadButton = new Button(buttonText);
-        downloadButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-
-        String[] parts = filePath.split("\\\\");
-        String fileName = parts[parts.length - 1];
-
-        StreamResource resource = new StreamResource(fileName, () -> {
-            try {
-                return new FileInputStream(filePath);
-            } catch (FileNotFoundException e) {
-                return null;
-            }
-        });
-
-        Anchor anchor = new Anchor(resource, "");
-        anchor.getElement().setAttribute("download", true);
-        anchor.add(downloadButton);
-
-        return anchor;
-    }
 }

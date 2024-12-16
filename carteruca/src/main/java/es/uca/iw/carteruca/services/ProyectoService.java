@@ -10,7 +10,7 @@ import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer;
 import es.uca.iw.carteruca.models.Proyecto;
 import es.uca.iw.carteruca.models.Solicitud;
 import es.uca.iw.carteruca.repository.ProyectoRepository;
-import es.uca.iw.carteruca.views.common.common;
+import es.uca.iw.carteruca.services.commonService;
 
 @Service
 public class ProyectoService {
@@ -24,9 +24,9 @@ public class ProyectoService {
         //this.solicitudService = solicitudService;
     }
 
-    public void guardar(Float puntuacion, Float porcentaje, MultiFileMemoryBuffer buffer, Solicitud solicitud) {
+    public void guardarProyecto(Float puntuacion, Float porcentaje, MultiFileMemoryBuffer buffer, Solicitud solicitud) {
 
-        List<String> documento = common.guardarFiles(buffer, "../"+solicitud.getCartera().getNombre()+"/poryectos");
+        List<String> documento = commonService.guardarFiles(buffer, "../"+solicitud.getCartera().getNombre()+"/proyectos");
 
         Proyecto proyecto = new Proyecto();
 
@@ -36,6 +36,10 @@ public class ProyectoService {
         proyecto.setPresupuesto(documento.get(1));
         proyecto.setSolicitud(solicitud);
 
+        repository.save(proyecto);
+    }
+
+    public void updateProyecto(Proyecto proyecto) {
         repository.save(proyecto);
     }
 }

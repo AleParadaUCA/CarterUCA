@@ -18,6 +18,7 @@ import es.uca.iw.carteruca.models.Usuario;
 import es.uca.iw.carteruca.security.AuthenticatedUser;
 import es.uca.iw.carteruca.services.SolicitudService;
 import es.uca.iw.carteruca.views.common.common;
+import es.uca.iw.carteruca.services.commonService;
 import es.uca.iw.carteruca.views.layout.MainLayout;
 import jakarta.annotation.security.RolesAllowed;
 
@@ -181,7 +182,7 @@ public class SolicitudSeeView extends Composite<VerticalLayout> {
             // Botón para descargar el archivo de memoria
             String memoriaPath = solicitud.getMemoria();
             if (memoriaPath != null && !memoriaPath.isEmpty()) {
-                Anchor downloadAnchor = common.descargarFile(memoriaPath, "Descargar Memoria");
+                Anchor downloadAnchor = commonService.descargarFile(memoriaPath, "Descargar Memoria");
                 formLayout.add(downloadAnchor);
             } else {
                 Button descargarMemoriaButton = new Button("Descargar Memoria");
