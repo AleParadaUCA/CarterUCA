@@ -39,4 +39,6 @@ public class Proyecto {
     public Float getPorcentaje() {return porcentaje;}
     public void setPorcentaje(Float porcentaje) {this.porcentaje = porcentaje;}
 
+    public Solicitud getSolicitud() {return solicitud;}
+    public void setSolicitud(Solicitud solicitud) {this.solicitud = solicitud;}
 }

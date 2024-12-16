@@ -35,27 +35,27 @@ public class SolicitudService {
         //Faltan commprobaciones..
 
         buffer.getFiles().forEach(fileName -> {
-        try (InputStream inputStream = buffer.getInputStream(fileName)) {
-            // Define the target directory
-            File targetDir = new File("../archivos");
-            if (!targetDir.exists()) {
-                targetDir.mkdirs(); // Create the directory if it doesn't exist
-            }
+            try (InputStream inputStream = buffer.getInputStream(fileName)) {
+                // Define the target directory
+                File targetDir = new File("../archivos");
+                if (!targetDir.exists()) {
+                    targetDir.mkdirs(); // Create the directory if it doesn't exist
+                }
 
-            // Define the target file
-            File targetFile = new File(targetDir, fileName);
+                // Define the target file
+                File targetFile = new File(targetDir, fileName);
 
-            // Write the uploaded file to the target directory
-            try (FileOutputStream outputStream = new FileOutputStream(targetFile)) {
-                org.apache.commons.io.IOUtils.copy(inputStream, outputStream);
-                memoria.set(targetFile.getPath());
+                // Write the uploaded file to the target directory
+                try (FileOutputStream outputStream = new FileOutputStream(targetFile)) {
+                    org.apache.commons.io.IOUtils.copy(inputStream, outputStream);
+                    memoria.set(targetFile.getPath());
+                } catch (IOException e) {
+                    Notification.show("Error al guardar el archivo: " + e.getMessage(), 5000, Notification.Position.MIDDLE);
+                }
             } catch (IOException e) {
-                Notification.show("Error al guardar el archivo: " + e.getMessage(), 5000, Notification.Position.MIDDLE);
+                Notification.show("Error al leer el archivo: " + e.getMessage(), 5000, Notification.Position.MIDDLE);
             }
-        } catch (IOException e) {
-            Notification.show("Error al leer el archivo: " + e.getMessage(), 5000, Notification.Position.MIDDLE);
-        }
-    });
+        });
         Solicitud solicitud = new Solicitud();
         solicitud.setTitulo(titulo);
         solicitud.setNombre(nombre);
