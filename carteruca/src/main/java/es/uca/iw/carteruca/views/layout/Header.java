@@ -21,6 +21,7 @@ import es.uca.iw.carteruca.security.AuthenticatedUser;
 import es.uca.iw.carteruca.views.common.common;
 
 import com.vaadin.flow.component.dialog.Dialog;
+import es.uca.iw.carteruca.views.proyecto.ProyectoAllView;
 
 public class Header extends Composite<VerticalLayout> {
 
@@ -150,9 +151,8 @@ public class Header extends Composite<VerticalLayout> {
         menuBar.addClassName("rounded-menu-bar");
         menuBar.addClassName("full-menu");
 
-        menuBar.addItem("Proyectos", e -> UI.getCurrent().navigate("/"))
+        menuBar.addItem("Proyectos", e -> UI.getCurrent().navigate(ProyectoAllView.class))
                 .getElement().getClassList().add("menu-item");
-        //menuBar.addItem("Registrarse", e -> UI.getCurrent().navigate(RegistroView.class));
 
         if (authenticatedUser.get().isPresent()) {
             if (authenticatedUser.get().get().getRol() == Rol.Admin){
