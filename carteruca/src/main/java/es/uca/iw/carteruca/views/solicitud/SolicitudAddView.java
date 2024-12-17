@@ -17,6 +17,7 @@ import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.shared.Tooltip;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer;
@@ -95,22 +96,67 @@ public class SolicitudAddView extends Composite<VerticalLayout> {
         nombre.setId("Nombre");
         nombre.setLabel("Nombre Corto del Proyecto");
         nombre.getElement().setAttribute("aria-label", "Introduzca el nombre Corto del Proyecto");
+        nombre.setTooltipText("Acrónimo del Nombre del Proyecto");
+
+        Button nombre_toggleTooltip = new Button("Mostrar/Ocultar Tooltip");
+        nombre_toggleTooltip.addClickListener(event -> {
+            Tooltip nombreTooltip = nombre.getTooltip();
+            if (nombreTooltip != null) {
+                nombreTooltip.setOpened(!nombreTooltip.isOpened());
+            }
+        });
 
         interesados.setId("Interesados");
         interesados.setLabel("Interesados del Proyecto");
         interesados.getElement().setAttribute("aria-label", "Introduzca los interesados");
+        interesados.setTooltipText("Personas o grupo de personas que quieren que se lleve a cabo el proyecto");
+
+        Button interesados_toggleTooltip = new Button("Mostrar/Ocultar Tooltip");
+        interesados_toggleTooltip.addClickListener(event -> {
+            Tooltip interesadosTooltip = interesados.getTooltip();
+            if (interesadosTooltip != null) {
+                interesadosTooltip.setOpened(!interesadosTooltip.isOpened());
+            }
+        });
 
         objetivos.setId("Objetivos");
         objetivos.setLabel("Objetivos del Proyecto");
         objetivos.getElement().setAttribute("aria-label", "Introduzca los objetivos");
+        objetivos.setTooltipText("Objetivos que quiere conseguir el proyecto");
+
+        Button objetivos_toggleTooltip = new Button("Mostrar/Ocultar Tooltip");
+        objetivos_toggleTooltip.addClickListener(event -> {
+            Tooltip objetivosTooltip = objetivos.getTooltip();
+            if (objetivosTooltip != null) {
+                objetivosTooltip.setOpened(!objetivosTooltip.isOpened());
+            }
+        });
 
         alcance.setId("Alcance");
         alcance.setLabel("Alcance");
         alcance.getElement().setAttribute("aria-label", "Introduzca el alcance");
+        alcance.setTooltipText("Grupo de personas a las que beneficiará el proyecto");
+
+        Button alcance_toggleTooltip = new Button("Mostrar/Ocultar Tooltip");
+        alcance_toggleTooltip.addClickListener(event -> {
+            Tooltip alcanceTooltip = alcance.getTooltip();
+            if (alcanceTooltip != null) {
+                alcanceTooltip.setOpened(!alcanceTooltip.isOpened());
+            }
+        });
 
         normativa.setId("Normativa");
         normativa.setLabel("Normativa");
         normativa.getElement().setAttribute("aria-label", "Normativa");
+        normativa.setTooltipText("Código que debe cumplir la solicitud");
+
+        Button normativa_toggleTooltip = new Button("Mostrar/Ocultar Tooltip");
+        normativa_toggleTooltip.addClickListener(event -> {
+            Tooltip normativaTooltip = normativa.getTooltip();
+            if (normativaTooltip != null) {
+                normativaTooltip.setOpened(!normativaTooltip.isOpened());
+            }
+        });
 
         avalador.setId("Avalador");
         avalador.setLabel("Avalador");
@@ -133,8 +179,17 @@ public class SolicitudAddView extends Composite<VerticalLayout> {
         fecha_puesta.getElement().setAttribute("aria-label", "Seleccione Fecha");
         fecha_puesta.setAutoOpen(false);
         fecha_puesta.setHelperText("Fecha limite de puesta en marcha del proyecto");
+        fecha_puesta.setTooltipText("Fecha limite en la que el proyecto se tiene que poner en marcha");
 
-        Span memoria = new Span("Memoria(20MB)");
+        Button fecha_puesta_toggleTooltip = new Button("Mostrar/Ocultar Tooltip");
+        fecha_puesta_toggleTooltip.addClickListener(event -> {
+            Tooltip fecha_puestaTooltip = fecha_puesta.getTooltip();
+            if (fecha_puestaTooltip != null) {
+                fecha_puestaTooltip.setOpened(!fecha_puestaTooltip.isOpened());
+            }
+        });
+
+        Span memoria = new Span("Memoria (20MB)");
         memoria.getElement().setAttribute("aria-label", "Adjunte la memoria del proyecto");
         memoria.getStyle()
                 .set("font-size", "14px") // Tamaño de fuente
@@ -147,7 +202,7 @@ public class SolicitudAddView extends Composite<VerticalLayout> {
         upload.setMaxFiles(1); // Límite opcional del número de archivos
         upload.setAcceptedFileTypes(".pdf");
         upload.setMaxFileSize(20 * 1024 * 1024); // Tamaño máximo de archivo en bytes (20 MB)
-
+        
         // Componentes del formulario
         form.add(titulo, nombre, interesados, objetivos, alcance, normativa, avalador, fecha_puesta, memoria, upload);
 
