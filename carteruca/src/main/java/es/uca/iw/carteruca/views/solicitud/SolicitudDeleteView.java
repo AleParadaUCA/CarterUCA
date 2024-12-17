@@ -52,10 +52,8 @@ public class SolicitudDeleteView extends Composite<VerticalLayout> {
         solicitudes.addColumn(Solicitud::getTitulo).setHeader("Titulo del Proyecto");
         solicitudes.addColumn(Solicitud::getNombre).setHeader("Nombre del Solicitud");
 
-        solicitudes.addColumn(new ComponentRenderer<>(solicitud ->
-                common.createBadgeForEstado(solicitud.getEstado()))
-        ).setHeader("Estado");
-
+        /*
+        NO FUNKA
         solicitudes.addColumn(new ComponentRenderer<>(solicitud ->{
             if(solicitud.getEstado() == Estado.EN_TRAMITE){
                 Button eliminar = new Button("Eliminar Solicitud");
@@ -65,6 +63,8 @@ public class SolicitudDeleteView extends Composite<VerticalLayout> {
             }
             return null;
         }));
+
+         */
 
         List<Solicitud> lista_solicitudes = solicitudService.getSolicitudesByUsuario(currentUser);
         solicitudes.setItems(lista_solicitudes);
