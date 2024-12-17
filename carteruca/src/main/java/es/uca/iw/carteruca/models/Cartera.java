@@ -42,13 +42,13 @@ public class Cartera {
     private LocalDateTime fecha_cierre_evaluacion;
 
     @Column(nullable = false)
-    float n_horas;
+    private float n_horas;
 
     @Column(nullable = false)
-    int n_max_tecnicos;
+    private int n_max_tecnicos;
 
     @Column(nullable = false)
-    float presupuesto_total;
+    private float presupuesto_total;
 
 //GETTERS Y SETTERS
     public Long getId() {return id;}
