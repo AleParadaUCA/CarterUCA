@@ -11,6 +11,10 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import es.uca.iw.carteruca.models.Solicitud;
+import es.uca.iw.carteruca.models.Usuario;
+import es.uca.iw.carteruca.security.AuthenticatedUser;
+import es.uca.iw.carteruca.services.SolicitudService;
+import es.uca.iw.carteruca.services.UsuarioService;
 import es.uca.iw.carteruca.views.common.common;
 import jakarta.annotation.security.PermitAll;
 
@@ -19,7 +23,17 @@ import jakarta.annotation.security.PermitAll;
 @PermitAll
 public class NotificacionesView extends Composite<VerticalLayout> {
 
-    public NotificacionesView() {
+    private final UsuarioService usuarioService;
+    private final AuthenticatedUser authenticatedUser;
+    private final SolicitudService solicitudService;
+    private final Usuario currentUser;
+
+    public NotificacionesView(UsuarioService usuarioService, AuthenticatedUser authenticatedUser,
+                              SolicitudService solicitudService) {
+        this.usuarioService = usuarioService;
+        this.authenticatedUser = authenticatedUser;
+        this.solicitudService = solicitudService;
+        this.currentUser = authenticatedUser.get().get();
 
         Grid<Solicitud> solicitudes = new Grid<>(Solicitud.class, false);
         solicitudes.addColumn(Solicitud::getTitulo).setHeader("Titulo");
@@ -31,6 +45,8 @@ public class NotificacionesView extends Composite<VerticalLayout> {
         solicitudes.setEmptyStateText("No hay solicitudes");
 
         getContent().add(solicitudes);
-        getContent().add(common.botones_Registrado());
+        getContent().add(common.boton_dinamico(currentUser));
+
+
     }
 }
