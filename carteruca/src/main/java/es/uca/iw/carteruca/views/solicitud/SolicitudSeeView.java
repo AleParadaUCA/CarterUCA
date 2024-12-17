@@ -35,6 +35,7 @@ import com.vaadin.flow.component.html.Anchor;
 public class SolicitudSeeView extends Composite<VerticalLayout> {
 
     private final SolicitudService solicitudService;
+    private final AuthenticatedUser authenticatedUser;
     private final Usuario usuario;
 
     private final Grid<Solicitud> solicitudes = new Grid<>(Solicitud.class, false);
@@ -42,6 +43,7 @@ public class SolicitudSeeView extends Composite<VerticalLayout> {
     @Autowired
     public SolicitudSeeView(SolicitudService solicitudService, AuthenticatedUser authenticatedUser) {
         this.solicitudService = solicitudService;
+        this.authenticatedUser = authenticatedUser;
         this.usuario = authenticatedUser.get().get();
 
         common.creartitulo("Ver Solicitudes",this);
@@ -55,10 +57,7 @@ public class SolicitudSeeView extends Composite<VerticalLayout> {
         solicitudes.setHeight("400px");  // Ajustar la altura si es necesario
         solicitudes.addColumn(Solicitud::getTitulo).setHeader("Título");
 
-        // Agregar la columna de Estado con el Badge filtrado por usuario
-        solicitudes.addColumn(new ComponentRenderer<>(solicitud -> {
-            return createBadgeForEstado(solicitud.getEstado()); // Devuelve el componente Span
-        }));
+        solicitudes.addColumn(new ComponentRenderer<>(solicitud -> common.createBadgeForEstado(solicitud.getEstado()))).setHeader("Estado");
 
         // Agregar un botón para alternar detalles
         solicitudes.addColumn(createToggleDetailsRenderer(solicitudes)).setHeader("Detalles");
@@ -72,47 +71,6 @@ public class SolicitudSeeView extends Composite<VerticalLayout> {
         List<Solicitud> solicitudesList = solicitudService.getSolicitudesByUsuario(usuario);
         solicitudes.setItems(solicitudesList); // Establecer los datos al grid
         getContent().add(solicitudes);  // Cambiar add() por getContent().add()
-    }
-
-    private Span createBadgeForEstado(Estado estado) {
-        Span badge = new Span(estado.name());  // Utiliza name() para obtener el valor del enum como String
-        badge.getElement().getThemeList().add("badge"); // Aplicar el tema base de Vaadin
-
-        // Estilo personalizado según el estado
-        switch (estado) {
-            case ACEPTADO:
-                badge.getStyle().set("background-color", "green"); // Verde
-                badge.getStyle().set("color", "#ffffff");           // Texto blanco
-                break;
-            case RECHAZADO:
-                badge.getStyle().set("background-color", "#dc3545"); // Rojo
-                badge.getStyle().set("color", "#ffffff");           // Texto blanco
-                break;
-            case EN_TRAMITE:
-                badge.getStyle().set("background-color", "violet"); // Amarillo
-                badge.getStyle().set("color", "#000000");           // Texto negro
-                break;
-            case EN_TRAMITE_AVALADO:
-                badge.getStyle().set("background-color", "orange");
-                badge.getStyle().set("color", "#ff0000");
-                break;
-            case TERMINADO:
-                badge.getStyle().set("background-color", "blue");
-                badge.getStyle().set("color", "#ffffff");
-
-            default:
-                badge.getStyle().set("background-color", "#6c757d"); // Gris
-                badge.getStyle().set("color", "#ffffff");           // Texto blanco
-                break;
-        }
-
-        // Opcional: personalizar tamaño y bordes del badge
-        badge.getStyle().set("padding", "0.25em 0.5em");
-        badge.getStyle().set("border-radius", "0.5em");
-        badge.getStyle().set("font-size", "0.875rem");
-        badge.getStyle().set("font-weight", "bold");
-
-        return badge;
     }
 
     // Crear el renderizado para alternar los detalles
