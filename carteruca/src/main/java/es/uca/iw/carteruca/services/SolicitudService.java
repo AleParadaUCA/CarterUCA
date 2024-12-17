@@ -47,6 +47,28 @@ public class SolicitudService {
         repository.save(solicitud);
     }
 
+    public void update_solicitud(Long id, String titulo, String nombre, LocalDateTime fechaPuesta,
+                                 String interesados, String alineamiento, String alcance, String normativa, Usuario avalador) {
+        // Buscar la solicitud por su ID
+        Solicitud solicitud = repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Solicitud no encontrada con el ID: " + id));
+
+        // Actualizar los campos de la solicitud
+        solicitud.setTitulo(titulo);
+        solicitud.setNombre(nombre);
+        solicitud.setFecha_puesta(fechaPuesta);
+        solicitud.setInteresados(interesados);
+        solicitud.setAlineamiento(alineamiento);
+        solicitud.setAlcance(alcance);
+        solicitud.setNormativa(normativa);
+        solicitud.setAvalador(avalador);
+
+        // Guardar los cambios en la base de datos
+        repository.save(solicitud);
+    }
+
+
+
     public List<Solicitud> getSolicitudesByUsuario(Usuario usuario) {
         // Consultar todas las solicitudes asociadas a este usuario, basándonos en los proyectos y estados que tiene
         return repository.findBySolicitante(usuario);
