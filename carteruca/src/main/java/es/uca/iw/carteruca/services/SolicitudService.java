@@ -27,7 +27,7 @@ public class SolicitudService {
         
         //Faltan comprobaciones...
 
-        List<String> memoria = CommonService.guardarFiles(buffer, "../"+ cartera.getNombre());
+        List<String> memoria = CommonService.guardarFiles(buffer, "../archivos/Cartera"+ cartera.getId());
         
         Solicitud solicitud = new Solicitud();
         solicitud.setTitulo(titulo);
