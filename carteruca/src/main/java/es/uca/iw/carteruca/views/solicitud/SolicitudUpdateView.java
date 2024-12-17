@@ -9,18 +9,15 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H4;
-import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.shared.Tooltip;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer;
-import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import es.uca.iw.carteruca.models.Cartera;
 import es.uca.iw.carteruca.models.Estado;
 import es.uca.iw.carteruca.models.Solicitud;
 import es.uca.iw.carteruca.models.Usuario;
@@ -31,11 +28,9 @@ import es.uca.iw.carteruca.views.common.common;
 import es.uca.iw.carteruca.views.layout.MainLayout;
 import jakarta.annotation.security.RolesAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.time.LocalDateTime;
 import java.util.List;
 
-@PageTitle("Modificar Solicitud")
+@PageTitle("Modificar Solicitudes")
 @Route(value = "/solicitudes/update-solicitud", layout = MainLayout.class)
 @RolesAllowed({"Promotor","CIO","Solicitante", "OTP"})
 public class SolicitudUpdateView extends Composite<VerticalLayout> {
@@ -101,6 +96,11 @@ public class SolicitudUpdateView extends Composite<VerticalLayout> {
         List<Solicitud> lista_solicitudes = solicitudService.getSolicitudesByUsuario(currentUser);
         solicitud_tabla.setItems(lista_solicitudes);
 
+    }
+
+    private void updateGrid() {
+        List<Solicitud> lista_solicitudes = solicitudService.getSolicitudesByUsuario(currentUser);
+        solicitud_tabla.setItems(lista_solicitudes);
     }
 
 
@@ -224,12 +224,11 @@ public class SolicitudUpdateView extends Composite<VerticalLayout> {
                         avaladores.getValue()
                 );
 
-                // Mostrar un mensaje de confirmación
-                common.showSuccessNotification("Solicitud actualizada con exito");
-
+                updateGrid();
                 // Cerrar el diálogo y refrescar la tabla de solicitudes
                 dialog.close();
-                crearTabla();
+                // Mostrar un mensaje de confirmación
+                common.showSuccessNotification("Solicitud actualizada con exito");
             } catch (Exception e) {
                 // Manejo de errores
                 common.showErrorNotification("Error al actualizar la solicitud: " + e.getMessage());
