@@ -40,7 +40,7 @@ public class CarteraActualView extends Composite<VerticalLayout> {
     }
 
     private void loadCarteraActual() {
-        carteraService.getCarteraActual().ifPresent(cartera -> {
+        carteraService.getCartera().ifPresent(cartera -> {
             // Crear el FormLayout
             FormLayout formLayout = new FormLayout();
             formLayout.setResponsiveSteps(

@@ -159,4 +159,17 @@ public class CarteraService {
         LocalDateTime now = LocalDateTime.now();
         return carteraRepository.findByFechaInicioLessThanEqualAndFechaFinGreaterThanEqual(now, now);
     }
+
+    //Es la que funciona cuando hay mas de una cartera
+    public Optional<Cartera> getCartera() {
+        LocalDateTime fechaActual = LocalDateTime.now();
+        Optional<Cartera> carteraActual = carteraRepository.buscarCarteraVigente(fechaActual);
+
+        if(carteraActual.isPresent()) {
+            return carteraActual;
+        } else {
+            throw new IllegalStateException("No hay cartera vigente");
+        }
+    }
+
 }
