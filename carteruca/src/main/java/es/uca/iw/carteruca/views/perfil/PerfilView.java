@@ -22,8 +22,6 @@ import es.uca.iw.carteruca.models.Usuario;
 import es.uca.iw.carteruca.security.AuthenticatedUser;
 import es.uca.iw.carteruca.services.UsuarioService;
 import es.uca.iw.carteruca.views.common.common;
-import es.uca.iw.carteruca.views.home.HomeAdminView;
-import es.uca.iw.carteruca.views.home.HomeSolicitanteView;
 import es.uca.iw.carteruca.views.layout.MainLayout;
 import jakarta.annotation.security.PermitAll;
 
@@ -50,8 +48,9 @@ public class PerfilView extends Composite<VerticalLayout> {
         this.currentUser = authenticatedUser.get().get();
 
         crearPerfilForm();
+        update_password();
         BotonesConfiguracion();
-        botonVolver();
+        getContent().add(common.boton_dinamico(currentUser));
     }
 
     private TextField LecturaTextField(String label, String value) {
@@ -247,17 +246,14 @@ public class PerfilView extends Composite<VerticalLayout> {
         HorizontalLayout buttonLayout = new HorizontalLayout();
 
         Button eliminar = new Button("Eliminar");
-        eliminar.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        eliminar.addThemeVariants(ButtonVariant.LUMO_ERROR);
         eliminar.addClickListener(e -> openEliminarDialog());
 
         Button modificar = new Button("Modificar");
         modificar.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         modificar.addClickListener(e -> openEditarDialog());
 
-        Button cambiarPasswordButton = new Button("Cambiar Contraseña", e -> openCambiarPasswordDialog());
-        cambiarPasswordButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-
-        buttonLayout.add(cambiarPasswordButton, modificar, eliminar);
+        buttonLayout.add(modificar, eliminar);
         buttonLayout.setWidthFull(); // Asegúrate de que ocupe todo el ancho disponible
         buttonLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER); // Centra los botones horizontalmente
         buttonLayout.setAlignItems(FlexComponent.Alignment.CENTER); // Centra los botones verticalmente (opcional)
@@ -265,23 +261,21 @@ public class PerfilView extends Composite<VerticalLayout> {
         getContent().add(buttonLayout);
     }
 
-    private void botonVolver() {
-        Button volverButton = new Button("Volver");
-        volverButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+    private void update_password() {
+        HorizontalLayout password = new HorizontalLayout();
+        password.setSpacing(true);
+        password.setWidthFull();
+        password.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
 
-        volverButton.addClickListener(e -> {
-            if (currentUser.getRol().name().equals("Admin")) {
-                getUI().ifPresent(ui -> ui.navigate(HomeAdminView.class));
-            } else {
-                getUI().ifPresent(ui -> ui.navigate(HomeSolicitanteView.class));
-            }});
+        Button cambiarPasswordButton = new Button("Cambiar Contraseña", e -> openCambiarPasswordDialog());
+        cambiarPasswordButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
-        HorizontalLayout footerLayout = new HorizontalLayout(volverButton);
-        footerLayout.setWidthFull();
-        footerLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
+        password.add(cambiarPasswordButton);
 
-        getContent().add(footerLayout);
+        getContent().add(password);
+
     }
+
 }
 
 
