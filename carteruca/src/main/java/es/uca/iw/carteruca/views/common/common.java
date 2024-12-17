@@ -7,7 +7,6 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
-import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Span;
@@ -19,11 +18,11 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer;
-import com.vaadin.flow.server.StreamResource;
-
 import es.uca.iw.carteruca.models.Centro;
+import es.uca.iw.carteruca.models.Usuario;
 import es.uca.iw.carteruca.services.CentroService;
+import es.uca.iw.carteruca.views.home.HomeAdminView;
+import es.uca.iw.carteruca.views.home.HomeSolicitanteView;
 
 public class common {
     public static Div createSquare(String text, VaadinIcon iconType) {
@@ -194,6 +193,28 @@ public class common {
         volver.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
 
         botones.add(volver);
+        return botones;
+    }
+
+    public static HorizontalLayout boton_dinamico(Usuario user){
+        HorizontalLayout botones = new HorizontalLayout();
+
+        Button volverButton = new Button("Volver");
+
+        volverButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        volverButton.getElement().setAttribute("aria-label", "Volver");
+
+        volverButton.addClickListener(event -> {
+            if(user.getRol().name().equals("Admin")){
+                UI.getCurrent().navigate(HomeAdminView.class);
+            }else{
+                UI.getCurrent().navigate(HomeSolicitanteView.class);
+            }
+        });
+        botones.setWidthFull();
+        botones.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
+
+        botones.add(volverButton);
         return botones;
     }
 
