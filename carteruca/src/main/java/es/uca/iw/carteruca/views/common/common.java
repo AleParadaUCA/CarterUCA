@@ -19,6 +19,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import es.uca.iw.carteruca.models.Centro;
+import es.uca.iw.carteruca.models.Estado;
 import es.uca.iw.carteruca.models.Usuario;
 import es.uca.iw.carteruca.services.CentroService;
 import es.uca.iw.carteruca.views.home.HomeAdminView;
@@ -216,6 +217,47 @@ public class common {
 
         botones.add(volverButton);
         return botones;
+    }
+
+    public static Span createBadgeForEstado(Estado estado) {
+        Span badge = new Span(estado.name());  // Utiliza name() para obtener el valor del enum como String
+        badge.getElement().getThemeList().add("badge"); // Aplicar el tema base de Vaadin
+
+        // Estilo personalizado según el estado
+        switch (estado) {
+            case ACEPTADO:
+                badge.getStyle().set("background-color", "green"); // Verde
+                badge.getStyle().set("color", "#ffffff");           // Texto blanco
+                break;
+            case RECHAZADO:
+                badge.getStyle().set("background-color", "#dc3545"); // Rojo
+                badge.getStyle().set("color", "#ffffff");           // Texto blanco
+                break;
+            case EN_TRAMITE:
+                badge.getStyle().set("background-color", "violet"); // Amarillo
+                badge.getStyle().set("color", "#000000");           // Texto negro
+                break;
+            case EN_TRAMITE_AVALADO:
+                badge.getStyle().set("background-color", "orange");
+                badge.getStyle().set("color", "#ff0000");
+                break;
+            case TERMINADO:
+                badge.getStyle().set("background-color", "blue");
+                badge.getStyle().set("color", "#ffffff");
+
+            default:
+                badge.getStyle().set("background-color", "#6c757d"); // Gris
+                badge.getStyle().set("color", "#ffffff");           // Texto blanco
+                break;
+        }
+
+        // Opcional: personalizar tamaño y bordes del badge
+        badge.getStyle().set("padding", "0.25em 0.5em");
+        badge.getStyle().set("border-radius", "0.5em");
+        badge.getStyle().set("font-size", "0.875rem");
+        badge.getStyle().set("font-weight", "bold");
+
+        return badge;
     }
 
 
