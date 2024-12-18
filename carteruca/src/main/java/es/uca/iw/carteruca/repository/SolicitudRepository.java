@@ -1,5 +1,6 @@
 package es.uca.iw.carteruca.repository;
 
+import es.uca.iw.carteruca.models.Estado;
 import es.uca.iw.carteruca.models.Solicitud;
 import es.uca.iw.carteruca.models.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,6 +17,9 @@ public interface SolicitudRepository extends JpaRepository<Solicitud, Long> {
     //Devuelve lista de solicitudes que pertenezcan a la cartera con fecha de inicio dada
 
     List<Solicitud> findBySolicitante(Usuario solicitante);    //Busca las solicitudes hechas por un usuario
+
+    List<Solicitud> findByPromotorAndEstado(Usuario promotor, Estado estado);
+
 
     // void deleteById(Long id);
 }

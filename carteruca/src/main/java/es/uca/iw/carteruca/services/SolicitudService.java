@@ -84,4 +84,17 @@ public class SolicitudService {
         // Consultar todas las solicitudes asociadas a este usuario, basándonos en los proyectos y estados que tiene
         return repository.findBySolicitante(usuario);
     }
+
+
+    public List<Solicitud> getSolicitudesByPromotor(Usuario promotor) {
+        return repository.findByPromotorAndEstado(promotor, Estado.EN_TRAMITE);
+    }
+
+    public void updateSolicitud(Solicitud solicitud) {
+        repository.save(solicitud);  // Guarda la solicitud actualizada
+    }
+
+
+
+
 }
