@@ -2,6 +2,7 @@ package es.uca.iw.carteruca.services;
 
 import java.util.List;
 
+import es.uca.iw.carteruca.models.Estado;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,5 +41,10 @@ public class ProyectoService {
 
     public void updateProyecto(Proyecto proyecto) {
         repository.save(proyecto);
+    }
+
+    public List<Proyecto> getProyectosFinalizadosPorCartera(Long carteraId) {
+        // Filtra los proyectos por carteraId y estado "FINALIZADO"
+        return repository.findBySolicitud_Cartera_IdAndSolicitud_Estado(carteraId, Estado.ACEPTADO);
     }
 }

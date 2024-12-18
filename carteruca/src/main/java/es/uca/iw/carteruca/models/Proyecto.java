@@ -32,7 +32,12 @@ public class Proyecto {
 
     @Column
     private Float porcentaje; // este campo mostrará el porcentaje de avance del proyecto que este en marcha.
+
+    @Column
+    private float horas;
     // *hasta aqui lo rellena CIO y OTP
+
+
 
     public Long getId() {return id; }
 
@@ -50,4 +55,7 @@ public class Proyecto {
 
     public Solicitud getSolicitud() {return solicitud;}
     public void setSolicitud(Solicitud solicitud) {this.solicitud = solicitud;}
+
+    public float getHoras() {return horas;}
+    public void setHoras(float horas) {this.horas = horas;}
 }

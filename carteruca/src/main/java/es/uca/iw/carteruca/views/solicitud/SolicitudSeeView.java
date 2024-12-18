@@ -6,6 +6,7 @@ import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
@@ -143,13 +144,14 @@ public class SolicitudSeeView extends Composite<VerticalLayout> {
                 Anchor downloadAnchor = CommonService.descargarFile(memoriaPath, "Descargar Memoria");
                 formLayout.add(downloadAnchor);
             } else {
+
                 Button descargarMemoriaButton = new Button("Descargar Memoria");
                 descargarMemoriaButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
                 descargarMemoriaButton.addClassName("disabled-button");
                 formLayout.add(descargarMemoriaButton);
                 descargarMemoriaButton.setEnabled(false);
             }
-            detailsLayout.add(formLayout);    
+            detailsLayout.add(formLayout);
 
             return detailsLayout;
         });

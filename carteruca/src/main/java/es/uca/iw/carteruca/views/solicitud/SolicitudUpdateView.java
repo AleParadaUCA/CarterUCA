@@ -2,8 +2,6 @@ package es.uca.iw.carteruca.views.solicitud;
 
 import java.util.List;
 
-import com.vaadin.flow.component.html.Span;
-
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.vaadin.flow.component.Composite;
@@ -15,6 +13,7 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H4;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -36,7 +35,7 @@ import es.uca.iw.carteruca.views.common.common;
 import es.uca.iw.carteruca.views.layout.MainLayout;
 import jakarta.annotation.security.RolesAllowed;
 
-@PageTitle("Modificar Solicitud")
+@PageTitle("Modificar Solicitudes")
 @Route(value = "/solicitudes/update-solicitud", layout = MainLayout.class)
 @RolesAllowed({"Promotor","CIO","Solicitante", "OTP"})
 public class SolicitudUpdateView extends Composite<VerticalLayout> {
@@ -98,6 +97,11 @@ public class SolicitudUpdateView extends Composite<VerticalLayout> {
         List<Solicitud> lista_solicitudes = solicitudService.getSolicitudesByUsuario(currentUser);
         solicitud_tabla.setItems(lista_solicitudes);
 
+    }
+
+    private void updateGrid() {
+        List<Solicitud> lista_solicitudes = solicitudService.getSolicitudesByUsuario(currentUser);
+        solicitud_tabla.setItems(lista_solicitudes);
     }
 
 
@@ -242,6 +246,9 @@ public class SolicitudUpdateView extends Composite<VerticalLayout> {
                         buffer
                 );
 
+                updateGrid();
+                // Cerrar el diálogo y refrescar la tabla de solicitudes
+                dialog.close();
                 // Mostrar un mensaje de confirmación
                 common.showSuccessNotification("Solicitud actualizada con Éxito");
 

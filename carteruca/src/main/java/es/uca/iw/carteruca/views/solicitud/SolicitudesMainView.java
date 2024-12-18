@@ -52,6 +52,7 @@ public class SolicitudesMainView extends Composite<VerticalLayout> {
 
         // Cancelar Solicitud
         Div cancelar = common.createSquare("Cancelar Solicitud", VaadinIcon.CLOSE);
+        cancelar.addClickListener(e -> UI.getCurrent().navigate(SolicitudDeleteView.class));
 
         // Ver Solicitudes
         Div solicitudes = common.createSquare("Ver Solicitudes", VaadinIcon.SEARCH);
