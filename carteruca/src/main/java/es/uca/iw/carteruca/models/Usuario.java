@@ -50,6 +50,11 @@ public class Usuario implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Rol rol;
 
+    @Column(name = "activo")
+    private boolean activo;
+
+    private String codigoRegistro = "";
+
     // @Column(columnDefinition = "VARCHAR(255) DEFAULT 'icons/profile.svg'")
     // private String fotoPerfil = "icons/profile.svg";
 
@@ -139,4 +144,19 @@ public class Usuario implements UserDetails {
         this.centro = centro;
     }
 
+    public boolean isActivo() {
+        return activo;
+    }
+
+    public void setActivo(boolean activo) {
+        this.activo = activo;
+    }
+
+    public String getCodigoRegistro() {
+        return codigoRegistro;
+    }
+
+    public void setCodigoRegistro(String codigoRegistro) {
+        this.codigoRegistro = codigoRegistro;
+    }
 }

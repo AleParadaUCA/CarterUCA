@@ -1,11 +1,13 @@
 package es.uca.iw.carteruca.repository;
 
-import es.uca.iw.carteruca.models.Rol;
-import es.uca.iw.carteruca.models.Usuario;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import java.util.List;
 import java.util.Optional;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+
+import es.uca.iw.carteruca.models.Rol;
+import es.uca.iw.carteruca.models.Usuario;
 
 public interface UsuarioRepository extends JpaRepository<Usuario, Long>, JpaSpecificationExecutor<Usuario> {
 
@@ -24,5 +26,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long>, JpaSpec
     void deleteByEmail(String email);//Elimina un usuario dado un email
 
     List<Usuario> findByRolNot(Rol rol); // Buscar todos los usuarios excepto los de un tipo de rol concreto
+
+    public Optional<Usuario> findByCodigoRegistro(String token);
 
 }

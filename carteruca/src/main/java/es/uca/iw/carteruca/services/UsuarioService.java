@@ -3,6 +3,7 @@ package es.uca.iw.carteruca.services;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
@@ -22,7 +23,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vaadin.hilla.ExplicitNullableTypeChecker;
 
 import es.uca.iw.carteruca.models.Centro;
 import es.uca.iw.carteruca.models.Rol;
@@ -34,15 +34,15 @@ public class UsuarioService implements UserDetailsService {
 
     private final UsuarioRepository repository;
     private final PasswordEncoder passwordEncoder;
-    //private final EmailService emailService;
+    private final EmailService emailService;
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[\\w.%+-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$");
     //private final ExplicitNullableTypeChecker typeChecker;
 
     @Autowired
-    public UsuarioService(UsuarioRepository repository, PasswordEncoder passwordEncoder, ExplicitNullableTypeChecker typeChecker) {
+    public UsuarioService(UsuarioRepository repository, PasswordEncoder passwordEncoder, EmailService emailService) {
         this.repository = repository;
         this.passwordEncoder = passwordEncoder;
-        // this.emailService = emailService;
+        this.emailService = emailService;
         //this.typeChecker = typeChecker;
     }
 
@@ -104,9 +104,32 @@ public class UsuarioService implements UserDetailsService {
         nuevoUsuario.setRol(rol);
         nuevoUsuario.setPassword(passwordEncoder.encode(password));
         nuevoUsuario.setCentro(centro);
+        nuevoUsuario.setActivo(false);
 
-        repository.save(nuevoUsuario);
-        return "Exito";
+        nuevoUsuario.setCodigoRegistro(UUID.randomUUID().toString().substring(0, 5));
+
+        try {
+            repository.save(nuevoUsuario);
+            emailService.sendRegistrationEmail(nuevoUsuario);
+            return "Exito";
+        } catch (DataIntegrityViolationException e) {
+            return "Error: "+ e;
+        }
+    }
+
+    @Transactional
+    public String activateUser(String token) {
+        Optional<Usuario> usuarioOptional = repository.findByCodigoRegistro(token);
+        if (usuarioOptional.isEmpty()) {
+            return "Token de activación inválido.";
+        }
+
+        Usuario usuario = usuarioOptional.get();
+        usuario.setActivo(true);
+        usuario.setCodigoRegistro(null);
+        repository.save(usuario);
+
+        return "Cuenta activada correctamente.";
     }
 
     private Rol ObtenerRol(String nombre) throws JsonProcessingException {
