@@ -34,7 +34,7 @@ public class UsuarioService implements UserDetailsService {
 
     private final UsuarioRepository repository;
     private final PasswordEncoder passwordEncoder;
-    private final EmailService emailService;
+    // private final EmailService emailService;
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[\\w.%+-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$");
     //private final ExplicitNullableTypeChecker typeChecker;
 
@@ -42,21 +42,21 @@ public class UsuarioService implements UserDetailsService {
     public UsuarioService(UsuarioRepository repository, PasswordEncoder passwordEncoder, EmailService emailService) {
         this.repository = repository;
         this.passwordEncoder = passwordEncoder;
-        this.emailService = emailService;
+        // this.emailService = emailService;
         //this.typeChecker = typeChecker;
     }
 
     @Transactional
-    public String createUser(String nombre, String apellidos, String username, String email, String password, Centro centro) {
+    public String createUser(String nombre, String apellidos, String usuario, String email, String password, Centro centro){
         // Eliminar espacios al inicio y al final de los campos
         nombre = nombre != null ? nombre.trim() : "";
         apellidos = apellidos != null ? apellidos.trim() : "";
-        username = username != null ? username.trim() : "";
+        usuario = usuario != null ? usuario.trim() : "";
         email = email != null ? email.trim() : "";
         password = password != null ? password.trim() : "";
 
         // Validar campos vacíos
-        if (!StringUtils.hasText(username) || !StringUtils.hasText(email) || !StringUtils.hasText(password) ||
+        if (!StringUtils.hasText(usuario) || !StringUtils.hasText(email) || !StringUtils.hasText(password) ||
                 !StringUtils.hasText(apellidos) || !StringUtils.hasText(nombre)) {
             return "Todos los campos son obligatorios.";
         }
@@ -72,13 +72,18 @@ public class UsuarioService implements UserDetailsService {
         }
 
         // Comprobar si el usuario ya existe
-        if (repository.existsByUsuario(username)) {
+        if (repository.existsByUsuario(usuario)) {
             return "El nombre de usuario ya está en uso.";
         }
 
         // Validar que el nombre de usuario no contenga espacios
-        if (username.contains(" ")) {
+        if (usuario.contains(" ")) {
             return "El nombre de usuario no debe contener espacios.";
+        }
+
+        // Validar que el usuario esté en el formato u + 8 números
+        if (!usuario.matches("u\\d{8}")) {
+            return "Formato de usuario incorrecto. Debe ser 'u' seguido de 8 números.";
         }
 
         // Comprobar si el correo ya existe
@@ -86,22 +91,12 @@ public class UsuarioService implements UserDetailsService {
             return "El correo ya está en uso.";
         }
 
-
-        Rol rol;
-        try {
-            rol = ObtenerRol(nombre+" "+apellidos);
-        } catch (JsonProcessingException e) {
-            //error al acceder al json
-            throw new RuntimeException(e);
-        }
-
-
         Usuario nuevoUsuario = new Usuario();
         nuevoUsuario.setNombre(nombre);
         nuevoUsuario.setApellidos(apellidos);
-        nuevoUsuario.setUsername(username);
+        nuevoUsuario.setUsername(usuario);
         nuevoUsuario.setEmail(email);
-        nuevoUsuario.setRol(rol);
+        nuevoUsuario.setRol(obtenerRol(usuario));
         nuevoUsuario.setPassword(passwordEncoder.encode(password));
         nuevoUsuario.setCentro(centro);
 
@@ -109,7 +104,7 @@ public class UsuarioService implements UserDetailsService {
 
         try {
             repository.save(nuevoUsuario);
-            emailService.sendRegistrationEmail(nuevoUsuario);
+//            emailService.sendRegistrationEmail(nuevoUsuario);
             return "Exito";
         } catch (DataIntegrityViolationException e) {
             return "Error: "+ e;
@@ -131,11 +126,11 @@ public class UsuarioService implements UserDetailsService {
         return "Cuenta activada correctamente.";
     }
 
-    private Rol ObtenerRol(String nombre) throws JsonProcessingException {
+    private Rol obtenerRol(String usuario) {
         final String url = "https://e608f590-1a0b-43c5-b363-e5a883961765.mock.pstmn.io/sponsors";
-        Rol rol=Rol.Solicitante;
+        Rol rol = Rol.Solicitante;
         WebClient webClient = WebClient.create();
-        
+
         // Realizar la solicitud
         String response = webClient.get()
             .uri(url)
@@ -143,14 +138,17 @@ public class UsuarioService implements UserDetailsService {
             .bodyToMono(String.class)
             .block();
 
-        // Parsear el JSON y buscar el nombre
+        // Parsear el JSON y buscar el ID
         ObjectMapper mapper = new ObjectMapper();
-        JsonNode root = mapper.readTree(response);
-        JsonNode data = root.path("data");
-        for (JsonNode promotor : data) {
-            if (nombre.equalsIgnoreCase(promotor.path("nombre").asText())) rol=Rol.Promotor;
-        }
-        return  rol;
+        JsonNode root;
+        try {
+            root = mapper.readTree(response);
+            JsonNode data = root.path("data");
+            for (JsonNode promotor : data) {
+                if (usuario.equalsIgnoreCase(promotor.path("id").asText())) { rol = Rol.Promotor; }
+            }
+        } catch (JsonProcessingException ex) {}
+        return rol;
     }
 
 
