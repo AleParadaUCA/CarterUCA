@@ -22,6 +22,7 @@ import es.uca.iw.carteruca.models.Centro;
 import es.uca.iw.carteruca.models.Estado;
 import es.uca.iw.carteruca.models.Usuario;
 import es.uca.iw.carteruca.services.CentroService;
+import es.uca.iw.carteruca.views.avalar.AvalarMainView;
 import es.uca.iw.carteruca.views.home.HomeAdminView;
 import es.uca.iw.carteruca.views.home.HomeSolicitanteView;
 
@@ -258,6 +259,22 @@ public class common {
         badge.getStyle().set("font-weight", "bold");
 
         return badge;
+    }
+
+    public static HorizontalLayout boton_avalar(){
+        HorizontalLayout boton = new HorizontalLayout();
+
+        boton.setWidthFull();
+        boton.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
+
+        Button volver = new Button("Volver");
+        volver.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        volver.getElement().setAttribute("aria-label", "Volver");
+        volver.addClickListener(event -> UI.getCurrent().navigate(AvalarMainView.class));
+
+        boton.add(volver);
+        return boton;
+
     }
 
 
