@@ -41,7 +41,6 @@ public class HomeView extends Composite<VerticalLayout> {
             emailService.enviarCorreo("carterucaiw@gmail.com", "Asunto del correo", "enviar correos");
             Notification.show("Envío correcto");
         });
-        getContent().add(sendEmailButton);
-
+//        getContent().add(sendEmailButton);
     }
 }
