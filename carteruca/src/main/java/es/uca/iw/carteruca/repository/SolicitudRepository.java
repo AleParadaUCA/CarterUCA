@@ -17,5 +17,5 @@ public interface SolicitudRepository extends JpaRepository<Solicitud, Long> {
 
     List<Solicitud> findBySolicitante(Usuario solicitante);    //Busca las solicitudes hechas por un usuario
 
-    void deleteById(Long id);
+    // void deleteById(Long id);
 }
