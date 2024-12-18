@@ -1,5 +1,11 @@
 package es.uca.iw.carteruca.views.solicitud;
 
+import java.util.List;
+
+import com.vaadin.flow.component.html.Span;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -9,18 +15,17 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H4;
-import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.shared.Tooltip;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer;
-import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import es.uca.iw.carteruca.models.Cartera;
+
 import es.uca.iw.carteruca.models.Estado;
 import es.uca.iw.carteruca.models.Solicitud;
 import es.uca.iw.carteruca.models.Usuario;
@@ -30,10 +35,6 @@ import es.uca.iw.carteruca.services.UsuarioService;
 import es.uca.iw.carteruca.views.common.common;
 import es.uca.iw.carteruca.views.layout.MainLayout;
 import jakarta.annotation.security.RolesAllowed;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 @PageTitle("Modificar Solicitud")
 @Route(value = "/solicitudes/update-solicitud", layout = MainLayout.class)
@@ -41,9 +42,8 @@ import java.util.List;
 public class SolicitudUpdateView extends Composite<VerticalLayout> {
 
     private final SolicitudService solicitudService;
-    private final AuthenticatedUser authenticatedUser;
     private final UsuarioService usuarioService;
-    private Usuario currentUser;
+    private final Usuario currentUser;
 
     private final TextField titulo = new TextField();
     private final TextField nombre = new TextField();   //nombre corto del proyecto
@@ -53,8 +53,6 @@ public class SolicitudUpdateView extends Composite<VerticalLayout> {
     private final TextField normativa = new TextField();
     private final DatePicker fecha_puesta = new DatePicker();
     private final ComboBox<Usuario> avaladores = new ComboBox<>();
-    private final MultiFileMemoryBuffer buffer = new MultiFileMemoryBuffer();
-
     private final Grid<Solicitud> solicitud_tabla = new Grid<>(Solicitud.class);
 
     @Autowired
@@ -62,9 +60,8 @@ public class SolicitudUpdateView extends Composite<VerticalLayout> {
                                AuthenticatedUser authenticatedUser,
                                UsuarioService usuarioService) {
         this.solicitudService = solicitudService;
-        this.authenticatedUser = authenticatedUser;
         this.usuarioService = usuarioService;
-        currentUser = authenticatedUser.get().get();
+        this.currentUser = authenticatedUser.get().get();
 
         common.creartitulo("Modificar Solicitudes",this);
         crearTabla();
@@ -110,7 +107,7 @@ public class SolicitudUpdateView extends Composite<VerticalLayout> {
 
         H4 tituloSpan = new H4("Modificar Solicitud");
 
-        //Campos de edicion
+        //Campos de edición
 
         titulo.setLabel("Titulo");
         titulo.getElement().setAttribute("aria-label", "Introduzca el titulo");
@@ -205,27 +202,48 @@ public class SolicitudUpdateView extends Composite<VerticalLayout> {
             }
         });
 
-        //no esta ni memoria ni avalador
+        TextField memoriaName = new TextField ("Memoria");
+        memoriaName.setValue(solicitud.getMemoria().substring(solicitud.getMemoria().lastIndexOf("\\") + 1));
+        memoriaName.setReadOnly(true);
 
-        contenido.add(titulo,nombre,interesados,objetivos,alcance,normativa,fecha_puesta, avaladores);
+        MultiFileMemoryBuffer buffer = new MultiFileMemoryBuffer();
+        Upload upload = new Upload(buffer);
+        upload.setDropLabel(new Span("Cambiar memoria del proyecto"));
+        upload.setMaxFiles(1); // Límite opcional del número de archivos
+        upload.setAcceptedFileTypes(".pdf");
+        upload.setMaxFileSize(20 * 1024 * 1024); // Tamaño máximo de archivo en bytes (20 MB)
+
+        Span memoria = new Span("Memoria (20MB)");
+        memoria.getElement().setAttribute("aria-label", "Adjunte la memoria del proyecto");
+        memoria.getStyle()
+                .set("font-size", "14px") // Tamaño de fuente
+                .set("font-weight", "600") // Negrita
+                .set("color", "grey") // Color del texto
+                .set("margin-bottom", "8px"); // Espaciado inferior
+
+        contenido.add(titulo,nombre,interesados,objetivos,alcance,normativa,fecha_puesta, avaladores, memoriaName, memoria, upload);
+
+        contenido.setColspan(memoria,2);
+        contenido.setColspan(upload,2);
 
         Button save = new Button("Guardar", event -> {
             try {
                 // Llamar al servicio para actualizar la solicitud
                 solicitudService.update_solicitud(
-                        solicitud.getId(), // ID de la solicitud
-                        titulo.getValue(), // Nuevos valores del formulario
+                        solicitud.getId(),
+                        titulo.getValue(),
                         nombre.getValue(),
                         fecha_puesta.getValue().atStartOfDay(),
                         interesados.getValue(),
                         objetivos.getValue(),
                         alcance.getValue(),
                         normativa.getValue(),
-                        avaladores.getValue()
+                        avaladores.getValue(),
+                        buffer
                 );
 
                 // Mostrar un mensaje de confirmación
-                common.showSuccessNotification("Solicitud actualizada con exito");
+                common.showSuccessNotification("Solicitud actualizada con Éxito");
 
                 // Cerrar el diálogo y refrescar la tabla de solicitudes
                 dialog.close();
