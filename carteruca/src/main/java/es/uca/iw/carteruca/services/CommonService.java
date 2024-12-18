@@ -5,27 +5,40 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer;
 import com.vaadin.flow.server.StreamResource;
+
 import org.apache.commons.io.IOUtils;
 
 import java.io.*;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
+
 import es.uca.iw.carteruca.views.common.common;
 
 public class CommonService {
-    public static List<String> guardarFiles(MultiFileMemoryBuffer buffer, String targetDirPath) {
+    public static List<String> guardarFile(MultiFileMemoryBuffer buffer, String targetDirPath) {
         List<String> filePaths = new ArrayList<>();
 
-        buffer.getFiles().forEach(fileName -> {
+            buffer.getFiles().forEach(fileName -> {
             try (InputStream inputStream = buffer.getInputStream(fileName)) {
-                // Define the target directory
+
                 File targetDir = new File(targetDirPath);
                 if (!targetDir.exists()) {
-                    targetDir.mkdirs(); // Create the directory if it doesn't exist
+                    //crear directorio si no existe
+                    targetDir.mkdirs();
                 }
-
                 // Define the target file
                 File targetFile = new File(targetDir, fileName);
+
+                //Cambiar Nombre para archivos repetidos
+                if (targetFile.exists()) {
+
+                    String newFileName = fileName.substring(0, fileName.lastIndexOf('.'));
+                    newFileName += "_" + System.currentTimeMillis() + ".pdf";
+                    targetFile = new File(targetDir, newFileName);
+                }
 
                 // Write the uploaded file to the target directory
                 try (FileOutputStream outputStream = new FileOutputStream(targetFile)) {
@@ -61,5 +74,18 @@ public class CommonService {
         anchor.add(downloadButton);
 
         return anchor;
+    }
+
+    public static void eliminarFile(String filePath) {
+        try {
+            Path path = Paths.get(filePath);
+            if (Files.exists(path)) {
+                Files.deleteIfExists(path);
+            } else {
+                System.out.println("El fichero no existe: " + filePath);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

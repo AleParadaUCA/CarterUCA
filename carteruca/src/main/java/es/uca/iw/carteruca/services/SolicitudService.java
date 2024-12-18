@@ -27,8 +27,9 @@ public class SolicitudService {
         
         //Faltan comprobaciones...
 
-        List<String> memoria = CommonService.guardarFiles(buffer, "../archivos/Cartera"+ cartera.getId());
-        
+        //comprobar ".pdf" if (buffer.endsWith(".pdf"))
+        List<String> memoria = CommonService.guardarFile(buffer, "../archivos/Cartera"+ cartera.getId());
+
         Solicitud solicitud = new Solicitud();
         solicitud.setTitulo(titulo);
         solicitud.setNombre(nombre);
@@ -48,7 +49,7 @@ public class SolicitudService {
     }
 
     public void update_solicitud(Long id, String titulo, String nombre, LocalDateTime fechaPuesta,
-                                 String interesados, String alineamiento, String alcance, String normativa, Usuario avalador) {
+                                 String interesados, String alineamiento, String alcance, String normativa, Usuario avalador, MultiFileMemoryBuffer buffer) {
         // Buscar la solicitud por su ID
         Solicitud solicitud = repository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Solicitud no encontrada con el ID: " + id));
@@ -62,6 +63,11 @@ public class SolicitudService {
         solicitud.setAlcance(alcance);
         solicitud.setNormativa(normativa);
         solicitud.setAvalador(avalador);
+
+        if (!buffer.getFiles().isEmpty()) {
+            CommonService.eliminarFile(solicitud.getMemoria());
+            solicitud.setMemoria( CommonService.guardarFile(buffer, "../archivos/Cartera"+ solicitud.getCartera().getId()).get(0));
+        }
 
         // Guardar los cambios en la base de datos
         repository.save(solicitud);

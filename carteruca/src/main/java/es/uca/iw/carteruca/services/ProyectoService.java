@@ -25,7 +25,7 @@ public class ProyectoService {
 
     public void guardarProyecto(Float puntuacion, Float porcentaje, MultiFileMemoryBuffer buffer, Solicitud solicitud) {
 
-        List<String> documento = CommonService.guardarFiles(buffer, "../archivos"+solicitud.getCartera().getNombre()+"/proyectos");
+        List<String> documento = CommonService.guardarFile(buffer, "../archivos"+solicitud.getCartera().getNombre()+"/proyectos");
 
         Proyecto proyecto = new Proyecto();
 
