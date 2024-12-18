@@ -104,7 +104,7 @@ public class UsuarioService implements UserDetailsService {
         nuevoUsuario.setRol(rol);
         nuevoUsuario.setPassword(passwordEncoder.encode(password));
         nuevoUsuario.setCentro(centro);
-        nuevoUsuario.setActivo(false);
+        nuevoUsuario.setActivo(true);  //IMPORTANTE la idea es q esté a false hasta que s evalide el correo
 
         nuevoUsuario.setCodigoRegistro(UUID.randomUUID().toString().substring(0, 5));
 

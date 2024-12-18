@@ -1,17 +1,16 @@
 package es.uca.iw.carteruca.security;
 
-import com.vaadin.flow.spring.security.AuthenticationContext;
+import java.util.Optional;
 
-import es.uca.iw.carteruca.models.Usuario;
-import es.uca.iw.carteruca.repository.UsuarioRepository;
-
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
+import com.vaadin.flow.spring.security.AuthenticationContext;
 
-import org.springframework.context.annotation.Lazy;
+import es.uca.iw.carteruca.models.Usuario;
+import es.uca.iw.carteruca.repository.UsuarioRepository;
 
 @Component
 public class AuthenticatedUser {
@@ -27,10 +26,23 @@ public class AuthenticatedUser {
     @Transactional
     public Optional<Usuario> get() {
         return authenticationContext.getAuthenticatedUser(UserDetails.class)
-                .flatMap(userDetails -> userRepository.findByUsuario(userDetails.getUsername()));
+                .flatMap(userDetails -> {
+                Optional<Usuario> usuario = userRepository.findByUsuario(userDetails.getUsername());
+                if (usuario.isPresent() && !usuario.get().isActivo()) {
+                    logout();
+                    throw new UserNotActiveException("El usuario no está activo.");
+                }
+                return usuario;
+            });
     }
 
     public void logout() {
         authenticationContext.logout();
     }
+
+    public class UserNotActiveException extends RuntimeException {
+    public UserNotActiveException(String message) {
+        super(message);
+    }
+}
 }
