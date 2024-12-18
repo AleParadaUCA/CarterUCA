@@ -308,5 +308,6 @@ public class SolicitudAddView extends Composite<VerticalLayout> {
                 carteraActual
         );
         common.showSuccessNotification("Solicitud guardada exitosamente.");
+        UI.getCurrent().access(() -> UI.getCurrent().navigate("/solicitudes") );
     }
 }
