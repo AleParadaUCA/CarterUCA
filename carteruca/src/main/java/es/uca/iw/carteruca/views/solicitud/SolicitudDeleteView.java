@@ -3,7 +3,11 @@ package es.uca.iw.carteruca.views.solicitud;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.PageTitle;
@@ -52,19 +56,17 @@ public class SolicitudDeleteView extends Composite<VerticalLayout> {
         solicitudes.addColumn(Solicitud::getTitulo).setHeader("Titulo del Proyecto");
         solicitudes.addColumn(Solicitud::getNombre).setHeader("Nombre del Solicitud");
 
-        /*
-        NO FUNKA
-        solicitudes.addColumn(new ComponentRenderer<>(solicitud ->{
-            if(solicitud.getEstado() == Estado.EN_TRAMITE){
+        solicitudes.addComponentColumn(solicitud -> {
+            if(solicitud.getEstado() == Estado.EN_TRAMITE) {
                 Button eliminar = new Button("Eliminar Solicitud");
-                eliminar.addThemeVariants(ButtonVariant.LUMO_ERROR);
-                updateGrid();
+                eliminar.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+                eliminar.addClickListener(event -> EliminarDialog(solicitud));
                 return eliminar;
+            }else{
+                return null;
             }
-            return null;
-        }));
 
-         */
+        });
 
         List<Solicitud> lista_solicitudes = solicitudService.getSolicitudesByUsuario(currentUser);
         solicitudes.setItems(lista_solicitudes);
@@ -74,6 +76,52 @@ public class SolicitudDeleteView extends Composite<VerticalLayout> {
     private void updateGrid() {
         List<Solicitud> lista_solicitudes = solicitudService.getSolicitudesByUsuario(currentUser);
         solicitudes.setItems(lista_solicitudes);
+    }
+
+    private void EliminarDialog(Solicitud solicitud) {
+        Dialog dialog = new Dialog();
+
+        VerticalLayout dialogo = new VerticalLayout();
+        Span titulo = new Span("¿Quieres eliminar la solicitud?");
+
+        HorizontalLayout botones = new HorizontalLayout();
+
+        Button Btnsi = new Button("Sí", event -> {
+            try {
+                // Cambiar el estado de la solicitud a CANCELADO
+                solicitud.setEstado(Estado.CANCELADO);
+
+                // Llamar al servicio para actualizar la solicitud
+                solicitudService.updateSolicitud(solicitud);
+
+                // Mostrar notificación de éxito
+                common.showSuccessNotification("Solicitud cancelada correctamente.");
+
+                // Actualizar el grid para reflejar los cambios
+                updateGrid();
+
+                // Cerrar el diálogo después de la operación
+                dialog.close();
+            } catch (Exception e) {
+                // Manejar excepciones y mostrar mensaje de error
+                common.showErrorNotification("Error al cancelar la solicitud: " + e.getMessage());
+            }
+        });
+        Btnsi.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+
+
+
+        Button BtnNo = new Button("No",click -> dialog.close());
+        BtnNo.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+
+        botones.setWidthFull();
+        botones.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
+        botones.add(Btnsi, BtnNo);
+
+        dialogo.add(titulo, botones);
+
+        dialog.add(dialogo);
+        dialog.open();
     }
 
 }

@@ -138,11 +138,20 @@ public class SolicitudSeeView extends Composite<VerticalLayout> {
             Div detailsLayout = new Div();
             detailsLayout.add(formLayout);
 
+            Span memoria = new Span("Memoria");
+            memoria.getStyle()
+                    .set("font-size", "14px") // Tamaño de fuente
+                    .set("font-weight", "600") // Negrita
+                    .set("color", "grey") // Color del texto
+                    .set("margin-bottom", "8px"); // Espaciado inferior
+            formLayout.add(memoria);
+            formLayout.setColspan(memoria, 2);
             // Botón para descargar el archivo de memoria
             String memoriaPath = solicitud.getMemoria();
             if (memoriaPath != null && !memoriaPath.isEmpty()) {
                 Anchor downloadAnchor = CommonService.descargarFile(memoriaPath, "Descargar Memoria");
                 formLayout.add(downloadAnchor);
+                formLayout.setColspan(downloadAnchor, 1);
             } else {
 
                 Button descargarMemoriaButton = new Button("Descargar Memoria");
@@ -150,6 +159,7 @@ public class SolicitudSeeView extends Composite<VerticalLayout> {
                 descargarMemoriaButton.addClassName("disabled-button");
                 formLayout.add(descargarMemoriaButton);
                 descargarMemoriaButton.setEnabled(false);
+                formLayout.setColspan(descargarMemoriaButton, 1);
             }
             detailsLayout.add(formLayout);
 

@@ -81,8 +81,8 @@ public class SolicitudService {
 
 
     public List<Solicitud> getSolicitudesByUsuario(Usuario usuario) {
-        // Consultar todas las solicitudes asociadas a este usuario, basándonos en los proyectos y estados que tiene
-        return repository.findBySolicitante(usuario);
+        // Consultar todas las solicitudes asociadas a este usuario, excluyendo las CANCELADAS
+        return repository.findBySolicitanteAndEstadoNot(usuario, Estado.CANCELADO);
     }
 
 
