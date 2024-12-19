@@ -79,9 +79,11 @@ public class ProyectoAllView extends Composite<VerticalLayout> {
                 proyect.addColumn(Proyecto::getEspecificacion_tecnica)
                                 .setHeader("Especificacion");
                                 
-                 */
+
                 proyect.addColumn(Proyecto::getPresupuesto)
                              .setHeader("Presupuesto (€)");
+
+                 */
 
                 proyect.addColumn(Proyecto::getHoras)
                         .setHeader("Horas");
