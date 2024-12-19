@@ -51,7 +51,34 @@ public class EmailService {
         return serverUrl;
     }
 
-    public boolean sendRegistrationEmail(Usuario usuario) {
+    // public boolean enviarCorreoRegistro(Usuario user) {
+
+    //     MimeMessage message = emailSender.createMimeMessage();
+
+    //     MimeMessageHelper helper = new MimeMessageHelper(message, "utf-8");
+
+    //     String subject = "Welcome";
+    //     String body = "You should active your account. "
+    //             + "Go to " + getServerUrl() + "useractivation "
+    //             + "and introduce your mail and the following code: "
+    //             + user.getCodigoRegistro();
+
+
+    //     try {
+    //         helper.setFrom(defaultMail);
+    //         helper.setTo(user.getEmail());
+    //         helper.setSubject(subject);
+    //         helper.setText(body);
+    //         this.emailSender.send(message);
+    //     } catch (MailException | MessagingException ex) {
+    //         ex.printStackTrace();
+    //         return false;
+    //     }
+
+    //     return true;
+    // }
+
+    public boolean enviarCorreoRegistro(Usuario usuario) {
         String subject = "Activa tu cuenta";
         String body = "Por favor, activa tu cuenta usando el siguiente enlace: "
                 + getServerUrl() + "activate?token=" + usuario.getCodigoRegistro();

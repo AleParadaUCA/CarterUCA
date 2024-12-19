@@ -19,7 +19,7 @@ public class ActivationService {
 
     @GetMapping
     public ResponseEntity<String> activateUser(@RequestParam("token") String token) {
-        String result = usuarioService.activateUser(token);
+        String result = usuarioService.activarteUser(token);
         return ResponseEntity.ok(result);
     }
 }

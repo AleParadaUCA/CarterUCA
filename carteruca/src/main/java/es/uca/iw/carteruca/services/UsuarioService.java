@@ -104,7 +104,7 @@ public class UsuarioService implements UserDetailsService {
 
         try {
             repository.save(nuevoUsuario);
-            emailService.sendRegistrationEmail(nuevoUsuario);
+            emailService.enviarCorreoRegistro(nuevoUsuario);
             return "Exito";
         } catch (DataIntegrityViolationException e) {
             return "Error: "+ e;
@@ -112,10 +112,10 @@ public class UsuarioService implements UserDetailsService {
     }
 
     @Transactional
-    public String activateUser(String token) {
+    public String activarteUser(String token) {
         Optional<Usuario> usuarioOptional = repository.findByCodigoRegistro(token);
         if (usuarioOptional.isEmpty()) {
-            return "Token de activación inválido.";
+            return "Token de activación inválido. aaa";
         }
 
         Usuario usuario = usuarioOptional.get();
@@ -150,7 +150,6 @@ public class UsuarioService implements UserDetailsService {
         } catch (JsonProcessingException ex) {}
         return rol;
     }
-
 
     @Override
     @Transactional

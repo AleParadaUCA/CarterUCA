@@ -51,7 +51,7 @@ public class Usuario implements UserDetails {
     private Rol rol;
 
     @Column(name = "activo")
-    private boolean activo = true; //IMPORTANTE la idea es q esté a false hasta que se valide el correo
+    private boolean activo = false;
 
     private String codigoRegistro = "";
 
