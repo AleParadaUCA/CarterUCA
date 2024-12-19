@@ -94,6 +94,11 @@ public class SolicitudService {
         repository.save(solicitud);  // Guarda la solicitud actualizada
     }
 
+    public List<Solicitud> getSolicitudByEstado(Estado estado) {
+        return repository.findByEstado(estado);
+    }
+
+
 
 
 

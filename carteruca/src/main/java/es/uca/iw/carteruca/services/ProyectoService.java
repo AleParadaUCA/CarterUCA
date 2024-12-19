@@ -69,4 +69,16 @@ public class ProyectoService {
         repository.save(proyecto);
 
     }
+
+    public void guardarProyecto(Solicitud solicitud) {
+        // Crear un nuevo proyecto con la solicitud
+        Proyecto proyecto = new Proyecto();
+
+        // Aquí deberías establecer todos los campos necesarios para el proyecto
+        proyecto.setSolicitud(solicitud);
+        proyecto.setPorcentaje(0.0f);  // Puedes inicializar el porcentaje si es necesario
+        // Guardar el proyecto en la base de datos
+        repository.save(proyecto);
+    }
+
 }
