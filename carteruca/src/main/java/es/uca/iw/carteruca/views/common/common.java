@@ -245,7 +245,11 @@ public class common {
             case TERMINADO:
                 badge.getStyle().set("background-color", "blue");
                 badge.getStyle().set("color", "#ffffff");
-
+                break;
+            case CANCELADO:
+                badge.getStyle().set("background-color", "#f44336"); // Rojo coral para cancelado
+                badge.getStyle().set("color", "#ffffff");           // Texto blanco
+                break;
             default:
                 badge.getStyle().set("background-color", "#6c757d"); // Gris
                 badge.getStyle().set("color", "#ffffff");           // Texto blanco
