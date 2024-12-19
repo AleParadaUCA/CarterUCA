@@ -20,7 +20,7 @@ import jakarta.annotation.security.RolesAllowed;
 
 @PageTitle("Avalar Solicitudes")
 @Route(value = "/avalar-solicitudes", layout = MainLayout.class)
-@RolesAllowed("promotor")
+@RolesAllowed("Promotor")
 public class AvalarMainView extends Composite<VerticalLayout> {
 
     public AvalarMainView() {

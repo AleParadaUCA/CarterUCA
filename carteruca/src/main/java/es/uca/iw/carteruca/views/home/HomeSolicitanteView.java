@@ -10,6 +10,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import es.uca.iw.carteruca.models.Rol;
 import es.uca.iw.carteruca.security.AuthenticatedUser;
+import es.uca.iw.carteruca.views.avalar.AvalarMainView;
 import es.uca.iw.carteruca.views.layout.MainLayout;
 import es.uca.iw.carteruca.views.solicitud.SolicitudesMainView;
 import jakarta.annotation.security.RolesAllowed;
@@ -41,6 +42,7 @@ public class HomeSolicitanteView extends Composite<VerticalLayout>{
 
             Div avalar = common.createSquare("Avalar Solicitudes", VaadinIcon.BOOK);
             avalar.getElement().setAttribute("aria-label", "Avalar Solicitudes");
+            avalar.addClickListener(event -> UI.getCurrent().navigate(AvalarMainView.class));
             getContent().add(avalar);
         }
 
