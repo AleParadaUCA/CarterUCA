@@ -34,7 +34,7 @@ public class UsuarioService implements UserDetailsService {
 
     private final UsuarioRepository repository;
     private final PasswordEncoder passwordEncoder;
-    // private final EmailService emailService;
+    private final EmailService emailService;
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[\\w.%+-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$");
     //private final ExplicitNullableTypeChecker typeChecker;
 
@@ -42,7 +42,7 @@ public class UsuarioService implements UserDetailsService {
     public UsuarioService(UsuarioRepository repository, PasswordEncoder passwordEncoder, EmailService emailService) {
         this.repository = repository;
         this.passwordEncoder = passwordEncoder;
-        // this.emailService = emailService;
+        this.emailService = emailService;
         //this.typeChecker = typeChecker;
     }
 
@@ -104,7 +104,7 @@ public class UsuarioService implements UserDetailsService {
 
         try {
             repository.save(nuevoUsuario);
-//            emailService.sendRegistrationEmail(nuevoUsuario);
+            emailService.sendRegistrationEmail(nuevoUsuario);
             return "Exito";
         } catch (DataIntegrityViolationException e) {
             return "Error: "+ e;
