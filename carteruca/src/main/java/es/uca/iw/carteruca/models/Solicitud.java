@@ -51,7 +51,7 @@ public class Solicitud {
     @JoinColumn(name = "solicitante_id") //FK hacia usuario solicitante
     private Usuario solicitante;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "promotor_id")// FK hacia usuario promotor
     private Usuario promotor;
 

@@ -1,13 +1,8 @@
 package es.uca.iw.carteruca.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
+import es.uca.iw.carteruca.models.Usuario;
 
 @Entity
 @Table
@@ -37,7 +32,12 @@ public class Proyecto {
     private float horas;
     // *hasta aqui lo rellena CIO y OTP
 
+    @Column
+    private String director_de_proyecto;
 
+    @ManyToOne
+    @JoinColumn(name = "jefe_id")
+    private Usuario jefe;
 
     public Long getId() {return id; }
 
@@ -58,4 +58,10 @@ public class Proyecto {
 
     public float getHoras() {return horas;}
     public void setHoras(float horas) {this.horas = horas;}
+
+    public Usuario getJefe() {return jefe;}
+    public void setJefe(Usuario jefe) {this.jefe = jefe;}
+
+    public String getDirector_de_proyecto() {return director_de_proyecto;}
+    public void setDirector_de_proyecto(String director_de_proyecto) {this.director_de_proyecto = director_de_proyecto;}
 }
