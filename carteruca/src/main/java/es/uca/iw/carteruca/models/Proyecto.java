@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -28,16 +29,23 @@ public class Proyecto {
     private String especificacion_tecnica;// es un documento con las especificaciones tecnologicas
 
     @Column
-    private Float puntuacion; // este se debe calcular mediante los criterios
+    private Float puntuacionTotal; // este se debe calcular mediante los criterios
 
     @Column
     private Float porcentaje; // este campo mostrará el porcentaje de avance del proyecto que este en marcha.
 
     @Column
-    private float horas;
-    // *hasta aqui lo rellena CIO y OTP
+    private Float horas;
 
+    @Column
+    private String puntuaciones;
 
+    @Column
+    private String director_de_proyecto;
+
+    @ManyToOne
+    @JoinColumn(name = "jefe_id")
+    private Usuario jefe;
 
     public Long getId() {return id; }
 
@@ -47,8 +55,8 @@ public class Proyecto {
     public String getEspecificacion_tecnica() {return especificacion_tecnica;}
     public void setEspecificacion_tecnica(String especificacion_tecnica) {this.especificacion_tecnica = especificacion_tecnica;}
 
-    public Float getPuntuacion() {return puntuacion;}
-    public void setPuntuacion(Float puntuacion) {this.puntuacion = puntuacion;}
+    public Float getPuntuacionTotal() {return puntuacionTotal;}
+    public void setPuntuacionTotal(Float puntuacion) {this.puntuacionTotal = puntuacion;}
 
     public Float getPorcentaje() {return porcentaje;}
     public void setPorcentaje(Float porcentaje) {this.porcentaje = porcentaje;}
@@ -58,4 +66,13 @@ public class Proyecto {
 
     public float getHoras() {return horas;}
     public void setHoras(float horas) {this.horas = horas;}
+
+    public String getPuntuaciones() {return puntuaciones;}
+    public void setPuntuaciones(String puntuaciones) {this.puntuaciones = puntuaciones;}
+
+    public Usuario getJefe() {return jefe;}
+    public void setJefe(Usuario jefe) {this.jefe = jefe;}
+
+    public String getDirector_de_proyecto() {return director_de_proyecto;}
+    public void setDirector_de_proyecto(String director_de_proyecto) {this.director_de_proyecto = director_de_proyecto;}
 }

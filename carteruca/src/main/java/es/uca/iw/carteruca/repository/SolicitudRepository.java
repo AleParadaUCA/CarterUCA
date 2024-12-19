@@ -20,6 +20,7 @@ public interface SolicitudRepository extends JpaRepository<Solicitud, Long> {
 
     List<Solicitud> findByPromotorAndEstado(Usuario promotor, Estado estado);
 
+    List<Solicitud> findBySolicitanteAndEstadoNot(Usuario solicitante, Estado estado);  // Excluye el estado CANCELADO
 
-    // void deleteById(Long id);
+    List<Solicitud> findByEstado(Estado estado);
 }
