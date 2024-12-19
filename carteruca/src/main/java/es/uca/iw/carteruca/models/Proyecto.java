@@ -47,6 +47,7 @@ public class Proyecto {
     @JoinColumn(name = "jefe_id")
     private Usuario jefe;
 
+    //GETTERS Y SETTERS
     public Long getId() {return id; }
 
     public String getPresupuesto() {return presupuesto;}
