@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer;
+import java.util.stream.Collectors;
 
 import es.uca.iw.carteruca.models.Proyecto;
 import es.uca.iw.carteruca.models.Solicitud;
@@ -25,11 +26,12 @@ public class ProyectoService {
         this.criterioRepository = criterioRepository;
     }
 
-    public void guardarProyecto( Float porcentaje, MultiFileMemoryBuffer buffer, Solicitud solicitud) {
+    public void guardarProyecto( MultiFileMemoryBuffer buffer, Solicitud solicitud) { //Esto es para OTP
 
         List<String> documento = CommonService.guardarFile(buffer, "../archivos"+solicitud.getCartera().getNombre()+"/proyectos");
 
         Proyecto proyecto = new Proyecto();
+        float porcentaje = 0.0f;
 
         proyecto.setPorcentaje(porcentaje);
         proyecto.setEspecificacion_tecnica(documento.get(0));
@@ -48,19 +50,22 @@ public class ProyectoService {
         return repository.findBySolicitud_Cartera_IdAndSolicitud_Estado(carteraId, Estado.ACEPTADO);
     }
 
-    public void puntuacion(List<Float> vector, Proyecto proyecto) {  //
+    public void puntuacionTotal( Proyecto proyecto, List<Float> puntuaciones) {  //Esto es para CIO
         List<Float> pesos = criterioRepository.findAllPesos();
-        Float total = 0.0f;
+        float total = 0.0f;
 
-        if (pesos.size() != vector.size()) {
+        if (pesos.size() != puntuaciones.size()) {
             throw new IllegalArgumentException("Error, no coincide la cantidad de criterios con las puntuaciones dadas");
         }
 
         for (int i = 0; i < pesos.size(); i++) {
-            total += pesos.get(i) * vector.get(i);
+            total += pesos.get(i) * puntuaciones.get(i);
         }
 
-        proyecto.setPuntuacion(total);
+        String stringpuntuaciones = puntuaciones.stream().map(String::valueOf).collect(Collectors.joining("/"));
+
+        proyecto.setPuntuaciones(stringpuntuaciones);
+        proyecto.setPuntuacionTotal(total);
         repository.save(proyecto);
 
     }
