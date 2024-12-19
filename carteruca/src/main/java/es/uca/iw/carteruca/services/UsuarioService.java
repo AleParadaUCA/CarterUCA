@@ -111,21 +111,6 @@ public class UsuarioService implements UserDetailsService {
         }
     }
 
-    @Transactional
-    public String activarteUser(String token) {
-        Optional<Usuario> usuarioOptional = repository.findByCodigoRegistro(token);
-        if (usuarioOptional.isEmpty()) {
-            return "Token de activación inválido. aaa";
-        }
-
-        Usuario usuario = usuarioOptional.get();
-        usuario.setActivo(true);
-        usuario.setCodigoRegistro(null);
-        repository.save(usuario);
-
-        return "Cuenta activada correctamente.";
-    }
-
     private Rol obtenerRol(String usuario) {
         final String url = "https://e608f590-1a0b-43c5-b363-e5a883961765.mock.pstmn.io/sponsors";
         Rol rol = Rol.Solicitante;
@@ -252,5 +237,21 @@ public class UsuarioService implements UserDetailsService {
     public void updatePassword(Usuario currentUser, String value) {
         currentUser.setPassword(passwordEncoder.encode(value));
         repository.save(currentUser);
+    }
+
+        public boolean activateUser(String email, String registerCode) {
+
+        Optional<Usuario> user = repository.findByEmail(email);
+
+        if (user.isPresent() && !user.get().isActivo() && user.get().getCodigoRegistro().equals(registerCode)) {
+            user.get().setActivo(true);
+            user.get().setCodigoRegistro(null);
+            repository.save(user.get());
+            return true;
+
+        } else {
+            return false;
+        }
+
     }
 }

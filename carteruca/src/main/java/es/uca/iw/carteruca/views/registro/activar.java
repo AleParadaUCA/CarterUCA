@@ -1,41 +1,67 @@
 package es.uca.iw.carteruca.views.registro;
 
-import java.util.Optional;
+import es.uca.iw.carteruca.services.UsuarioService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
-import com.vaadin.flow.component.Composite;
-import com.vaadin.flow.component.UI;
-import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.H4;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.server.VaadinRequest;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 
-import es.uca.iw.carteruca.views.layout.MainLayout;
-
-@Route(value = "activar", layout = MainLayout.class)
+@PageTitle("Activate User")
+@Route(value = "useractivation")
+@Component
+@Scope("prototype")
 @AnonymousAllowed
-public class activar extends Composite<VerticalLayout> {
+public class Activar extends VerticalLayout {
 
-    public activar() {
-        System.out.print(VaadinRequest.getCurrent());
-        
-        // Obtener el parámetro `token` de la solicitud actual
-        Optional<String> tokenOptional = Optional.ofNullable(
-            VaadinRequest.getCurrent().getParameter("token")
-        );
+    private final UsuarioService usuarioService;
+    private final H1 title;
+    private final TextField email;
+    private final TextField secretCode;
+    private final Button activate;
+    private final H4 status;
 
-        if (tokenOptional.isPresent() && !tokenOptional.get().isEmpty()) {
-            String token = tokenOptional.get();
-            System.out.print(token);
-            String result = activateUser(token);
-            Notification.show(result);
-        } else {
-            Notification.show("Token de activación no proporcionado.");
-        }
+    @Autowired
+    public Activar(UsuarioService usuarioService) {
+        this.usuarioService = usuarioService;
+
+        title = new H1("Activate User");
+        email = new TextField("Your email");
+        email.setId("email");
+
+        secretCode = new TextField("Your secret code");
+        secretCode.setId("secretCode");
+
+        status = new H4();
+        status.setId("status");
+
+        activate = new Button("Activate");
+        activate.setId("activate");
+
+        status.setVisible(false);
+
+        setMargin(true);
+
+        add(title, new HorizontalLayout(email, secretCode), activate, status);
+
+        activate.addClickListener(e -> onActivateButtonClick());
     }
 
-    private String activateUser(String token) {
-        // Llamar al controlador para activar el usuario
-        return UI.getCurrent().getPage().executeJs("return fetch('/api/usuarios/activar/' + $0).then(response => response.text())", token).toString();
+    private void onActivateButtonClick() {
+        status.setVisible(true);
+
+        if (usuarioService.activateUser(email.getValue(), secretCode.getValue())) {
+            status.setText("Congrats. The user has been activated");
+        } else {
+            status.setText("Ups. The user could not be activated");
+        }
     }
 }
