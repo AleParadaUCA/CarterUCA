@@ -11,7 +11,9 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
+import es.uca.iw.carteruca.security.AuthenticatedUser;
 import es.uca.iw.carteruca.services.CarteraService;
+import es.uca.iw.carteruca.views.common.common;
 import es.uca.iw.carteruca.views.layout.MainLayout;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -25,7 +27,7 @@ public class CarteraActualView extends Composite<VerticalLayout> {
     private final CarteraService carteraService;
 
     @Autowired
-    public CarteraActualView(CarteraService carteraService) {
+    public CarteraActualView(CarteraService carteraService, AuthenticatedUser authenticatedUser) {
         this.carteraService = carteraService;
 
         Icon icono = new Icon(VaadinIcon.CLIPBOARD);
@@ -37,6 +39,7 @@ public class CarteraActualView extends Composite<VerticalLayout> {
 
         loadCarteraActual();
 
+        getContent().add(common.boton_dinamico(authenticatedUser.get().orElse(null)));
     }
 
     private void loadCarteraActual() {
