@@ -10,6 +10,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import es.uca.iw.carteruca.models.Cartera;
 import es.uca.iw.carteruca.models.Proyecto;
+import es.uca.iw.carteruca.security.AuthenticatedUser;
 import es.uca.iw.carteruca.services.CarteraService;
 import es.uca.iw.carteruca.services.ProyectoService;
 import es.uca.iw.carteruca.views.common.common;
@@ -25,12 +26,12 @@ import java.util.List;
 public class ProyectoAllView extends Composite<VerticalLayout> {
 
     private final CarteraService carteraService;
-    private ProyectoService proyectoService;
+    private final ProyectoService proyectoService;
 
     private final Accordion carteras = new Accordion();
 
     @Autowired
-    public ProyectoAllView(CarteraService carteraService, ProyectoService proyectoService) {
+    public ProyectoAllView(CarteraService carteraService, ProyectoService proyectoService, AuthenticatedUser authenticatedUser) {
 
         this.carteraService = carteraService;
         this.proyectoService = proyectoService;
@@ -44,9 +45,7 @@ public class ProyectoAllView extends Composite<VerticalLayout> {
         carteras.setSizeFull();
         loadCarteras();
         getContent().add(carteras);
-
-
-
+        getContent().add(common.boton_dinamico(authenticatedUser.get().orElse(null)));
     }
 
     private void loadCarteras() {
