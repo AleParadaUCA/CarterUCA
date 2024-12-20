@@ -18,6 +18,7 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+
 import es.uca.iw.carteruca.models.Centro;
 import es.uca.iw.carteruca.models.Estado;
 import es.uca.iw.carteruca.models.Usuario;
@@ -25,6 +26,7 @@ import es.uca.iw.carteruca.services.CentroService;
 import es.uca.iw.carteruca.views.avalar.AvalarMainView;
 import es.uca.iw.carteruca.views.home.HomeAdminView;
 import es.uca.iw.carteruca.views.home.HomeSolicitanteView;
+import es.uca.iw.carteruca.views.home.HomeView;
 
 public class common {
     public static Div createSquare(String text, VaadinIcon iconType) {
@@ -207,9 +209,11 @@ public class common {
         volverButton.getElement().setAttribute("aria-label", "Volver");
 
         volverButton.addClickListener(event -> {
-            if(user.getRol().name().equals("Admin")){
-                UI.getCurrent().navigate(HomeAdminView.class);
-            }else{
+        if(user == null){
+            UI.getCurrent().navigate(HomeView.class);
+        } else if(user.getRol().name().equals("Admin")){
+            UI.getCurrent().navigate(HomeAdminView.class);
+            } else {
                 UI.getCurrent().navigate(HomeSolicitanteView.class);
             }
         });
