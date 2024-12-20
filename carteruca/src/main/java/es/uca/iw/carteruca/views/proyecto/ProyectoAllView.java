@@ -74,7 +74,7 @@ public class ProyectoAllView extends Composite<VerticalLayout> {
                 proyect.addComponentColumn(proyecto -> common.createBadgeForEstado(proyecto.getSolicitud().getEstado()))
                              .setHeader("Estado");
 
-                /*
+
                 proyect.addColumn(Proyecto::getEspecificacion_tecnica)
                                 .setHeader("Especificacion");
                                 
@@ -82,7 +82,7 @@ public class ProyectoAllView extends Composite<VerticalLayout> {
                 proyect.addColumn(Proyecto::getPresupuesto)
                              .setHeader("Presupuesto (€)");
 
-                 */
+
 
                 proyect.addColumn(Proyecto::getHoras)
                         .setHeader("Horas");
