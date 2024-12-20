@@ -96,10 +96,16 @@ public class SolicitudChangeView extends Composite<VerticalLayout> {
 
                 // Mostrar una notificación de éxito
                 common.showSuccessNotification("Solicitud aceptada y proyecto creado con éxito.");
+
+                // Cerrar el diálogo
+                dialog.close();
+
+                // Actualizar la tabla para reflejar el cambio
+                actualizarTabla();
+
             } catch (Exception e) {
                 // Manejo de errores: mostrar mensaje en caso de error
                 common.showErrorNotification("Ha ocurrido un error al cambiar la solicitud a proyecto. Intente nuevamente.");
-
             }
         });
         BtnSi.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
@@ -114,4 +120,10 @@ public class SolicitudChangeView extends Composite<VerticalLayout> {
         dialog.add(layout);
         dialog.open();
     }
+
+    private void actualizarTabla() {
+        List<Solicitud> lista_solicitudes = solicitudService.getSolicitudByEstado(Estado.EN_TRAMITE_AVALADO);
+        solicitud_tabla.setItems(lista_solicitudes);
+    }
+
 }
