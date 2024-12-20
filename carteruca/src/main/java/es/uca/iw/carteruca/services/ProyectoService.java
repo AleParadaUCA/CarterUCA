@@ -46,9 +46,14 @@ public class ProyectoService {
     }
 
     public List<Proyecto> getProyectosFinalizadosPorCartera(Long carteraId) {
-        // Filtra los proyectos por carteraId y estado "FINALIZADO"
-        return repository.findBySolicitud_Cartera_IdAndSolicitud_Estado(carteraId, Estado.ACEPTADO);
+        return repository.findBySolicitud_Cartera_IdAndSolicitud_Estado(carteraId, Estado.ACEPTADO).stream()
+                .filter(proyecto -> proyecto.getHoras() > 0.0f)
+                .filter(proyecto -> proyecto.getPresupuesto() != null && !proyecto.getPresupuesto().isEmpty())
+                .filter(proyecto -> proyecto.getPorcentaje() > 0.0f)
+                .filter(proyecto -> proyecto.getEspecificacion_tecnica() != null && !proyecto.getEspecificacion_tecnica().isEmpty())
+                .collect(Collectors.toList());
     }
+
 
     public void puntuacionTotal( Proyecto proyecto, List<Float> puntuaciones) {  //Esto es para CIO
         List<Float> pesos = criterioRepository.findAllPesos();
