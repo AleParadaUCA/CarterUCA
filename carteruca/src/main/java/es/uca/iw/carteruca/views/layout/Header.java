@@ -5,6 +5,7 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.avatar.Avatar;
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.contextmenu.SubMenu;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
@@ -18,8 +19,6 @@ import com.vaadin.flow.component.textfield.TextField;
 import es.uca.iw.carteruca.models.Rol;
 import es.uca.iw.carteruca.security.AuthenticatedUser;
 import es.uca.iw.carteruca.views.common.common;
-
-import com.vaadin.flow.component.dialog.Dialog;
 import es.uca.iw.carteruca.views.proyecto.ProyectoAllView;
 
 public class Header extends Composite<VerticalLayout> {
@@ -76,7 +75,7 @@ public class Header extends Composite<VerticalLayout> {
         iconsLayout.add(languageIcon);
 
         if (authenticatedUser.get().isPresent()) {
-            //icono de notifcaciones
+            //icono de notificaciones
             Icon bellIcon = new Icon(VaadinIcon.BELL);
             bellIcon.setClassName("icon-button");
             bellIcon.getStyle().set("margin-left", "10px");
@@ -150,22 +149,26 @@ public class Header extends Composite<VerticalLayout> {
         menuBar.addClassName("rounded-menu-bar");
         menuBar.addClassName("full-menu");
 
+        String redirigir;
+        if (authenticatedUser.get().isPresent()) {
+            if (authenticatedUser.get().get().getRol() == Rol.Admin){
+                redirigir ="/home-admin";
+            }else {
+                redirigir ="/home";
+            }
+        } else {
+            redirigir = "";
+        }
+
+        menuBar.addItem(VaadinIcon.HOME.create(), e -> UI.getCurrent().navigate(redirigir))
+                .getElement().getClassList().add("menu-item");
+
         menuBar.addItem("Proyectos", e -> UI.getCurrent().navigate(ProyectoAllView.class))
                 .getElement().getClassList().add("menu-item");
 
-        if (authenticatedUser.get().isPresent()) {
-            if (authenticatedUser.get().get().getRol() == Rol.Admin){
-                menuBar.addItem("Home-Admin", e -> UI.getCurrent().navigate("/home-admin"))
-                        .getElement().getClassList().add("menu-item");
-            }else {
-                menuBar.addItem("Home", e -> UI.getCurrent().navigate("/home"))
-                        .getElement().getClassList().add("menu-item");
-            }
-        }
-
         menuBar.addItem("Cartera", e -> UI.getCurrent().navigate("/cartera"))
                 .getElement().getClassList().add("menu-item");
-
+        
         return menuBar;
     }
 
