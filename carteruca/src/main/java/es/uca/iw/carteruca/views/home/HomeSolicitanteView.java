@@ -12,6 +12,7 @@ import es.uca.iw.carteruca.models.Rol;
 import es.uca.iw.carteruca.security.AuthenticatedUser;
 import es.uca.iw.carteruca.views.avalar.AvalarMainView;
 import es.uca.iw.carteruca.views.layout.MainLayout;
+import es.uca.iw.carteruca.views.proyecto.ProyectoConfigureView;
 import es.uca.iw.carteruca.views.solicitud.SolicitudChangeView;
 import es.uca.iw.carteruca.views.solicitud.SolicitudesMainView;
 import jakarta.annotation.security.RolesAllowed;
@@ -49,11 +50,20 @@ public class HomeSolicitanteView extends Composite<VerticalLayout>{
 
         if (userRol == Rol.CIO) {
 
-            Div proyectos = common.createSquare("Proyectos", VaadinIcon.EXCHANGE);
-            proyectos.getElement().setAttribute("aria-label", "Proyectos");
-            proyectos.addClickListener(event -> UI.getCurrent().navigate(SolicitudChangeView.class));
-            getContent().add(proyectos);
+            Div aceptación_a_proyectosproyectos = common.createSquare("Aceptación a Proyectos", VaadinIcon.CHECK_CIRCLE);
+            aceptación_a_proyectosproyectos.getElement().setAttribute("aria-label", "Proyectos");
+            aceptación_a_proyectosproyectos.addClickListener(event -> UI.getCurrent().navigate(SolicitudChangeView.class));
+            getContent().add(aceptación_a_proyectosproyectos);
 
+        }
+
+        if (userRol == Rol.OTP) {
+
+            Div proyectos = common.createSquare("Proyectos", VaadinIcon.COG);
+            proyectos.getElement().setAttribute("aria-label", "Proyectos");
+            proyectos.addClickListener(event -> UI.getCurrent().navigate(ProyectoConfigureView.class));
+            getContent().add(proyectos);
+            
         }
 
     }
