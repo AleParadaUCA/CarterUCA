@@ -9,4 +9,6 @@ import java.util.List;
 public interface ProyectoRepository extends JpaRepository<Proyecto, Long> {
 
     List<Proyecto> findBySolicitud_Cartera_IdAndSolicitud_Estado(Long carteraId, Estado estado);
+    List<Proyecto> findAll();
+
 }

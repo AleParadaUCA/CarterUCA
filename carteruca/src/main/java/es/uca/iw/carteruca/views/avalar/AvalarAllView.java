@@ -89,7 +89,7 @@ public class AvalarAllView extends Composite<VerticalLayout> {
         solicitudes_tabla.addColumn(Solicitud::getTitulo).setHeader("Título del Proyecto");
         solicitudes_tabla.addColumn(Solicitud::getNombre).setHeader("Nombre Corto del Proyecto");
 
-        solicitudes_tabla.addColumn(createToggleDetailsRenderer(solicitudes_tabla)).setHeader("Detalles");
+        solicitudes_tabla.addColumn(common.createToggleDetailsRenderer(solicitudes_tabla)).setHeader("Detalles");
         // Renderizar detalles (detalles ocultos por defecto)
         solicitudes_tabla.setItemDetailsRenderer(createStaticDetailsRenderer());
         solicitudes_tabla.setDetailsVisibleOnClick(true);
@@ -109,18 +109,6 @@ public class AvalarAllView extends Composite<VerticalLayout> {
         getContent().add(solicitudes_tabla);
     }
 
-    // Crear el renderizado para alternar los detalles
-    private ComponentRenderer<Button, Solicitud> createToggleDetailsRenderer(Grid<Solicitud> grid) {
-        return new ComponentRenderer<>(solicitud -> {
-            Button toggleButton = new Button("Detalles", e -> {
-                // Alternar la visibilidad de los detalles
-                boolean visible = grid.isDetailsVisible(solicitud);
-                grid.setDetailsVisible(solicitud, !visible);
-            });
-            toggleButton.getElement().setAttribute("theme", "tertiary"); // Estilo del botón
-            return toggleButton;
-        });
-    }
 
     private ComponentRenderer<Div, Solicitud> createStaticDetailsRenderer() {
         return new ComponentRenderer<>(solicitud -> {
@@ -210,7 +198,7 @@ public class AvalarAllView extends Composite<VerticalLayout> {
 
     private void abrirDialogAvalar(Solicitud solicitud) {
         // Crear el diálogo
-        Dialog dialog = new com.vaadin.flow.component.dialog.Dialog();
+        Dialog dialog = new Dialog();
         dialog.setHeaderTitle("Avalar Solicitud");
 
         dialog.setWidth("40%"); // Tamaño relativo (40% del ancho del contenedor)

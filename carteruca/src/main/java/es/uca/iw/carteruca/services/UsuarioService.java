@@ -230,6 +230,8 @@ public class UsuarioService implements UserDetailsService {
         return repository.findByRol(Rol.Promotor);
     }
 
+    public List<Usuario> getOTP(){ return repository.findByRol(Rol.OTP); }
+
     public boolean checkPassword(Usuario currentUser, String value) {
         return passwordEncoder.matches(value, currentUser.getPassword());
     }

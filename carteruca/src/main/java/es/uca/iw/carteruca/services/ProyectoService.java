@@ -51,6 +51,27 @@ public class ProyectoService {
                 .filter(proyecto -> proyecto.getPresupuesto() != null && !proyecto.getPresupuesto().isEmpty())
                 .filter(proyecto -> proyecto.getPorcentaje() > 0.0f)
                 .filter(proyecto -> proyecto.getEspecificacion_tecnica() != null && !proyecto.getEspecificacion_tecnica().isEmpty())
+                .filter(proyecto -> proyecto.getPuntuacionTotal() > 0.0f)
+                .collect(Collectors.toList());
+    }
+    public List<Proyecto> getProyectosSinConfigurar() {
+        // Obtenemos todos los proyectos de la base de datos
+        List<Proyecto> proyectos = repository.findAll();
+
+        // Filtramos los proyectos que no tienen la configuración
+        return proyectos.stream()
+                // Filtra proyectos donde la especificación técnica es nula o vacía
+                .filter(proyecto -> proyecto.getEspecificacion_tecnica() == null || proyecto.getEspecificacion_tecnica().isEmpty())
+                // Filtra proyectos donde las horas son 0.0
+                .filter(proyecto -> proyecto.getHoras() == 0.0f)
+                // Filtra proyectos donde el presupuesto es nulo o vacío
+                .filter(proyecto -> proyecto.getPresupuesto() == null || proyecto.getPresupuesto().isEmpty())
+                // Filtra proyectos donde el porcentaje es 0.0
+                .filter(proyecto -> proyecto.getPorcentaje() == 0.0f)
+                // Filtra proyectos donde el director de proyecto es nulo o vacío
+                .filter(proyecto -> proyecto.getDirector_de_proyecto() == null || proyecto.getDirector_de_proyecto().isEmpty())
+                // Filtra proyectos donde el jefe es nulo
+                .filter(proyecto -> proyecto.getJefe() == null)
                 .collect(Collectors.toList());
     }
 
@@ -86,5 +107,17 @@ public class ProyectoService {
         // Guardar el proyecto en la base de datos
         repository.save(proyecto);
     }
+
+    public float sumarHorasByCarteraAndEstado(Long carteraId) {
+        List<Proyecto> proyectos = repository.findBySolicitud_Cartera_IdAndSolicitud_Estado(carteraId, Estado.ACEPTADO);
+
+        // Usamos mapToDouble en vez de mapToFloat
+        return (float) proyectos.stream()
+                .mapToDouble(Proyecto::getHoras)  // Aquí mapeamos las horas como double
+                .sum();  // Suma de todos los valores y luego convertimos el resultado a float
+    }
+
+
+
 
 }
