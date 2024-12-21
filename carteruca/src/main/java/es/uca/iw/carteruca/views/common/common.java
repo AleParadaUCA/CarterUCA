@@ -7,6 +7,9 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Span;
@@ -19,10 +22,10 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 
-import es.uca.iw.carteruca.models.Centro;
-import es.uca.iw.carteruca.models.Estado;
-import es.uca.iw.carteruca.models.Usuario;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
+import es.uca.iw.carteruca.models.*;
 import es.uca.iw.carteruca.services.CentroService;
+import es.uca.iw.carteruca.services.CommonService;
 import es.uca.iw.carteruca.views.avalar.AvalarMainView;
 import es.uca.iw.carteruca.views.home.HomeAdminView;
 import es.uca.iw.carteruca.views.home.HomeSolicitanteView;
@@ -284,6 +287,185 @@ public class common {
         return boton;
 
     }
+
+    public static <T> ComponentRenderer<Button, T> createToggleDetailsRenderer(Grid<T> grid) {
+        return new ComponentRenderer<>(item -> {
+            Button toggleButton = new Button("Detalles", e -> {
+                boolean visible = grid.isDetailsVisible(item);
+                grid.setDetailsVisible(item, !visible);
+            });
+            toggleButton.getElement().setAttribute("theme", "tertiary");
+            return toggleButton;
+        });
+    }
+
+
+    public static ComponentRenderer<Div,Solicitud> createStaticDetailsRenderer() {
+        return new ComponentRenderer<>(solicitud -> {
+            FormLayout formLayout = new FormLayout();
+
+            // Título de la solicitud
+            TextField titulo = new TextField("Título de la solicitud");
+            titulo.setValue(solicitud.getTitulo() != null ? solicitud.getTitulo() : "No disponible");
+            titulo.setReadOnly(true);
+
+            // Nombre corto del proyecto
+            TextField nombre = new TextField("Nombre corto del proyecto");
+            nombre.setValue(solicitud.getNombre() != null ? solicitud.getNombre() : "No disponible");
+            nombre.setReadOnly(true);
+
+            // Interesados del proyecto
+            TextField interesados = new TextField("Interesados del proyecto");
+            interesados.setValue(solicitud.getInteresados() != null ? solicitud.getInteresados() : "No disponibles");
+            interesados.setReadOnly(true);
+
+            // Objetivos del proyecto
+            TextField alineamiento = new TextField("Objetivos del proyecto");
+            alineamiento.setValue(solicitud.getAlineamiento() != null ? solicitud.getAlineamiento() : "No disponibles");
+            alineamiento.setReadOnly(true);
+
+            // Alcance del proyecto
+            TextField alcance = new TextField("Alcance");
+            alcance.setValue(solicitud.getAlcance() != null ? solicitud.getAlcance() : "No disponible");
+            alcance.setReadOnly(true);
+
+            // Normativa
+            TextField normativa = new TextField("Normativa");
+            normativa.setValue(solicitud.getNormativa() != null ? solicitud.getNormativa() : "No disponible");
+            normativa.setReadOnly(true);
+
+            // Avalador (promotor)
+            TextField promotor = new TextField("Avalador");
+            promotor.setValue(solicitud.getAvalador() != null && solicitud.getAvalador().getNombre() != null ? solicitud.getAvalador().getNombre() : "No asignado");
+            promotor.setReadOnly(true);
+
+            // Fecha de solicitud
+            TextField fechaSolicitud = new TextField("Fecha de solicitud");
+            fechaSolicitud.setValue(solicitud.getFecha_solicitud() != null ? solicitud.getFecha_solicitud().toString() : "No disponible");
+            fechaSolicitud.setReadOnly(true);
+
+            // Añadir los campos al FormLayout
+            formLayout.add(titulo, nombre, interesados, alineamiento, alcance, normativa, promotor, fechaSolicitud);
+
+            // Crear el layout final para los detalles
+            Div detailsLayout = new Div();
+            detailsLayout.add(formLayout);
+
+            Span memoria = new Span("Memoria");
+            memoria.getStyle()
+                    .set("font-size", "14px") // Tamaño de fuente
+                    .set("font-weight", "600") // Negrita
+                    .set("color", "grey") // Color del texto
+                    .set("margin-bottom", "8px"); // Espaciado inferior
+            formLayout.add(memoria);
+            formLayout.setColspan(memoria, 2);
+            // Botón para descargar el archivo de memoria
+            String memoriaPath = solicitud.getMemoria();
+            if (memoriaPath != null && !memoriaPath.isEmpty()) {
+                Anchor downloadAnchor = CommonService.descargarFile(memoriaPath, "Descargar Memoria");
+                formLayout.add(downloadAnchor);
+                formLayout.setColspan(downloadAnchor, 1);
+            } else {
+
+                Button descargarMemoriaButton = new Button("Descargar Memoria");
+                descargarMemoriaButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+                descargarMemoriaButton.addClassName("disabled-button");
+                formLayout.add(descargarMemoriaButton);
+                descargarMemoriaButton.setEnabled(false);
+                formLayout.setColspan(descargarMemoriaButton, 1);
+            }
+            detailsLayout.add(formLayout);
+
+            return detailsLayout;
+        });
+    }
+
+    public static ComponentRenderer<Div,Proyecto> createStaticDetailsRendererProyecto() {
+        return new ComponentRenderer<>(proyecto -> {
+            FormLayout formLayout = new FormLayout();
+
+            // Título de la solicitud
+            TextField titulo = new TextField("Título de la solicitud");
+            titulo.setValue(proyecto.getSolicitud().getTitulo() != null ? proyecto.getSolicitud().getTitulo() : "No disponible");
+            titulo.setReadOnly(true);
+
+            // Nombre corto del proyecto
+            TextField nombre = new TextField("Nombre corto del proyecto");
+            nombre.setValue(proyecto.getSolicitud().getNombre() != null ? proyecto.getSolicitud().getNombre() : "No disponible");
+            nombre.setReadOnly(true);
+
+            // Interesados del proyecto
+            TextField interesados = new TextField("Interesados del proyecto");
+            interesados.setValue(proyecto.getSolicitud().getInteresados() != null ? proyecto.getSolicitud().getInteresados() : "No disponibles");
+            interesados.setReadOnly(true);
+
+            // Objetivos del proyecto
+            TextField alineamiento = new TextField("Objetivos del proyecto");
+            alineamiento.setValue(proyecto.getSolicitud().getAlineamiento() != null ? proyecto.getSolicitud().getAlineamiento() : "No disponibles");
+            alineamiento.setReadOnly(true);
+
+            // Alcance del proyecto
+            TextField alcance = new TextField("Alcance");
+            alcance.setValue(proyecto.getSolicitud().getAlcance() != null ? proyecto.getSolicitud().getAlcance() : "No disponible");
+            alcance.setReadOnly(true);
+
+            // Normativa
+            TextField normativa = new TextField("Normativa");
+            normativa.setValue(proyecto.getSolicitud().getNormativa() != null ? proyecto.getSolicitud().getNormativa() : "No disponible");
+            normativa.setReadOnly(true);
+
+            //Solicitante
+            TextField solicitante = new TextField("Solicitante");
+            solicitante.setValue(proyecto.getSolicitud().getSolicitante()!= null ? proyecto.getSolicitud().getSolicitante().getNombre() : "No disponible");
+            solicitante.setReadOnly(true);
+
+            // Avalador (promotor)
+            TextField promotor = new TextField("Avalador");
+            promotor.setValue(proyecto.getSolicitud().getAvalador() != null && proyecto.getSolicitud().getAvalador().getNombre() != null ? proyecto.getSolicitud().getAvalador().getNombre() : "No asignado");
+            promotor.setReadOnly(true);
+
+            // Fecha de solicitud
+            TextField fechaSolicitud = new TextField("Fecha de solicitud");
+            fechaSolicitud.setValue(proyecto.getSolicitud().getFecha_solicitud() != null ? proyecto.getSolicitud().getFecha_solicitud().toString() : "No disponible");
+            fechaSolicitud.setReadOnly(true);
+
+            // Añadir los campos al FormLayout
+            formLayout.add(titulo, nombre, interesados, alineamiento, alcance, normativa, solicitante, promotor, fechaSolicitud);
+
+            // Crear el layout final para los detalles
+            Div detailsLayout = new Div();
+            detailsLayout.add(formLayout);
+
+            Span memoria = new Span("Memoria");
+            memoria.getStyle()
+                    .set("font-size", "14px") // Tamaño de fuente
+                    .set("font-weight", "600") // Negrita
+                    .set("color", "grey") // Color del texto
+                    .set("margin-bottom", "8px"); // Espaciado inferior
+            formLayout.add(memoria);
+            formLayout.setColspan(memoria, 2);
+            // Botón para descargar el archivo de memoria
+            String memoriaPath = proyecto.getSolicitud().getMemoria();
+            if (memoriaPath != null && !memoriaPath.isEmpty()) {
+                Anchor downloadAnchor = CommonService.descargarFile(memoriaPath, "Descargar Memoria");
+                formLayout.add(downloadAnchor);
+                formLayout.setColspan(downloadAnchor, 1);
+            } else {
+
+                Button descargarMemoriaButton = new Button("Descargar Memoria");
+                descargarMemoriaButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+                descargarMemoriaButton.addClassName("disabled-button");
+                formLayout.add(descargarMemoriaButton);
+                descargarMemoriaButton.setEnabled(false);
+                formLayout.setColspan(descargarMemoriaButton, 1);
+            }
+            detailsLayout.add(formLayout);
+
+            return detailsLayout;
+        });
+    }
+
+
 
 
 }
