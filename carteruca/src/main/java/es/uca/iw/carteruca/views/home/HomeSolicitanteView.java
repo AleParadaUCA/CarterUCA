@@ -50,10 +50,10 @@ public class HomeSolicitanteView extends Composite<VerticalLayout>{
 
         if (userRol == Rol.CIO) {
 
-            Div aceptación_a_proyectosproyectos = common.createSquare("Aceptación a Proyectos", VaadinIcon.CHECK_CIRCLE);
-            aceptación_a_proyectosproyectos.getElement().setAttribute("aria-label", "Proyectos");
-            aceptación_a_proyectosproyectos.addClickListener(event -> UI.getCurrent().navigate(SolicitudChangeView.class));
-            getContent().add(aceptación_a_proyectosproyectos);
+            Div aceptacion_a_proyectosproyectos = common.createSquare("Aceptación a Proyectos", VaadinIcon.CHECK_CIRCLE);
+            aceptacion_a_proyectosproyectos.getElement().setAttribute("aria-label", "Proyectos");
+            aceptacion_a_proyectosproyectos.addClickListener(event -> UI.getCurrent().navigate(SolicitudChangeView.class));
+            getContent().add(aceptacion_a_proyectosproyectos);
 
         }
 

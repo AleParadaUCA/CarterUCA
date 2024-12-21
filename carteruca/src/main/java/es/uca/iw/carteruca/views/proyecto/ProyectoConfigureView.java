@@ -33,9 +33,8 @@ import java.util.List;
 public class ProyectoConfigureView extends Composite<VerticalLayout> {
 
     private final ProyectoService proyectoService;
-    private final AuthenticatedUser authenticatedUser;
     private final UsuarioService usuarioService;
-    private Usuario currentUser;
+    private final Usuario currentUser;
 
     private final ComboBox<Usuario> otp = new ComboBox<>();
     private final TextField director = new TextField();
@@ -48,9 +47,8 @@ public class ProyectoConfigureView extends Composite<VerticalLayout> {
                                  AuthenticatedUser authenticatedUser,
                                  UsuarioService usuarioService) {
         this.proyectoService = proyectoService;
-        this.authenticatedUser = authenticatedUser;
         this.usuarioService = usuarioService;
-        this.currentUser = authenticatedUser.get().get();;
+        this.currentUser = authenticatedUser.get().get();
 
         common.creartitulo("Configurar Proyectos",this);
 
@@ -113,7 +111,7 @@ public class ProyectoConfigureView extends Composite<VerticalLayout> {
         otp.getElement().setAttribute("aria-label", "Jefe de Proyecto");
         List<Usuario> user_otp = usuarioService.getOTP();
         otp.setItems(user_otp);
-        otp.setItemLabelGenerator(usuario -> usuario.getNombre());
+        otp.setItemLabelGenerator(Usuario::getNombre);
         otp.setRequiredIndicatorVisible(true);
 
         // Se obtiene el total de horas usadas en la cartera
@@ -189,6 +187,4 @@ public class ProyectoConfigureView extends Composite<VerticalLayout> {
         dialog.setWidthFull();
         dialog.open();
     }
-
-
 }
