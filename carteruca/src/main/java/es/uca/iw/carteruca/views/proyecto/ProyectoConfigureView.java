@@ -56,7 +56,7 @@ public class ProyectoConfigureView extends Composite<VerticalLayout> {
 
         crearTabla();
 
-        common.boton_dinamico(currentUser);
+        getContent().add(common.boton_dinamico(currentUser));
 
     }
 
