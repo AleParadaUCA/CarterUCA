@@ -82,12 +82,6 @@ public class CarteraAllView extends VerticalLayout {
             return deleteButton;
         }).setHeader("Eliminar");
 
-        tablaCarteras.addComponentColumn( cartera -> {
-            Button add_criterios = new Button("Añadir Criterios", click -> openAddCriterios(cartera));
-            add_criterios.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
-            return add_criterios;
-        });
-
         updateGrid();
     }
 
@@ -243,9 +237,4 @@ public class CarteraAllView extends VerticalLayout {
         tablaCarteras.setItems(carteras);
     }
 
-    private void openAddCriterios(Cartera cartera) {
-
-        Dialog dialog = new Dialog("Nuevo Criterio");
-
-    }
 }
