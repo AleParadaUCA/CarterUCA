@@ -1,16 +1,17 @@
 package es.uca.iw.carteruca.services;
 
-import es.uca.iw.carteruca.models.Cartera;
-import es.uca.iw.carteruca.repository.CarteraRepository;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
+import es.uca.iw.carteruca.models.Cartera;
+import es.uca.iw.carteruca.repository.CarteraRepository;
 
 @Service
 public class CarteraService {
@@ -159,13 +160,4 @@ public class CarteraService {
         LocalDateTime now = LocalDateTime.now();
         return carteraRepository.findByFechaInicioLessThanEqualAndFechaFinGreaterThanEqual(now, now);
     }
-
-    //Es la que funciona cuando hay mas de una cartera
-//    public Optional<Cartera> getCartera() {
-//        LocalDateTime fechaActual = LocalDateTime.now();
-//        Optional<Cartera> carteraActual = carteraRepository.findByFechaInicioLessThanEqualAndFechaFinGreaterThanEqual(fechaActual);
-//
-//        return carteraActual;
-//    }
-
 }

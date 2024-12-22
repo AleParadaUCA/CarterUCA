@@ -118,7 +118,12 @@ public class ProyectoService {
 
     public float sumarHorasByCarteraAndEstado(Long carteraId) {
         List<Proyecto> proyectos = repository.findBySolicitud_Cartera_IdAndSolicitud_Estado(carteraId, Estado.ACEPTADO);
-
+        /*
+        // Filtrar proyectos con estados ACEPTADO o FINALIZADO
+        List<Proyecto> proyectos = repository.findBySolicitud_Cartera_IdAndSolicitud_EstadoIn(
+        carteraId, Arrays.asList(Estado.ACEPTADO, Estado.FINALIZADO)
+        );
+         */
         // Usamos mapToDouble en vez de mapToFloat
         return (float) proyectos.stream()
                 .mapToDouble(Proyecto::getHoras)  // Aquí mapeamos las horas como double
