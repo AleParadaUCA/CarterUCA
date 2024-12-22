@@ -1,6 +1,11 @@
 package es.uca.iw.carteruca.views.cartera;
 
+import java.time.format.DateTimeFormatter;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.vaadin.flow.component.Composite;
+import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.icon.Icon;
@@ -11,13 +16,11 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
+
 import es.uca.iw.carteruca.security.AuthenticatedUser;
 import es.uca.iw.carteruca.services.CarteraService;
 import es.uca.iw.carteruca.views.common.common;
 import es.uca.iw.carteruca.views.layout.MainLayout;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.time.format.DateTimeFormatter;
 
 @PageTitle("Cartera Actual")
 @Route(value ="/cartera", layout = MainLayout.class)
@@ -43,7 +46,7 @@ public class CarteraActualView extends Composite<VerticalLayout> {
     }
 
     private void loadCarteraActual() {
-        carteraService.getCartera().ifPresent(cartera -> {
+        carteraService.getCarteraActual().ifPresentOrElse(cartera -> {
             // Crear el FormLayout
             FormLayout formLayout = new FormLayout();
             formLayout.setResponsiveSteps(
@@ -106,6 +109,9 @@ public class CarteraActualView extends Composite<VerticalLayout> {
 
             // Agregar el FormLayout al contenido principal
             getContent().add(formLayout);
+        }, () -> {
+            // Acción en caso de que no haya cartera actual
+            getContent().add(new Text("No hay cartera actual disponible."));
         });
     }
 
