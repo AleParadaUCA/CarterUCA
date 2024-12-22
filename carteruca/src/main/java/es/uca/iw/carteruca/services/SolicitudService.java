@@ -4,12 +4,15 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import es.uca.iw.carteruca.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer;
 
+import es.uca.iw.carteruca.models.Cartera;
+import es.uca.iw.carteruca.models.Estado;
+import es.uca.iw.carteruca.models.Solicitud;
+import es.uca.iw.carteruca.models.Usuario;
 import es.uca.iw.carteruca.repository.SolicitudRepository;
 
 @Service
@@ -26,7 +29,7 @@ public class SolicitudService {
         //Faltan comprobaciones...
 
         //comprobar ".pdf" if (buffer.endsWith(".pdf"))
-        List<String> memoria = CommonService.guardarFile(buffer, "../archivos/Cartera"+ cartera.getId());
+        List<String> memoria = CommonService.guardarFile(buffer, "../archivos/Cartera"+ cartera.getId()); //IMPORTANTE cambiar esto en producción
 
         Solicitud solicitud = new Solicitud();
         solicitud.setTitulo(titulo);
@@ -64,7 +67,7 @@ public class SolicitudService {
 
         if (!buffer.getFiles().isEmpty()) {
             CommonService.eliminarFile(solicitud.getMemoria());
-            solicitud.setMemoria( CommonService.guardarFile(buffer, "../archivos/Cartera"+ solicitud.getCartera().getId()).get(0));
+            solicitud.setMemoria( CommonService.guardarFile(buffer, "../archivos/Cartera"+ solicitud.getCartera().getId()).get(0)); //IMPORTANTE cambiar esto en producción
         }
 
         // Guardar los cambios en la base de datos

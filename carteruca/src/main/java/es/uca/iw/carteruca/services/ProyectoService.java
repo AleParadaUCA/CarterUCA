@@ -28,7 +28,7 @@ public class ProyectoService {
 
     public void guardarProyecto( MultiFileMemoryBuffer buffer, Solicitud solicitud) { //Esto es para OTP
 
-        List<String> documento = CommonService.guardarFile(buffer, "../archivos"+solicitud.getCartera().getNombre()+"/proyectos");
+        List<String> documento = CommonService.guardarFile(buffer, "../archivos/Cartera"+solicitud.getCartera().getId()+"/proyectos"); //IMPORTANTE cambiar esto en producción
 
         Proyecto proyecto = new Proyecto();
         float porcentaje = 0.0f;
