@@ -161,15 +161,11 @@ public class CarteraService {
     }
 
     //Es la que funciona cuando hay mas de una cartera
-    public Optional<Cartera> getCartera() {
-        LocalDateTime fechaActual = LocalDateTime.now();
-        Optional<Cartera> carteraActual = carteraRepository.buscarCarteraVigente(fechaActual);
-
-        if(carteraActual.isPresent()) {
-            return carteraActual;
-        } else {
-            throw new IllegalStateException("No hay cartera vigente");
-        }
-    }
+//    public Optional<Cartera> getCartera() {
+//        LocalDateTime fechaActual = LocalDateTime.now();
+//        Optional<Cartera> carteraActual = carteraRepository.findByFechaInicioLessThanEqualAndFechaFinGreaterThanEqual(fechaActual);
+//
+//        return carteraActual;
+//    }
 
 }
