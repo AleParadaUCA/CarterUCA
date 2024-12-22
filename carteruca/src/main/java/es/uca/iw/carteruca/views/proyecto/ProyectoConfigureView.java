@@ -1,20 +1,28 @@
 package es.uca.iw.carteruca.views.proyecto;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.orderedlayout.FlexComponent;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.shared.Tooltip;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.shared.Tooltip;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.component.upload.Upload;
+import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+
 import es.uca.iw.carteruca.models.Proyecto;
 import es.uca.iw.carteruca.models.Usuario;
 import es.uca.iw.carteruca.security.AuthenticatedUser;
@@ -23,9 +31,6 @@ import es.uca.iw.carteruca.services.UsuarioService;
 import es.uca.iw.carteruca.views.common.common;
 import es.uca.iw.carteruca.views.layout.MainLayout;
 import jakarta.annotation.security.RolesAllowed;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.List;
 
 @PageTitle("Configurar Proyectos")
 @Route(value = "/configurar-proyectos", layout = MainLayout.class)
@@ -34,13 +39,17 @@ public class ProyectoConfigureView extends Composite<VerticalLayout> {
 
     private final ProyectoService proyectoService;
     private final UsuarioService usuarioService;
-    private final Usuario currentUser;
 
     private final ComboBox<Usuario> otp = new ComboBox<>();
     private final TextField director = new TextField();
     private final NumberField n_horasField = new NumberField();
-
     private final Grid<Proyecto> proyectos_tabla = new Grid<>(Proyecto.class);
+
+    private final MultiFileMemoryBuffer especificacionBuffer = new MultiFileMemoryBuffer();
+    private final Upload especificacionUpload = new Upload(especificacionBuffer);
+    private final MultiFileMemoryBuffer presupuestoBuffer = new MultiFileMemoryBuffer();
+    private final Upload presupuestoUpload = new Upload(presupuestoBuffer);
+
 
     @Autowired
     public ProyectoConfigureView(ProyectoService proyectoService,
@@ -48,13 +57,12 @@ public class ProyectoConfigureView extends Composite<VerticalLayout> {
                                  UsuarioService usuarioService) {
         this.proyectoService = proyectoService;
         this.usuarioService = usuarioService;
-        this.currentUser = authenticatedUser.get().get();
 
         common.creartitulo("Configurar Proyectos",this);
 
         crearTabla();
 
-        getContent().add(common.boton_dinamico(currentUser));
+        getContent().add(common.boton_dinamico(authenticatedUser.get().get()));
 
     }
 
@@ -133,6 +141,34 @@ public class ProyectoConfigureView extends Composite<VerticalLayout> {
         });
         n_horasField.setRequiredIndicatorVisible(true);
 
+        // Configurar los componentes de subida de archivos
+        Span especificacion = new Span("Especificación Técnica(20MB)");
+        especificacion.getElement().setAttribute("aria-label", "Adjunte la memoria del proyecto");
+        especificacion.getStyle()
+                .set("font-size", "14px") // Tamaño de fuente
+                .set("font-weight", "600") // Negrita
+                .set("color", "grey") // Color del texto
+                .set("margin-bottom", "8px"); // Espaciado inferior
+
+        especificacionUpload.setDropLabel(new Span("Arrastra tu archivo aquí o haz clic para subir la Especificación Técnica"));
+        especificacionUpload.setMaxFiles(1);
+        especificacionUpload.setAcceptedFileTypes(".pdf");
+        especificacionUpload.setMaxFileSize(20 * 1024 * 1024);
+
+        Span presupuesto = new Span("Presupuesto (20MB)");
+        presupuesto.getElement().setAttribute("aria-label", "Adjunte la memoria del proyecto");
+        presupuesto.getStyle()
+                .set("font-size", "14px") // Tamaño de fuente
+                .set("font-weight", "600") // Negrita
+                .set("color", "grey") // Color del texto
+                .set("margin-bottom", "8px"); // Espaciado inferior
+
+        presupuestoUpload.setDropLabel(new Span("Arrastra tu archivo aquí o haz clic para subir el Presupuesto"));
+        presupuestoUpload.setMaxFiles(1);
+        presupuestoUpload.setAcceptedFileTypes(".pdf");
+        presupuestoUpload.setMaxFileSize(20 * 1024 * 1024);
+
+
         // Configuramos el botón de "Guardar" para verificar las horas
         Button guardarButton = new Button("Guardar", event -> {
             float horasNuevas = n_horasField.getValue().floatValue();
@@ -153,7 +189,7 @@ public class ProyectoConfigureView extends Composite<VerticalLayout> {
                     proyecto.setHoras(horasNuevas);
 
                     // Llamamos al servicio para actualizar el proyecto
-                    proyectoService.updateProyecto(proyecto);
+                    proyectoService.updateProyecto(proyecto, presupuestoBuffer, especificacionBuffer);
 
                     // Mostrar notificación de éxito
                     common.showSuccessNotification("Proyecto configurado correctamente.");
@@ -177,7 +213,13 @@ public class ProyectoConfigureView extends Composite<VerticalLayout> {
         boton.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
         boton.setAlignItems(FlexComponent.Alignment.CENTER);
 
-        formulario.add(director, otp, n_horasField);
+        formulario.add(director, otp, n_horasField, especificacion, especificacionUpload, presupuesto, presupuestoUpload);
+
+
+        formulario.setColspan(presupuesto, 2);
+        formulario.setColspan(especificacion, 2);
+        formulario.setColspan(presupuestoUpload, 2);
+        formulario.setColspan(especificacionUpload, 2);
 
         VerticalLayout contenido = new VerticalLayout(formulario, boton);
         contenido.setSizeFull();

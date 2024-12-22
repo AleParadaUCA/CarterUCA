@@ -41,7 +41,15 @@ public class ProyectoService {
         repository.save(proyecto);
     }
 
-    public void updateProyecto(Proyecto proyecto) {
+    public void updateProyecto(Proyecto proyecto, MultiFileMemoryBuffer presupuesto,  MultiFileMemoryBuffer especificacion) {
+
+        String path = "../archivos/Cartera"+proyecto.getSolicitud().getCartera().getId()+"/proyectos"; //IMPORTANTE cambiar esto en producción
+        List<String> presupuestoPath = CommonService.guardarFile(presupuesto, path);
+        List<String> especificacionPath = CommonService.guardarFile(especificacion, path);
+
+        proyecto.setPresupuesto(presupuestoPath.get(0));
+        proyecto.setEspecificacion_tecnica(especificacionPath.get(0));
+
         repository.save(proyecto);
     }
 
