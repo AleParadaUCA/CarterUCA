@@ -12,8 +12,7 @@ import es.uca.iw.carteruca.models.Rol;
 import es.uca.iw.carteruca.security.AuthenticatedUser;
 import es.uca.iw.carteruca.views.avalar.AvalarMainView;
 import es.uca.iw.carteruca.views.layout.MainLayout;
-import es.uca.iw.carteruca.views.proyecto.ProyectoConfigureView;
-import es.uca.iw.carteruca.views.solicitud.SolicitudChangeView;
+import es.uca.iw.carteruca.views.proyecto.ProyectoMainView;
 import es.uca.iw.carteruca.views.solicitud.SolicitudesMainView;
 import jakarta.annotation.security.RolesAllowed;
 import es.uca.iw.carteruca.views.common.common;
@@ -48,6 +47,15 @@ public class HomeSolicitanteView extends Composite<VerticalLayout>{
             getContent().add(avalar);
         }
 
+        if (userRol == Rol.CIO || userRol == Rol.OTP) {
+
+            Div proyectos = common.createSquare("Proyectos", VaadinIcon.COG);
+            proyectos.getElement().setAttribute("aria-label", "Proyectos");
+            proyectos.addClickListener(event -> UI.getCurrent().navigate(ProyectoMainView.class));
+            getContent().add(proyectos);
+        }
+
+        /*
         if (userRol == Rol.CIO) {
 
             Div aceptacion_a_proyectosproyectos = common.createSquare("Aceptación a Proyectos", VaadinIcon.CHECK_CIRCLE);
@@ -65,6 +73,8 @@ public class HomeSolicitanteView extends Composite<VerticalLayout>{
             getContent().add(proyectos);
             
         }
+
+         */
 
     }
 
