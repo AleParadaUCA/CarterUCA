@@ -15,7 +15,10 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import es.uca.iw.carteruca.models.Estado;
 import es.uca.iw.carteruca.models.Proyecto;
+import es.uca.iw.carteruca.models.Rol;
+import es.uca.iw.carteruca.models.Solicitud;
 import es.uca.iw.carteruca.services.ProyectoService;
+import es.uca.iw.carteruca.services.SolicitudService;
 import es.uca.iw.carteruca.views.common.common;
 import es.uca.iw.carteruca.views.layout.MainLayout;
 import jakarta.annotation.security.RolesAllowed;
@@ -29,13 +32,16 @@ import java.util.List;
 public class ProyectoCancelView extends Composite<VerticalLayout> {
 
     private final ProyectoService proyectoService;
+    private final SolicitudService solicitudService;
 
     private final Grid<Proyecto> proyectos_tabla = new Grid<>(Proyecto.class);
 
     @Autowired
-    public ProyectoCancelView(ProyectoService proyectoService) {
+    public ProyectoCancelView(ProyectoService proyectoService,
+                              SolicitudService solicitudService) {
 
         this.proyectoService = proyectoService;
+        this.solicitudService = solicitudService;
 
         common.creartitulo("Cancelar Proyectos",this);
 
@@ -83,22 +89,31 @@ public class ProyectoCancelView extends Composite<VerticalLayout> {
 
         Button BtnSi = new Button("Si", e -> {
             try {
-                // Cambiar el estado del proyecto a RECHAZADO
-                proyecto.getSolicitud().setEstado(Estado.RECHAZADO);
+                Solicitud solicitud = proyecto.getSolicitud();
+
+                solicitud.setEstado(Estado.RECHAZADO);
+                solicitudService.updateSolicitud(solicitud, Rol.CIO,true);
+
+                // Guardar los cambios en el proyecto
                 proyectoService.update(proyecto);
 
                 // Mostrar notificación de éxito
                 common.showSuccessNotification("Proyecto cancelado correctamente");
 
-                // Cerrar el diálogo después de la acción
+                // Cerrar el diálogo
                 dialog.close();
+
+                // Recargar la lista de proyectos desde la base de datos
+                List<Proyecto> listaActualizada = proyectoService.getProyectosPorEstado(); // Obtén los proyectos con estado actualizado
+                proyectos_tabla.setItems(listaActualizada); // Actualiza los datos en la tabla
 
             } catch (Exception ex) {
                 // En caso de error, mostrar mensaje de error
-                common.showErrorNotification(ex.getMessage());
+                common.showErrorNotification("Error al cancelar el proyecto: " + ex.getMessage());
             }
         });
         BtnSi.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+
 
         Button BtnNo = new Button("No", event -> dialog.close());
         BtnNo.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
@@ -119,5 +134,6 @@ public class ProyectoCancelView extends Composite<VerticalLayout> {
         // Mostrar el diálogo
         dialog.open();
     }
+
 
 }
