@@ -19,11 +19,13 @@ public class ProyectoService {
 
     private final ProyectoRepository repository;
     private final CriterioRepository criterioRepository;
+    private final EmailService emailService;
 
     @Autowired
-    public ProyectoService(ProyectoRepository repository, CriterioRepository criterioRepository) {
+    public ProyectoService(ProyectoRepository repository, CriterioRepository criterioRepository, EmailService emailService) {
         this.repository = repository;
         this.criterioRepository = criterioRepository;
+        this.emailService = emailService;
     }
 
     public void guardarProyecto( MultiFileMemoryBuffer buffer, Solicitud solicitud) { //Esto es para OTP
@@ -39,6 +41,9 @@ public class ProyectoService {
         proyecto.setSolicitud(solicitud);
 
         repository.save(proyecto);
+        String subject = "Proyecto Configurado";
+        String body = "El proyecto con título '" + proyecto.getSolicitud().getTitulo() + "' ha sido configurado por OTP.";
+        emailService.enviarCorreo(proyecto.getSolicitud().getSolicitante().getEmail(), subject, body);
     }
 
     public void updateProyecto(Proyecto proyecto, MultiFileMemoryBuffer presupuesto,  MultiFileMemoryBuffer especificacion) {

@@ -13,6 +13,7 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import es.uca.iw.carteruca.models.Estado;
+import es.uca.iw.carteruca.models.Rol;
 import es.uca.iw.carteruca.models.Solicitud;
 import es.uca.iw.carteruca.models.Usuario;
 import es.uca.iw.carteruca.security.AuthenticatedUser;
@@ -92,7 +93,7 @@ public class SolicitudDeleteView extends Composite<VerticalLayout> {
                 solicitud.setEstado(Estado.CANCELADO);
 
                 // Llamar al servicio para actualizar la solicitud
-                solicitudService.updateSolicitud(solicitud);
+                solicitudService.updateSolicitud(solicitud, Rol.Solicitante, false);
 
                 // Mostrar notificación de éxito
                 common.showSuccessNotification("Solicitud cancelada correctamente.");

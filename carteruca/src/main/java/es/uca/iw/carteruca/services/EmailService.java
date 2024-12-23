@@ -65,5 +65,21 @@ public class EmailService {
         return true;
     }
 
+    public boolean enviarCorreo(String to, String subject, String body) {
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, "utf-8");
 
+        try {
+            helper.setFrom(defaultMail);
+            helper.setTo(to);
+            helper.setSubject(subject);
+            helper.setText(body);
+            this.mailSender.send(message);
+        } catch (MailException | MessagingException ex) {
+            ex.printStackTrace();
+            return false;
+        }
+
+        return true;
+    }
 }

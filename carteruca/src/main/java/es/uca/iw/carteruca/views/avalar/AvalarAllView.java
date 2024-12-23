@@ -19,10 +19,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import es.uca.iw.carteruca.models.Cartera;
-import es.uca.iw.carteruca.models.Estado;
-import es.uca.iw.carteruca.models.Solicitud;
-import es.uca.iw.carteruca.models.Usuario;
+import es.uca.iw.carteruca.models.*;
 import es.uca.iw.carteruca.security.AuthenticatedUser;
 import es.uca.iw.carteruca.services.CarteraService;
 import es.uca.iw.carteruca.services.CommonService;
@@ -42,7 +39,6 @@ import java.util.List;
 public class AvalarAllView extends Composite<VerticalLayout> {
 
     private final SolicitudService solicitudService;
-    private final AuthenticatedUser authenticatedUser;
     private final Usuario currentUser;
     private final Cartera carteraActual;
 
@@ -53,7 +49,6 @@ public class AvalarAllView extends Composite<VerticalLayout> {
     public AvalarAllView(SolicitudService solicitudService,
                          AuthenticatedUser authenticatedUser, CarteraService carteraService) {
         this.solicitudService = solicitudService;
-        this.authenticatedUser = authenticatedUser;
         this.currentUser = authenticatedUser.get().get();
         this.carteraActual = carteraService.getCarteraActual().orElse(null);
 
@@ -234,7 +229,7 @@ public class AvalarAllView extends Composite<VerticalLayout> {
             } else {
                 solicitud.setEstado(Estado.EN_TRAMITE_AVALADO);
                 solicitud.setImportancia_promotor(importanciaField.getValue());
-                solicitudService.updateSolicitud(solicitud);
+                solicitudService.updateSolicitud(solicitud, Rol.Promotor, true);
                 dialog.close();
                 common.showSuccessNotification("Solicitud avalada correctamente");
                 refrescarTabla();
@@ -244,7 +239,7 @@ public class AvalarAllView extends Composite<VerticalLayout> {
 
         Button btnNo = new Button("No", e -> {
             solicitud.setEstado(Estado.RECHAZADO);
-            solicitudService.updateSolicitud(solicitud);
+            solicitudService.updateSolicitud(solicitud, Rol.Promotor, false);
             dialog.close();
             common.showSuccessNotification("Solicitud cancelada");
             refrescarTabla();
