@@ -98,7 +98,6 @@ public class ProyectoConfigureView extends Composite<VerticalLayout> {
 
         Dialog dialog = new Dialog();
         dialog.setHeaderTitle("Configurar Proyecto");
-        dialog.setWidthFull();
 
         FormLayout formulario = new FormLayout();
 
@@ -122,6 +121,8 @@ public class ProyectoConfigureView extends Composite<VerticalLayout> {
         otp.setItemLabelGenerator(Usuario::getNombre);
         otp.setRequiredIndicatorVisible(true);
 
+
+
         // Se obtiene el total de horas usadas en la cartera
         float totalHorasCartera = proyectoService.sumarHorasByCarteraAndEstado(proyecto.getSolicitud().getCartera().getId());
 
@@ -142,7 +143,7 @@ public class ProyectoConfigureView extends Composite<VerticalLayout> {
         n_horasField.setRequiredIndicatorVisible(true);
 
         // Configurar los componentes de subida de archivos
-        Span especificacion = new Span("Especificación Técnica(20MB)");
+        Span especificacion = new Span("Especificación Técnica (20MB)");
         especificacion.getElement().setAttribute("aria-label", "Adjunte la memoria del proyecto");
         especificacion.getStyle()
                 .set("font-size", "14px") // Tamaño de fuente
@@ -215,6 +216,11 @@ public class ProyectoConfigureView extends Composite<VerticalLayout> {
 
         formulario.add(director, otp, n_horasField, especificacion, especificacionUpload, presupuesto, presupuestoUpload);
 
+        formulario.setColspan(director,1);
+        formulario.setColspan(otp,1);
+        formulario.setColspan(n_horasField,1);
+        formulario.setColspan(especificacion,2);
+        formulario.setColspan(presupuesto,2);
 
         formulario.setColspan(presupuesto, 2);
         formulario.setColspan(especificacion, 2);
@@ -222,11 +228,12 @@ public class ProyectoConfigureView extends Composite<VerticalLayout> {
         formulario.setColspan(especificacionUpload, 2);
 
         VerticalLayout contenido = new VerticalLayout(formulario, boton);
+        contenido.setPadding(false);
+        contenido.setSpacing(false);
         contenido.setSizeFull();
-        contenido.setSpacing(true);
 
         dialog.add(contenido);
-        dialog.setWidthFull();
+        dialog.setWidth("600px");
         dialog.open();
     }
 }
