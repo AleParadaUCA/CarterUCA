@@ -144,8 +144,4 @@ public class SolicitudService {
         return repository.findByEstado(estado);
     }
 
-
-
-
-
 }

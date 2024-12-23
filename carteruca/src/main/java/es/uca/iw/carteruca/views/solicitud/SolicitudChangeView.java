@@ -111,7 +111,25 @@ public class SolicitudChangeView extends Composite<VerticalLayout> {
         });
         BtnSi.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
-        Button BtnNo = new Button("No", click -> dialog.close());
+        Button BtnNo = new Button("No", click -> {
+            try {
+                // Cambiar el estado de la solicitud a RECHAZADO
+                solicitud.setEstado(Estado.RECHAZADO);
+                solicitudService.updateSolicitud(solicitud, Rol.CIO, false);
+
+                // Mostrar una notificación de rechazo
+                common.showSuccessNotification("Solicitud rechazada correctamente.");
+
+                // Cerrar el diálogo
+                dialog.close();
+
+                // Actualizar la tabla para reflejar el cambio
+                actualizarTabla();
+            } catch (Exception e) {
+                // Manejo de errores: mostrar mensaje en caso de error
+                common.showErrorNotification("Ha ocurrido un error al rechazar la solicitud. Intente nuevamente.");
+            }
+        });
         BtnNo.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
 
         buttons.add(BtnSi, BtnNo);
@@ -121,6 +139,7 @@ public class SolicitudChangeView extends Composite<VerticalLayout> {
         dialog.add(layout);
         dialog.open();
     }
+
 
     private void actualizarTabla() {
         List<Solicitud> lista_solicitudes = solicitudService.getSolicitudByEstado(Estado.EN_TRAMITE_AVALADO);
