@@ -30,6 +30,7 @@ import es.uca.iw.carteruca.views.avalar.AvalarMainView;
 import es.uca.iw.carteruca.views.home.HomeAdminView;
 import es.uca.iw.carteruca.views.home.HomeSolicitanteView;
 import es.uca.iw.carteruca.views.home.HomeView;
+import es.uca.iw.carteruca.views.proyecto.ProyectoMainView;
 
 public class common {
     public static Div createSquare(String text, VaadinIcon iconType) {
@@ -465,6 +466,23 @@ public class common {
         });
     }
 
+    public static HorizontalLayout botones_proyecto(){
+
+        HorizontalLayout botones = new HorizontalLayout();
+        botones.setWidthFull();
+        botones.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
+
+
+        Button volver = new Button("Volver", event -> {
+            // Redirigir al usuario a la vista HomeAdminView
+            UI.getCurrent().navigate(ProyectoMainView.class);
+        });
+        volver.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        volver.getElement().setAttribute("aria-label", "Volver");
+
+        botones.add(volver);
+        return botones;
+    }
 
 
 

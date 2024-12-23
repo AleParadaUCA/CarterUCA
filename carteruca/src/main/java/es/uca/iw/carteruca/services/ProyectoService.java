@@ -3,6 +3,7 @@ package es.uca.iw.carteruca.services;
 import java.util.List;
 
 import es.uca.iw.carteruca.models.Estado;
+import es.uca.iw.carteruca.models.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -133,6 +134,14 @@ public class ProyectoService {
         return (float) proyectos.stream()
                 .mapToDouble(Proyecto::getHoras)  // Aquí mapeamos las horas como double
                 .sum();  // Suma de todos los valores y luego convertimos el resultado a float
+    }
+
+    public void update(Proyecto proyecto) {
+        repository.save(proyecto);
+    }
+
+    public List<Proyecto> getProyectosPorJefeYEstado(Usuario jefe) {
+        return repository.findByJefeAndSolicitud_Estado(jefe, Estado.ACEPTADO);
     }
 
 
