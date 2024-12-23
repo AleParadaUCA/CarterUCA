@@ -37,7 +37,7 @@ public class ProyectoMainView extends Composite<VerticalLayout> {
 
             Div cancel = common.createSquare("Cancelar Proyecto", VaadinIcon.TRASH);
             cancel.getElement().setAttribute("aria-label", "Cancelar Proyecto");
-            //cancel.addClickListener(event -> UI.getCurrent().navigate(SolicitudCancelView.class));
+            cancel.addClickListener(event -> UI.getCurrent().navigate(ProyectoCancelView.class));
             getContent().add(cancel);
 
 

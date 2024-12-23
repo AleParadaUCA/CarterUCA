@@ -144,6 +144,10 @@ public class ProyectoService {
         return repository.findByJefeAndSolicitud_Estado(jefe, Estado.ACEPTADO);
     }
 
+    public List<Proyecto> getProyectosPorEstado(){
+        return repository.findBySolicitud_Estado(Estado.ACEPTADO);
+    }
+
 
 
 
