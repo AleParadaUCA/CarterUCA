@@ -33,7 +33,7 @@ import es.uca.iw.carteruca.views.layout.MainLayout;
 import jakarta.annotation.security.RolesAllowed;
 
 @PageTitle("Configurar Proyectos")
-@Route(value = "/configurar-proyectos", layout = MainLayout.class)
+@Route(value = "/proyectos/configurar-proyectos", layout = MainLayout.class)
 @RolesAllowed("OTP")
 public class ProyectoConfigureView extends Composite<VerticalLayout> {
 
