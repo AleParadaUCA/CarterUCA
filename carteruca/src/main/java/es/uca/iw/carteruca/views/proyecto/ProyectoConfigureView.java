@@ -208,11 +208,14 @@ public class ProyectoConfigureView extends Composite<VerticalLayout> {
 
         guardarButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
-        HorizontalLayout boton = new HorizontalLayout(guardarButton);
+        Button cancelButton = new Button("Cancelar", event -> dialog.close());
+        cancelButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
+
+        HorizontalLayout boton = new HorizontalLayout(guardarButton,cancelButton);
         boton.setSizeFull();
         boton.setSpacing(true);
-        boton.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
-        boton.setAlignItems(FlexComponent.Alignment.CENTER);
+        boton.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
+        boton.setAlignItems(FlexComponent.Alignment.END);
 
         formulario.add(director, otp, n_horasField, especificacion, especificacionUpload, presupuesto, presupuestoUpload);
 
