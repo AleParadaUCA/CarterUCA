@@ -13,6 +13,7 @@ import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.component.dialog.Dialog;
+import es.uca.iw.carteruca.models.Estado;
 import es.uca.iw.carteruca.models.Proyecto;
 import es.uca.iw.carteruca.models.Usuario;
 import es.uca.iw.carteruca.security.AuthenticatedUser;
@@ -104,6 +105,11 @@ public class ProyectoUpdateView extends Composite<VerticalLayout> {
             try {
                 // Validar que el porcentaje esté dentro del rango especificado
                 if (porcentaje.getValue() != null && porcentaje.getValue() >= proyecto.getPorcentaje() && porcentaje.getValue() <= 100) {
+
+                    if (porcentaje.getValue() == 100) {
+                        proyecto.getSolicitud().setEstado(Estado.TERMINADO);
+                    }
+                    
                     proyecto.setPorcentaje(porcentaje.getValue().floatValue());
                     proyectoService.update(proyecto);
                     common.showSuccessNotification("Porcentaje Actualizado");
