@@ -204,8 +204,7 @@ public class UsuarioAllView extends Composite<VerticalLayout> {
         Button botonSi = new Button("Sí", e -> {
             usuarioService.deleteUser(usuario.getId()); // Eliminar usuario
             dialogo.close();
-            Notification.show("Usuario eliminado con éxito.", 2000, Notification.Position.MIDDLE)
-                    .addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+            common.showSuccessNotification("Usuario eliminado con éxito.");
             recargarTabla(); // Actualizar la tabla
         });
 
