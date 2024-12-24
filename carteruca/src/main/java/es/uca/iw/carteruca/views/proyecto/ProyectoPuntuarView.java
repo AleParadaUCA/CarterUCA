@@ -1,0 +1,167 @@
+package es.uca.iw.carteruca.views.proyecto;
+
+import com.vaadin.flow.component.Composite;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.NumberField;
+import com.vaadin.flow.router.PageTitle;
+import com.vaadin.flow.router.Route;
+import es.uca.iw.carteruca.models.Criterio;
+import es.uca.iw.carteruca.models.Proyecto;
+import es.uca.iw.carteruca.models.Usuario;
+import es.uca.iw.carteruca.security.AuthenticatedUser;
+import es.uca.iw.carteruca.services.CriterioService;
+import es.uca.iw.carteruca.services.ProyectoService;
+import es.uca.iw.carteruca.services.UsuarioService;
+import es.uca.iw.carteruca.views.common.common;
+import es.uca.iw.carteruca.views.layout.MainLayout;
+import jakarta.annotation.security.RolesAllowed;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@PageTitle("Puntuar Proyectos")
+@Route(value = "/proyectos/puntuar", layout = MainLayout.class)
+@RolesAllowed("CIO")
+public class ProyectoPuntuarView extends Composite<VerticalLayout> {
+
+    private final CriterioService criterioService;
+    private final ProyectoService proyectoService;
+    private final AuthenticatedUser authenticatedUser;
+    private Usuario currentUser;
+
+    private final Grid<Criterio> criterio_tabla = new Grid<>(Criterio.class);
+    private final Grid<Proyecto> proyecto_tabla = new Grid<>(Proyecto.class);
+
+    @Autowired
+    public ProyectoPuntuarView(CriterioService criterioService,
+                               ProyectoService proyectoService,
+                               AuthenticatedUser authenticatedUser) {
+        this.criterioService = criterioService;
+        this.proyectoService = proyectoService;
+        this.authenticatedUser = authenticatedUser;
+        this.currentUser = authenticatedUser.get().get();
+
+        common.creartitulo("Puntuar Proyectos", this);
+
+        crearTabla();
+
+        getContent().add(common.botones_proyecto());
+    }
+
+    private void crearTabla() {
+
+        proyecto_tabla.setEmptyStateText("No hay proyectos que puntuar");
+        proyecto_tabla.setWidthFull();
+        proyecto_tabla.setHeight("400px");
+
+        proyecto_tabla.removeAllColumns();
+
+        proyecto_tabla.addColumn(proyecto -> proyecto.getSolicitud().getTitulo()).setHeader("Titulo");
+        proyecto_tabla.addColumn(Proyecto::getDirector_de_proyecto).setHeader("Director de Proyecto");
+
+        // Handling potential null value for jefe
+        proyecto_tabla.addColumn(proyecto -> {
+            Usuario jefe = proyecto.getJefe();
+            return (jefe != null) ? jefe.getNombre() : "No asignado";
+        }).setHeader("Jefe");
+
+        proyecto_tabla.addColumn(common.createToggleDetailsRenderer(proyecto_tabla));
+        proyecto_tabla.setItemDetailsRenderer(common.createStaticDetailsRendererProyecto());
+        proyecto_tabla.setDetailsVisibleOnClick(true);
+
+        proyecto_tabla.addComponentColumn(proyecto -> {
+            Button evaluar = new Button("Evaluar");
+            evaluar.getElement().setAttribute("aria-label", "Evaluar");
+            evaluar.addClickListener(e -> DialogCriterio(proyecto));
+            evaluar.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+            return evaluar;
+        });
+
+        List<Proyecto> proyectos = proyectoService.getProyectosSinPuntuacion();
+        proyecto_tabla.setItems(proyectos);
+        getContent().add(proyecto_tabla);
+    }
+
+    private void DialogCriterio(Proyecto proyecto) {
+
+        Dialog dialog = new Dialog();
+        dialog.setHeaderTitle(proyecto.getSolicitud().getTitulo());
+
+        List<Criterio> criterios = criterioService.getAllCriterios();
+
+        // Listas para almacenar IDs de criterios y puntuaciones
+        List<Long> idsCriterios = new ArrayList<>();
+        List<Float> puntuaciones = new ArrayList<>();
+
+        // Grid de criterios
+        Grid<Criterio> gridCriterios = new Grid<>(Criterio.class, false);
+        gridCriterios.addColumn(Criterio::getDescripcion).setHeader("Descripción");
+
+        // Añadir columna para NumberField (puntuación)
+        gridCriterios.addComponentColumn(criterio -> {
+            NumberField numberField = new NumberField();
+            numberField.setMin(0);
+            numberField.setMax(10);
+            numberField.setValue(null);
+            numberField.setWidth("100%");
+            numberField.setPlaceholder("Puntuar");
+            numberField.addValueChangeListener(event -> {
+                Float valor = event.getValue() != null ? event.getValue().floatValue() : null;
+                if (valor != null) {
+                    int index = idsCriterios.indexOf(criterio.getId());
+                    if (index == -1) {
+                        idsCriterios.add(criterio.getId());
+                        puntuaciones.add(valor);
+                    } else {
+                        puntuaciones.set(index, valor);
+                    }
+                }
+            });
+            return numberField;
+        }).setHeader("Puntuación");
+
+        gridCriterios.setItems(criterios);
+
+        // Botón guardar
+        Button guardarButton = new Button("Guardar", e -> {
+            try {
+                if (idsCriterios.size() != criterios.size()) {
+                    common.showErrorNotification("Debe completar todas las puntuaciones.");
+                }
+
+                // Lógica para guardar las puntuaciones
+                proyectoService.guardarPuntuaciones(proyecto, idsCriterios, puntuaciones);
+                common.showSuccessNotification("Puntuaciones guardadas correctamente.");
+
+                // Actualizar la tabla de proyectos
+                List<Proyecto> proyectosActualizados = proyectoService.getProyectosSinPuntuacion();
+                proyecto_tabla.setItems(proyectosActualizados);
+
+                dialog.close();
+            } catch (Exception ex) {
+                // Manejar excepciones
+                common.showErrorNotification("Error al guardar las puntuaciones. Intente de nuevo.");
+            }
+        });
+        guardarButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        Button cancelarButton = new Button("Cancelar", e -> dialog.close());
+        cancelarButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
+        HorizontalLayout botones = new HorizontalLayout(guardarButton, cancelarButton);
+        botones.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
+        botones.setWidthFull();
+        botones.setAlignItems(FlexComponent.Alignment.END);
+
+        dialog.add(gridCriterios, botones);
+        dialog.setWidthFull();
+        dialog.open();
+    }
+
+}
+

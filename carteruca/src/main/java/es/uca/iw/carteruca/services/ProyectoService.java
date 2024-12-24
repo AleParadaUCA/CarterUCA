@@ -2,16 +2,13 @@ package es.uca.iw.carteruca.services;
 
 import java.util.List;
 
-import es.uca.iw.carteruca.models.Estado;
-import es.uca.iw.carteruca.models.Usuario;
+import es.uca.iw.carteruca.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer;
 import java.util.stream.Collectors;
 
-import es.uca.iw.carteruca.models.Proyecto;
-import es.uca.iw.carteruca.models.Solicitud;
 import es.uca.iw.carteruca.repository.ProyectoRepository;
 import es.uca.iw.carteruca.repository.CriterioRepository;
 
@@ -29,23 +26,6 @@ public class ProyectoService {
         this.emailService = emailService;
     }
 
-    public void guardarProyecto( MultiFileMemoryBuffer buffer, Solicitud solicitud) { //Esto es para OTP
-
-        List<String> documento = CommonService.guardarFile(buffer, "../archivos/Cartera"+solicitud.getCartera().getId()+"/proyectos"); //IMPORTANTE cambiar esto en producción
-
-        Proyecto proyecto = new Proyecto();
-        float porcentaje = 0.0f;
-
-        proyecto.setPorcentaje(porcentaje);
-        proyecto.setEspecificacion_tecnica(documento.get(0));
-        proyecto.setPresupuesto(documento.get(1));
-        proyecto.setSolicitud(solicitud);
-
-        repository.save(proyecto);
-        String subject = "Proyecto Configurado";
-        String body = "El proyecto con título '" + proyecto.getSolicitud().getTitulo() + "' ha sido configurado por OTP.";
-        emailService.enviarCorreo(proyecto.getSolicitud().getSolicitante().getEmail(), subject, body);
-    }
 
     public void updateProyecto(Proyecto proyecto, MultiFileMemoryBuffer presupuesto,  MultiFileMemoryBuffer especificacion) {
 
@@ -58,9 +38,9 @@ public class ProyectoService {
 
         repository.save(proyecto);
     }
-
     public List<Proyecto> getProyectosFinalizadosPorCartera(Long carteraId) {
-        return repository.findBySolicitud_Cartera_IdAndSolicitud_Estado(carteraId, Estado.ACEPTADO).stream()
+        List<Estado> estadosPermitidos = List.of(Estado.ACEPTADO, Estado.TERMINADO);
+        return repository.findBySolicitud_Cartera_IdAndSolicitud_EstadoIn(carteraId, estadosPermitidos).stream()
                 .filter(proyecto -> proyecto.getHoras() > 0.0f)
                 .filter(proyecto -> proyecto.getPresupuesto() != null && !proyecto.getPresupuesto().isEmpty())
                 .filter(proyecto -> proyecto.getPorcentaje() > 0.0f)
@@ -68,6 +48,7 @@ public class ProyectoService {
                 .filter(proyecto -> proyecto.getPuntuacionTotal() > 0.0f)
                 .collect(Collectors.toList());
     }
+
     public List<Proyecto> getProyectosSinConfigurar() {
         // Obtenemos todos los proyectos de la base de datos
         List<Proyecto> proyectos = repository.findAll();
@@ -87,27 +68,6 @@ public class ProyectoService {
                 // Filtra proyectos donde el jefe es nulo
                 .filter(proyecto -> proyecto.getJefe() == null)
                 .collect(Collectors.toList());
-    }
-
-
-    public void puntuacionTotal( Proyecto proyecto, List<Float> puntuaciones) {  //Esto es para CIO
-        List<Float> pesos = criterioRepository.findAllPesos();
-        float total = 0.0f;
-
-        if (pesos.size() != puntuaciones.size()) {
-            throw new IllegalArgumentException("Error, no coincide la cantidad de criterios con las puntuaciones dadas");
-        }
-
-        for (int i = 0; i < pesos.size(); i++) {
-            total += pesos.get(i) * puntuaciones.get(i);
-        }
-
-        String stringpuntuaciones = puntuaciones.stream().map(String::valueOf).collect(Collectors.joining("/"));
-
-        proyecto.setPuntuaciones(stringpuntuaciones);
-        proyecto.setPuntuacionTotal(total);
-        repository.save(proyecto);
-
     }
 
     public void guardarProyecto(Solicitud solicitud) {
@@ -146,6 +106,61 @@ public class ProyectoService {
 
     public List<Proyecto> getProyectosPorEstado(){
         return repository.findBySolicitud_Estado(Estado.ACEPTADO);
+    }
+
+    public List<Proyecto> getProyectosSinPuntuacion() {
+        // Obtenemos los proyectos que no tienen puntuaciones ni puntuación total
+        List<Proyecto> proyectos = repository.findByPuntuacionesIsNullAndPuntuacionTotalIsNull();
+
+        // Filtramos los proyectos que tienen todos los campos necesarios rellenos (excepto puntuaciones y puntuacionTotal)
+        return proyectos.stream()
+                // Filtra proyectos donde solicitud no sea nula
+                .filter(proyecto -> proyecto.getSolicitud() != null)
+                // Filtra proyectos donde presupuesto no sea nulo ni vacío
+                .filter(proyecto -> proyecto.getPresupuesto() != null && !proyecto.getPresupuesto().isEmpty())
+                // Filtra proyectos donde especificacion_tecnica no sea nula ni vacía
+                .filter(proyecto -> proyecto.getEspecificacion_tecnica() != null && !proyecto.getEspecificacion_tecnica().isEmpty())
+                // Filtra proyectos donde porcentaje no sea nulo
+                .filter(proyecto -> proyecto.getPorcentaje() != null)
+                // Filtra proyectos donde horas no sea nulo
+                .filter(proyecto -> proyecto.getHoras() != 0.0)
+                // Filtra proyectos donde director_de_proyecto no sea nulo ni vacío
+                .filter(proyecto -> proyecto.getDirector_de_proyecto() != null && !proyecto.getDirector_de_proyecto().isEmpty())
+                // Filtra proyectos donde jefe no sea nulo
+                .filter(proyecto -> proyecto.getJefe() != null)
+                // Recoge los proyectos que cumplen todos los criterios
+                .collect(Collectors.toList());
+    }
+
+    public void guardarPuntuaciones(Proyecto proyecto, List<Long> idsCriterios, List<Float> puntuaciones) {
+        if (idsCriterios.size() != puntuaciones.size()) {
+            throw new IllegalArgumentException("Las listas de IDs y puntuaciones deben tener el mismo tamaño.");
+        }
+
+        // Obtener todos los criterios para calcular el peso
+        List<Criterio> criterios = criterioRepository.findAllById(idsCriterios);
+
+        float puntuacionTotal = 0.0f;
+
+        for (int i = 0; i < idsCriterios.size(); i++) {
+            Long criterioId = idsCriterios.get(i);
+            Float puntuacion = puntuaciones.get(i);
+
+            // Buscar el criterio correspondiente
+            Criterio criterio = criterios.stream()
+                    .filter(c -> c.getId().equals(criterioId))
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalArgumentException("Criterio no encontrado: " + criterioId));
+
+            // Calcular puntuación ponderada
+            puntuacionTotal += puntuacion * criterio.getPeso();
+        }
+
+        // Actualizar proyecto con las puntuaciones y puntuación total
+        proyecto.setPuntuacionTotal(puntuacionTotal);
+        proyecto.setPuntuaciones(puntuaciones.toString()); // Guardar puntuaciones como cadena JSON o similar
+
+        repository.save(proyecto); // Persistir en la base de datos
     }
 
 

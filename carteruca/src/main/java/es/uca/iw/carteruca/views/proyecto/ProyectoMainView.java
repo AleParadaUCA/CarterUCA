@@ -40,6 +40,11 @@ public class ProyectoMainView extends Composite<VerticalLayout> {
             cancel.addClickListener(event -> UI.getCurrent().navigate(ProyectoCancelView.class));
             getContent().add(cancel);
 
+            Div puntuar = common.createSquare("Puntuar", VaadinIcon.CHECK_SQUARE);
+            puntuar.getElement().setAttribute("aria-label", "Puntuar");
+            puntuar.addClickListener(event -> UI.getCurrent().navigate(ProyectoPuntuarView.class));
+            getContent().add(puntuar);
+
 
         }
 

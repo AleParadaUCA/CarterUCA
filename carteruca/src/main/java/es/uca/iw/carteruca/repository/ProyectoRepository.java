@@ -10,8 +10,10 @@ import java.util.List;
 public interface ProyectoRepository extends JpaRepository<Proyecto, Long> {
 
     List<Proyecto> findBySolicitud_Cartera_IdAndSolicitud_Estado(Long carteraId, Estado estado);
+    List<Proyecto> findBySolicitud_Cartera_IdAndSolicitud_EstadoIn(Long carteraId, List<Estado> estados);
     List<Proyecto> findByJefeAndSolicitud_Estado(Usuario jefe, Estado estado);
     List<Proyecto> findBySolicitud_Estado(Estado estado);
     List<Proyecto> findAll();
+    List<Proyecto> findByPuntuacionesIsNullAndPuntuacionTotalIsNull();
 
 }
