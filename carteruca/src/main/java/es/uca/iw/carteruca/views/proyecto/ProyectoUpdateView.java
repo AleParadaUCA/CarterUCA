@@ -13,11 +13,10 @@ import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.component.dialog.Dialog;
-import es.uca.iw.carteruca.models.Estado;
-import es.uca.iw.carteruca.models.Proyecto;
-import es.uca.iw.carteruca.models.Usuario;
+import es.uca.iw.carteruca.models.*;
 import es.uca.iw.carteruca.security.AuthenticatedUser;
 import es.uca.iw.carteruca.services.ProyectoService;
+import es.uca.iw.carteruca.services.SolicitudService;
 import es.uca.iw.carteruca.views.common.common;
 import es.uca.iw.carteruca.views.layout.MainLayout;
 import jakarta.annotation.security.RolesAllowed;
@@ -32,13 +31,16 @@ public class ProyectoUpdateView extends Composite<VerticalLayout> {
 
     private final ProyectoService proyectoService;
     private final AuthenticatedUser authenticatedUser;
+    private final SolicitudService solicitudService;
     private Usuario currentUser;
 
     private final Grid<Proyecto> proyecto_tabla = new Grid<>(Proyecto.class);
     private NumberField porcentaje = new NumberField();
     @Autowired
-    public ProyectoUpdateView(ProyectoService proyectoService, AuthenticatedUser authenticatedUser) {
+    public ProyectoUpdateView(ProyectoService proyectoService, AuthenticatedUser authenticatedUser,
+                              SolicitudService solicitudService) {
         this.proyectoService = proyectoService;
+        this.solicitudService = solicitudService;
         this.authenticatedUser = authenticatedUser;
         this.currentUser = authenticatedUser.get().get();
 
@@ -107,12 +109,15 @@ public class ProyectoUpdateView extends Composite<VerticalLayout> {
                 if (porcentaje.getValue() != null && porcentaje.getValue() >= proyecto.getPorcentaje() && porcentaje.getValue() <= 100) {
 
                     if (porcentaje.getValue() == 100) {
-                        proyecto.getSolicitud().setEstado(Estado.TERMINADO);
+                        Solicitud solicitud = proyecto.getSolicitud();
+                        solicitud.setEstado(Estado.TERMINADO);
+                        solicitudService.updateSolicitud(solicitud, Rol.OTP,true);
                     }
                     
                     proyecto.setPorcentaje(porcentaje.getValue().floatValue());
                     proyectoService.update(proyecto);
                     common.showSuccessNotification("Porcentaje Actualizado");
+                    actualizarTabla();
                     dialog.close();
                 } else {
                     common.showErrorNotification("El porcentaje debe estar entre " + proyecto.getPorcentaje() + " y 100.");
@@ -133,6 +138,11 @@ public class ProyectoUpdateView extends Composite<VerticalLayout> {
 
         dialog.add(formLayout, boton);
         dialog.open();
+    }
+
+    private void actualizarTabla() {
+        List<Proyecto> listaActualizada = proyectoService.getProyectosPorJefeYEstado(currentUser);
+        proyecto_tabla.setItems(listaActualizada);
     }
 
 }
