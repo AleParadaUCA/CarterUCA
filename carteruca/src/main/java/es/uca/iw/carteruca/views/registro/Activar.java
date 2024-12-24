@@ -1,5 +1,6 @@
 package es.uca.iw.carteruca.views.registro;
 
+import com.vaadin.flow.component.button.ButtonVariant;
 import es.uca.iw.carteruca.services.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -32,25 +33,43 @@ public class Activar extends VerticalLayout {
     @Autowired
     public Activar(UsuarioService usuarioService) {
         this.usuarioService = usuarioService;
+        VerticalLayout layout = new VerticalLayout();
+        layout.setSizeFull();
+        layout.setSpacing(true);
+        layout.setJustifyContentMode(JustifyContentMode.CENTER);
+        layout.setAlignItems(Alignment.CENTER);
 
-        title = new H1("Activate User");
-        email = new TextField("Your email");
+        title = new H1("Activar Usuario");
+        email = new TextField("Correo electronico");
         email.setId("email");
 
-        secretCode = new TextField("Your secret code");
+        secretCode = new TextField("Código secreto");
         secretCode.setId("secretCode");
 
         status = new H4();
         status.setId("status");
 
-        activate = new Button("Activate");
+        activate = new Button("Activar");
         activate.setId("activate");
+        activate.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
         status.setVisible(false);
 
         setMargin(true);
+        HorizontalLayout formulario = new HorizontalLayout();
+        formulario.setSpacing(true);
+        formulario.setAlignItems(Alignment.CENTER);
+        formulario.setJustifyContentMode(JustifyContentMode.CENTER);
+        formulario.add(email, secretCode);
 
-        add(title, new HorizontalLayout(email, secretCode), activate, status);
+        HorizontalLayout buttons = new HorizontalLayout(activate, status);
+        buttons.setAlignItems(Alignment.CENTER);
+        buttons.setJustifyContentMode(JustifyContentMode.CENTER);
+        buttons.setWidthFull();
+
+        layout.add(formulario,buttons);
+
+        add(title, layout);
 
         activate.addClickListener(e -> onActivateButtonClick());
     }
