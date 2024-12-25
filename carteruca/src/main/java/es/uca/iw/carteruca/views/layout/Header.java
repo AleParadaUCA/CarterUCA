@@ -75,12 +75,6 @@ public class Header extends Composite<VerticalLayout> {
         iconsLayout.add(languageIcon);
 
         if (authenticatedUser.get().isPresent()) {
-            //icono de notificaciones
-            Icon bellIcon = new Icon(VaadinIcon.BELL);
-            bellIcon.setClassName("icon-button");
-            bellIcon.getStyle().set("margin-left", "10px");
-            bellIcon.addClickListener(e -> UI.getCurrent().navigate("/notificaciones"));
-            iconsLayout.add(bellIcon);
 
             // Obtén el usuario autenticado
             String userName = authenticatedUser.get().get().getNombre();
