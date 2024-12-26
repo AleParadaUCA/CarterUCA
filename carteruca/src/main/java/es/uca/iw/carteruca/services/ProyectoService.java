@@ -38,6 +38,7 @@ public class ProyectoService {
 
         repository.save(proyecto);
     }
+
     public List<Proyecto> getProyectosFinalizadosPorCartera(Long carteraId) {
         List<Estado> estadosPermitidos = List.of(Estado.ACEPTADO, Estado.TERMINADO);
         return repository.findBySolicitud_Cartera_IdAndSolicitud_EstadoIn(carteraId, estadosPermitidos).stream()
@@ -97,7 +98,13 @@ public class ProyectoService {
     }
 
     public void update(Proyecto proyecto) {
+        String subject = "Solicitud Creada";
+        String body = "Hola " + proyecto.getSolicitud().getNombre() + ",\n\n" +
+                "Mensaje de notificación sobre una actualización del porcentaje del Proyecto " +
+                proyecto.getSolicitud().getNombre()+
+                ".\n\nSaludos,\nEl equipo de Carteruca\n";
         repository.save(proyecto);
+        emailService.enviarCorreo(proyecto.getSolicitud().getSolicitante().getEmail(),subject, body);
     }
 
     public List<Proyecto> getProyectosPorJefeYEstado(Usuario jefe) {
