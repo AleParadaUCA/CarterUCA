@@ -126,6 +126,7 @@ public class ProyectoService {
                 .filter(proyecto -> proyecto.getDirector_de_proyecto() == null || proyecto.getDirector_de_proyecto().isEmpty())
                 // Filtra proyectos donde el jefe es nulo
                 .filter(proyecto -> proyecto.getJefe() == null)
+                .filter(proyecto -> proyecto.getSolicitud().getEstado() == Estado.ACEPTADO)
                 .collect(Collectors.toList());
     }
 
