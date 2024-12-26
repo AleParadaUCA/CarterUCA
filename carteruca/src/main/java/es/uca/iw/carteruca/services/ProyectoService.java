@@ -36,11 +36,11 @@ public class ProyectoService {
         proyecto.setPorcentaje(0.0f);  // Puedes inicializar el porcentaje si es necesario
         proyecto.setHoras(0.0f);
 
-        String subject = "Solicitud Creada";
-        String body = "Hola " + proyecto.getSolicitud().getNombre() + ",\n\n" +
-                "Mensaje de notificación sobre una actualización del porcentaje del Proyecto " +
-                proyecto.getSolicitud().getNombre()+
-                ".\n\nSaludos,\nEl equipo de Carteruca\n";
+        String subject = "Proyecto Aceptado";
+        String body = "Hola " + proyecto.getSolicitud().getSolicitante().getNombre() + ",\n\n" +
+                "Mensaje de notificación sobre la aceptación de tu solicitud "+
+                proyecto.getSolicitud().getTitulo() +
+                ".\n\nSaludos,\nEl equipo de Carteruca.";
 
         repository.save(proyecto);
         emailService.enviarCorreo(proyecto.getSolicitud().getSolicitante().getEmail(),subject, body);
@@ -56,7 +56,14 @@ public class ProyectoService {
         proyecto.setPresupuesto(presupuestoPath.get(0));
         proyecto.setEspecificacion_tecnica(especificacionPath.get(0));
 
+        String subject = "Proyecto Configurado";
+        String body = "Hola " + proyecto.getSolicitud().getSolicitante().getNombre() + ",\n\n" +
+                "Le comunicamos que el proyecto con título "+
+                proyecto.getSolicitud().getTitulo() +
+                " ha sido evaluado por el OTP.\n\nSaludos,\nEl equipo de Carteruca.";
+
         repository.save(proyecto);
+        emailService.enviarCorreo(proyecto.getSolicitud().getSolicitante().getEmail(),subject, body);
     }
 
     public void cambiarPorcentaje(Proyecto proyecto) {

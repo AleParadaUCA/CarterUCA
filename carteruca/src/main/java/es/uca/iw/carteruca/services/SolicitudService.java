@@ -52,8 +52,7 @@ public class SolicitudService {
                 "Tu solicitud para la cartera " + cartera.getNombre() + " con el título \"" +
                 solicitud.getTitulo() + "\" ha sido creada exitosamente.\n\n" +
                 "¡Gracias por tu aportación!\n\n" +
-                "Saludos,\n" +
-                "El equipo de Carteruca";
+                "Saludos,\nEl equipo de Carteruca.";
 
         repository.save(solicitud);
         emailService.enviarCorreo(solictante.getEmail(), subject, body);
@@ -73,7 +72,7 @@ public class SolicitudService {
         String body = "Hola " + solicitud.getSolicitante().getNombre() + ",\n\n" +
                 "Tu solicitud con el título \"" + solicitud.getTitulo() + "\" ha sido modificada exitosamente.\n\n" +
                 "Saludos,\n" +
-                "El equipo de Carteruca";
+                "El equipo de Carteruca.";
 
         repository.save(solicitud);
         emailService.enviarCorreo(solicitud.getSolicitante().getEmail(), subject, body);
@@ -100,9 +99,9 @@ public class SolicitudService {
             solicitud.setEstado(Estado.RECHAZADO);
             estadoMensaje = "rechazada";
         }
-        String body = "Hola " + solicitud.getNombre() + ",\n\n" +
+        String body = "Hola " + solicitud.getSolicitante().getNombre() + ",\n\n" +
             "Tu solicitud con el título \"" + solicitud.getTitulo() +
-            "\" ha sido " + estadoMensaje + " por el Avalador.\n\nSaludos,\nEl equipo de Carteruca\n";
+            "\" ha sido " + estadoMensaje + " por el Avalador.\n\nSaludos,\nEl equipo de Carteruca.";
         
         repository.save(solicitud);
         emailService.enviarCorreo(solicitud.getSolicitante().getEmail(), subject, body);
@@ -114,9 +113,9 @@ public class SolicitudService {
         } else {
             solicitud.setEstado(Estado.RECHAZADO);
             String subject = "Resolución solicitud '" + solicitud.getNombre() +"'";
-            String body = "Hola " + solicitud.getNombre() + ",\n\n" +
+            String body = "Hola " + solicitud.getSolicitante().getNombre() + ",\n\n" +
                     "Tu solicitud con el título \"" + solicitud.getTitulo() +
-                    "\" ha sido rechazada por el CIO.\n\nSaludos,\nEl equipo de Carteruca\n";
+                    "\" ha sido rechazada por el CIO.\n\nSaludos,\nEl equipo de Carteruca.";
             emailService.enviarCorreo(solicitud.getSolicitante().getEmail(), subject, body);
         }
         repository.save(solicitud);
@@ -125,9 +124,9 @@ public class SolicitudService {
     public void CancelarSolicitud(Solicitud solicitud) {
         solicitud.setEstado(Estado.CANCELADO);
         String subject = "Cancelar solicitud '" + solicitud.getNombre() +"'";
-        String body = "Hola " + solicitud.getNombre() + ",\n\n" +
-                "Mensaje de confirmación sobre la cancelación de tu solicitud "+ solicitud.getTitulo()
-                +"\n\nSaludos,\nEl equipo de Carteruca\n";
+        String body = "Hola " + solicitud.getSolicitante().getNombre()+
+                ",\n\n Mensaje de confirmación sobre la cancelación de tu solicitud "+ solicitud.getTitulo()
+                +"\n\nSaludos,\nEl equipo de Carteruca.";
 
         repository.save(solicitud);
         emailService.enviarCorreo(solicitud.getSolicitante().getEmail(), subject, body);
@@ -136,9 +135,9 @@ public class SolicitudService {
     public void TerminarSolicitud(Solicitud solicitud) {
         solicitud.setEstado(Estado.TERMINADO);
         String subject = "Cancelar solicitud '" + solicitud.getNombre() +"'";
-        String body = "Hola " + solicitud.getNombre() + ",\n\n" +
+        String body = "Hola " + solicitud.getSolicitante().getNombre() + ",\n\n" +
                 "Mensaje de notificación sobre la completación del proyecto "+ solicitud.getTitulo()
-                +"\n\nSaludos,\nEl equipo de Carteruca\n";
+                +".\n\nSaludos,\nEl equipo de Carteruca.";
 
         repository.save(solicitud);  // Guarda la solicitud actualizada
         emailService.enviarCorreo(solicitud.getSolicitante().getEmail(), subject, body);
