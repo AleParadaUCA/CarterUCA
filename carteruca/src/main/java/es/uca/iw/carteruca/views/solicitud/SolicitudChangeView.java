@@ -12,7 +12,6 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import es.uca.iw.carteruca.models.Estado;
-import es.uca.iw.carteruca.models.Rol;
 import es.uca.iw.carteruca.models.Solicitud;
 import es.uca.iw.carteruca.models.Usuario;
 import es.uca.iw.carteruca.security.AuthenticatedUser;
@@ -92,7 +91,7 @@ public class SolicitudChangeView extends Composite<VerticalLayout> {
                 solicitudService.ResolucionSolicitud(solicitud, true);
 
                 // Crear el proyecto asociado a la solicitud
-                proyectoService.guardarProyecto(solicitud);
+                proyectoService.crearProyecto(solicitud);
 
                 // Mostrar una notificación de éxito
                 common.showSuccessNotification("Solicitud aceptada y proyecto creado con éxito.");

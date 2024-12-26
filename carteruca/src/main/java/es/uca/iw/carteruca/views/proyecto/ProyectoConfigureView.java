@@ -190,7 +190,7 @@ public class ProyectoConfigureView extends Composite<VerticalLayout> {
                     proyecto.setHoras(horasNuevas);
 
                     // Llamamos al servicio para actualizar el proyecto
-                    proyectoService.updateProyecto(proyecto, presupuestoBuffer, especificacionBuffer);
+                    proyectoService.changeProyecto(proyecto, presupuestoBuffer, especificacionBuffer);
 
                     // Mostrar notificación de éxito
                     common.showSuccessNotification("Proyecto configurado correctamente.");

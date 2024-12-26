@@ -109,21 +109,17 @@ public class SolicitudService {
     }
 
     public void ResolucionSolicitud(Solicitud solicitud, boolean aprobado) {
-        String subject = "Resolución solicitud '" + solicitud.getNombre() +"'";
-        String estadoMensaje;
         if (aprobado) {
             solicitud.setEstado(Estado.ACEPTADO);
-            estadoMensaje = "aprobada";
         } else {
             solicitud.setEstado(Estado.RECHAZADO);
-            estadoMensaje = "rechazada";
+            String subject = "Resolución solicitud '" + solicitud.getNombre() +"'";
+            String body = "Hola " + solicitud.getNombre() + ",\n\n" +
+                    "Tu solicitud con el título \"" + solicitud.getTitulo() +
+                    "\" ha sido rechazada por el CIO.\n\nSaludos,\nEl equipo de Carteruca\n";
+            emailService.enviarCorreo(solicitud.getSolicitante().getEmail(), subject, body);
         }
-        String body = "Hola " + solicitud.getNombre() + ",\n\n" +
-                "Tu solicitud con el título \"" + solicitud.getTitulo() +
-                "\" ha sido " + estadoMensaje + " por el CIO.\n\nSaludos,\nEl equipo de Carteruca\n";
-
         repository.save(solicitud);
-        emailService.enviarCorreo(solicitud.getSolicitante().getEmail(), subject, body);
     }
 
     public void CancelarSolicitud(Solicitud solicitud) {
@@ -152,5 +148,4 @@ public class SolicitudService {
     public List<Solicitud> getSolicitudByEstado(Estado estado) {
         return repository.findByEstado(estado);
     }
-
 }
