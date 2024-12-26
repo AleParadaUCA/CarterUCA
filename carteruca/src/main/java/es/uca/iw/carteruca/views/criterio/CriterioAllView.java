@@ -93,7 +93,6 @@ public class CriterioAllView extends VerticalLayout {
     }
 
     private void openAddDialog() {
-
         Dialog dialog = new Dialog();
         FormLayout form = new FormLayout();
 
@@ -103,17 +102,33 @@ public class CriterioAllView extends VerticalLayout {
         form.add(descripcion, peso);
 
         Button saveButton = new Button("Guardar", event -> {
-            try{
+            try {
+                // Obtener la suma actual de los pesos
+                List<Criterio> criterios = criterioService.getAllCriterios();
+                double sumaPesos = criterios.stream().mapToDouble(c -> c.getPeso() != null ? c.getPeso() : 0).sum();
+
+                // Validar el nuevo peso
+                if (peso.getValue() == null) {
+                    throw new IllegalArgumentException("El campo 'Peso' no puede estar vacío.");
+                }
+
+                double nuevoPeso = peso.getValue();
+
+                if (sumaPesos + nuevoPeso > 100) {
+                    throw new IllegalArgumentException("La suma de todos los pesos no puede exceder 100.");
+                }
+
+                // Crear y guardar el nuevo criterio
                 Criterio nuevoCriterio = new Criterio();
                 nuevoCriterio.setDescripcion(descripcion.getValue());
-                nuevoCriterio.setPeso(peso.getValue().floatValue());
+                nuevoCriterio.setPeso((float) nuevoPeso);
 
                 criterioService.addCriterio(nuevoCriterio);
                 updateGrid();
                 dialog.close();
                 common.showSuccessNotification("Criterio agregado");
-            }catch (IllegalArgumentException e){
-                common.showErrorNotification("Error " + e.getMessage());
+            } catch (IllegalArgumentException e) {
+                common.showErrorNotification("Error: " + e.getMessage());
             }
         });
 
@@ -126,27 +141,29 @@ public class CriterioAllView extends VerticalLayout {
         layout.add(form, saveButton, cancelButton);
         layout.setJustifyContentMode(JustifyContentMode.END);
 
-        dialog.add(form,layout);
+        dialog.add(form, layout);
         dialog.open();
-
     }
+
 
     private void openEditDialog(Criterio criterio) {
         // Crear el diálogo y el formulario
         Dialog dialog = new Dialog();
         FormLayout form = new FormLayout();
 
-        // Campo de texto para la descripción
         TextField descripcionField = new TextField("Descripción");
         descripcionField.setValue(criterio.getDescripcion());
+        descripcionField.getStyle().set("color", "gray"); // Mostrar texto en gris inicialmente
+        descripcionField.addFocusListener(event -> descripcionField.getStyle().remove("color")); // Cambiar a color normal al enfocar
 
         // Campo numérico para el peso
         NumberField pesoField = new NumberField("Peso");
         if (criterio.getPeso() != null) {
             pesoField.setValue(criterio.getPeso().doubleValue());
         }
+        pesoField.getStyle().set("color", "gray");
+        pesoField.addFocusListener(event -> pesoField.getStyle().remove("color"));
 
-        // Agregar campos al formulario
         form.add(descripcionField, pesoField);
 
         // Botón de guardar con acción
@@ -154,10 +171,24 @@ public class CriterioAllView extends VerticalLayout {
             try {
                 // Validar y actualizar valores del criterio
                 criterio.setDescripcion(descripcionField.getValue());
+
                 if (pesoField.getValue() == null) {
                     throw new IllegalArgumentException("El campo 'Peso' no puede estar vacío.");
                 }
-                criterio.setPeso(pesoField.getValue().floatValue());
+
+                // Validar la suma de los pesos
+                double nuevoPeso = pesoField.getValue();
+                List<Criterio> criterios = criterioService.getAllCriterios();
+                double sumaPesos = criterios.stream()
+                        .filter(c -> !c.getId().equals(criterio.getId())) // Excluir el criterio que se está editando
+                        .mapToDouble(c -> c.getPeso() != null ? c.getPeso() : 0)
+                        .sum();
+
+                if (sumaPesos + nuevoPeso > 100) {
+                    throw new IllegalArgumentException("La suma de todos los pesos no puede exceder 100.");
+                }
+
+                criterio.setPeso((float) nuevoPeso);
 
                 // Actualizar en el servicio
                 criterioService.updateCriterio(criterio);

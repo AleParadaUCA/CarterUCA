@@ -1,5 +1,6 @@
 package es.uca.iw.carteruca.services;
 
+import java.util.Arrays;
 import java.util.List;
 
 import es.uca.iw.carteruca.models.*;
@@ -42,13 +43,17 @@ public class ProyectoService {
     public List<Proyecto> getProyectosFinalizadosPorCartera(Long carteraId) {
         List<Estado> estadosPermitidos = List.of(Estado.ACEPTADO, Estado.TERMINADO);
         return repository.findBySolicitud_Cartera_IdAndSolicitud_EstadoIn(carteraId, estadosPermitidos).stream()
-                .filter(proyecto -> proyecto.getHoras() > 0.0f)
-                .filter(proyecto -> proyecto.getPresupuesto() != null && !proyecto.getPresupuesto().isEmpty())
-                .filter(proyecto -> proyecto.getPorcentaje() > 0.0f)
-                .filter(proyecto -> proyecto.getEspecificacion_tecnica() != null && !proyecto.getEspecificacion_tecnica().isEmpty())
-                .filter(proyecto -> proyecto.getPuntuacionTotal() > 0.0f)
+                // Filtrar proyectos donde todos los campos necesarios están completos
+                .filter(proyecto -> proyecto.getHoras() > 0.0f)  // Verifica que las horas estén completas
+                .filter(proyecto -> proyecto.getPresupuesto() != null && !proyecto.getPresupuesto().isEmpty())  // Verifica que el presupuesto no esté vacío
+                .filter(proyecto -> proyecto.getPorcentaje() >= 0.0f)  // Verifica que el porcentaje esté completo
+                .filter(proyecto -> proyecto.getEspecificacion_tecnica() != null && !proyecto.getEspecificacion_tecnica().isEmpty())  // Verifica la especificación técnica
+                .filter(proyecto -> proyecto.getPuntuacionTotal() > 0.0f)  // Verifica que la puntuación total esté completa
+                .filter(proyecto -> proyecto.getDirector_de_proyecto() != null && !proyecto.getDirector_de_proyecto().isEmpty())  // Verifica que el director esté asignado
+                .filter(proyecto -> proyecto.getJefe() != null)  // Verifica que el jefe esté asignado
                 .collect(Collectors.toList());
     }
+
 
     public List<Proyecto> getProyectosSinConfigurar() {
         // Obtenemos todos los proyectos de la base de datos
@@ -84,13 +89,12 @@ public class ProyectoService {
     }
 
     public float sumarHorasByCarteraAndEstado(Long carteraId) {
-        List<Proyecto> proyectos = repository.findBySolicitud_Cartera_IdAndSolicitud_Estado(carteraId, Estado.ACEPTADO);
-        /*
+
         // Filtrar proyectos con estados ACEPTADO o FINALIZADO
         List<Proyecto> proyectos = repository.findBySolicitud_Cartera_IdAndSolicitud_EstadoIn(
-        carteraId, Arrays.asList(Estado.ACEPTADO, Estado.FINALIZADO)
+        carteraId, Arrays.asList(Estado.ACEPTADO, Estado.TERMINADO)
         );
-         */
+
         // Usamos mapToDouble en vez de mapToFloat
         return (float) proyectos.stream()
                 .mapToDouble(Proyecto::getHoras)  // Aquí mapeamos las horas como double

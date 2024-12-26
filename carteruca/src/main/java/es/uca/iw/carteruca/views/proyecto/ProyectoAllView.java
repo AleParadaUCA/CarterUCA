@@ -5,6 +5,7 @@ import com.vaadin.flow.component.accordion.Accordion;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.progressbar.ProgressBar;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
@@ -58,42 +59,51 @@ public class ProyectoAllView extends Composite<VerticalLayout> {
             proyectosLayout.setSpacing(true);
             proyectosLayout.setPadding(false);
 
-            // Obtener proyectos finalizados para la cartera actual
-            List<Proyecto> proyectosList = proyectoService.getProyectosFinalizadosPorCartera(cartera.getId());
+            // Obtener proyectos finalizados con todos los campos completos para la cartera actual
+            List<Proyecto> listaDeProyectos = proyectoService.getProyectosFinalizadosPorCartera(cartera.getId());
 
-            if (proyectosList.isEmpty()) {
-                proyectosLayout.add(new Span("No hay proyectos finalizados para esta cartera."));
+            if (listaDeProyectos.isEmpty()) {
+                proyectosLayout.add(new Span("No hay proyectos para esta cartera."));
             } else {
                 // Crear un Grid para mostrar los proyectos
                 Grid<Proyecto> proyect = new Grid<>(Proyecto.class, false);
 
-                // Columnas del Grid
+                // Columna de nombre del proyecto
                 proyect.addColumn(proyecto -> proyecto.getSolicitud().getNombre())
-                             .setHeader("Nombre del Proyecto");
+                        .setHeader("Nombre del Proyecto");
 
-                proyect.addComponentColumn(proyecto -> common.createBadgeForEstado(proyecto.getSolicitud().getEstado()))
-                             .setHeader("Estado");
+                // Columna de director
+                proyect.addColumn(Proyecto::getDirector_de_proyecto)
+                        .setHeader("Director");
+
+                // Columna de jefe
+                proyect.addColumn(proyecto -> {
+                    // Si tienes un atributo nombre en Usuario, puedes ajustarlo aquí
+                    return proyecto.getJefe() != null ? proyecto.getJefe().getNombre() : "No asignado";
+                }).setHeader("Jefe");
+
+                // Columna de horas con Badge
+                proyect.addComponentColumn(proyecto -> {
+                    Span badge = new Span(String.valueOf(proyecto.getHoras()));
+                    badge.getElement().getStyle().set("font-size", "var(--lumo-font-size-m)"); // Tamaño de fuente más pequeño
+                    badge.getElement().getStyle().set("background-color", "#009688");
+                    badge.getElement().getStyle().set("color", "white");
+                    badge.getElement().getStyle().set("border-radius", "12px"); // Radio de borde más pequeño
+                    badge.getElement().getStyle().set("padding", "2px 6px"); // Padding más pequeño
+                    return badge;
+                }).setHeader("Horas");
 
 
-                proyect.addColumn(Proyecto::getEspecificacion_tecnica)
-                                .setHeader("Especificacion");
-                                
-
-                proyect.addColumn(Proyecto::getPresupuesto)
-                             .setHeader("Presupuesto (€)");
-
-
-
-                proyect.addColumn(Proyecto::getHoras)
-                        .setHeader("Horas");
-
-                proyect.addColumn(Proyecto::getPorcentaje)
-                        .setHeader("Porcentaje");
-
-
+                // Columna de progreso con ProgressBar
+                proyect.addComponentColumn(proyecto -> {
+                    ProgressBar progressBar = new ProgressBar();
+                    progressBar.setValue(proyecto.getPorcentaje() / 100f); // Convertir el porcentaje a valor entre 0 y 1
+                    progressBar.setWidth("100%");
+                    return progressBar;
+                }).setHeader("Progreso");
 
                 // Asignar los proyectos al Grid
-                proyect.setItems(proyectosList);
+                proyect.setItems(listaDeProyectos);
 
                 // Añadir el Grid al layout de proyectos
                 proyectosLayout.add(proyect);
@@ -103,9 +113,6 @@ public class ProyectoAllView extends Composite<VerticalLayout> {
             carteras.add(cartera.getNombre(), proyectosLayout);
         }
     }
-
-
-
 
 }
 
