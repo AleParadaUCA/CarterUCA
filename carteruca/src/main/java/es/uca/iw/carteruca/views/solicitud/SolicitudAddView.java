@@ -294,7 +294,7 @@ public class SolicitudAddView extends Composite<VerticalLayout> {
 
     private void guardar(){
 
-        solicitudService.guardar(
+        solicitudService.crearSolicitud(
                 titulo.getValue(),
                 nombre.getValue(),
                 fecha_puesta.getValue().atStartOfDay(),

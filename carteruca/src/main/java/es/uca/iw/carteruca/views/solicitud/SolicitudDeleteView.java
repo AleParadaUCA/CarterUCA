@@ -90,10 +90,7 @@ public class SolicitudDeleteView extends Composite<VerticalLayout> {
         Button Btnsi = new Button("Sí", event -> {
             try {
                 // Cambiar el estado de la solicitud a CANCELADO
-                solicitud.setEstado(Estado.CANCELADO);
-
-                // Llamar al servicio para actualizar la solicitud
-                solicitudService.updateSolicitud(solicitud, Rol.Solicitante, false);
+                solicitudService.CancelarSolicitud(solicitud);
 
                 // Mostrar notificación de éxito
                 common.showSuccessNotification("Solicitud cancelada correctamente.");

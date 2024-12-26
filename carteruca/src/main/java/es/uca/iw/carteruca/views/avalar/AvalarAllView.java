@@ -227,9 +227,7 @@ public class AvalarAllView extends Composite<VerticalLayout> {
                 importanciaField.setInvalid(true);
                 importanciaField.setErrorMessage("La importancia debe estar entre 1 y 10");
             } else {
-                solicitud.setEstado(Estado.EN_TRAMITE_AVALADO);
-                solicitud.setImportancia_promotor(importanciaField.getValue());
-                solicitudService.updateSolicitud(solicitud, Rol.Promotor, true);
+                solicitudService.AvalarSolicitud(solicitud, importanciaField.getValue());
                 dialog.close();
                 common.showSuccessNotification("Solicitud avalada correctamente");
                 refrescarTabla();
@@ -238,8 +236,7 @@ public class AvalarAllView extends Composite<VerticalLayout> {
         btnSi.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
         Button btnNo = new Button("No", e -> {
-            solicitud.setEstado(Estado.RECHAZADO);
-            solicitudService.updateSolicitud(solicitud, Rol.Promotor, false);
+            solicitudService.AvalarSolicitud(solicitud, null);
             dialog.close();
             common.showSuccessNotification("Solicitud cancelada");
             refrescarTabla();

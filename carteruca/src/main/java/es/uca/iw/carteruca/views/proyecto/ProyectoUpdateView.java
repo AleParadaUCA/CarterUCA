@@ -30,9 +30,8 @@ import java.util.List;
 public class ProyectoUpdateView extends Composite<VerticalLayout> {
 
     private final ProyectoService proyectoService;
-    private final AuthenticatedUser authenticatedUser;
     private final SolicitudService solicitudService;
-    private Usuario currentUser;
+    private final Usuario currentUser;
 
     private final Grid<Proyecto> proyecto_tabla = new Grid<>(Proyecto.class);
     private NumberField porcentaje = new NumberField();
@@ -41,7 +40,6 @@ public class ProyectoUpdateView extends Composite<VerticalLayout> {
                               SolicitudService solicitudService) {
         this.proyectoService = proyectoService;
         this.solicitudService = solicitudService;
-        this.authenticatedUser = authenticatedUser;
         this.currentUser = authenticatedUser.get().get();
 
         common.creartitulo("Actualizar Proyecto",this);
@@ -100,7 +98,6 @@ public class ProyectoUpdateView extends Composite<VerticalLayout> {
             }
         });
 
-
         formLayout.add(porcentaje);
 
         Button guardar = new Button("Guardar", event -> {
@@ -108,10 +105,9 @@ public class ProyectoUpdateView extends Composite<VerticalLayout> {
                 // Validar que el porcentaje esté dentro del rango especificado
                 if (porcentaje.getValue() != null && porcentaje.getValue() >= proyecto.getPorcentaje() && porcentaje.getValue() <= 100) {
 
-                    if (porcentaje.getValue() == 100) {
+                    if (porcentaje.getValue() == 100) { //IMPORTANTE no tengo claro esto
                         Solicitud solicitud = proyecto.getSolicitud();
-                        solicitud.setEstado(Estado.TERMINADO);
-                        solicitudService.updateSolicitud(solicitud, Rol.OTP,true);
+                        solicitudService.TerminarSolicitud(solicitud);
                     }
                     
                     proyecto.setPorcentaje(porcentaje.getValue().floatValue());

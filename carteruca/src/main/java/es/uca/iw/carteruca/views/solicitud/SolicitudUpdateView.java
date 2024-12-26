@@ -232,19 +232,17 @@ public class SolicitudUpdateView extends Composite<VerticalLayout> {
 
         Button save = new Button("Guardar", event -> {
             try {
+                solicitud.setTitulo(titulo.getValue());
+                solicitud.setNombre(nombre.getValue());
+                solicitud.setFecha_solicitud(fecha_puesta.getValue().atStartOfDay());
+                solicitud.setInteresados(interesados.getValue());
+                solicitud.setAlineamiento(objetivos.getValue());
+                solicitud.setAlcance(alcance.getValue());
+                solicitud.setNormativa(normativa.getValue());
+                solicitud.setAvalador(avaladores.getValue());
+
                 // Llamar al servicio para actualizar la solicitud
-                solicitudService.update_solicitud(
-                        solicitud.getId(),
-                        titulo.getValue(),
-                        nombre.getValue(),
-                        fecha_puesta.getValue().atStartOfDay(),
-                        interesados.getValue(),
-                        objetivos.getValue(),
-                        alcance.getValue(),
-                        normativa.getValue(),
-                        avaladores.getValue(),
-                        buffer
-                );
+                solicitudService.updateSolicitud( solicitud,buffer);
 
                 updateGrid();
                 // Cerrar el diálogo y refrescar la tabla de solicitudes

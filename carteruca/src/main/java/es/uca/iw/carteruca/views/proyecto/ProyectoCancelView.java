@@ -91,11 +91,10 @@ public class ProyectoCancelView extends Composite<VerticalLayout> {
             try {
                 Solicitud solicitud = proyecto.getSolicitud();
 
-                solicitud.setEstado(Estado.RECHAZADO);
-                solicitudService.updateSolicitud(solicitud, Rol.CIO,true);
+                solicitudService.ResolucionSolicitud(solicitud,false);
 
-                // Guardar los cambios en el proyecto
-                proyectoService.update(proyecto);
+//                // Guardar los cambios en el proyecto
+//                proyectoService.update(proyecto);   //este update no hace nada pq no cambia nada, ¿no?
 
                 // Mostrar notificación de éxito
                 common.showSuccessNotification("Proyecto cancelado correctamente");

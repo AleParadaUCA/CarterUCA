@@ -89,8 +89,7 @@ public class SolicitudChangeView extends Composite<VerticalLayout> {
         Button BtnSi = new Button("Si", event -> {
             try {
                 // Cambiar el estado de la solicitud
-                solicitud.setEstado(Estado.ACEPTADO);
-                solicitudService.updateSolicitud(solicitud, Rol.CIO, true);
+                solicitudService.ResolucionSolicitud(solicitud, true);
 
                 // Crear el proyecto asociado a la solicitud
                 proyectoService.guardarProyecto(solicitud);
@@ -114,8 +113,7 @@ public class SolicitudChangeView extends Composite<VerticalLayout> {
         Button BtnNo = new Button("No", click -> {
             try {
                 // Cambiar el estado de la solicitud a RECHAZADO
-                solicitud.setEstado(Estado.RECHAZADO);
-                solicitudService.updateSolicitud(solicitud, Rol.CIO, false);
+                solicitudService.ResolucionSolicitud(solicitud, false);
 
                 // Mostrar una notificación de rechazo
                 common.showSuccessNotification("Solicitud rechazada correctamente.");
