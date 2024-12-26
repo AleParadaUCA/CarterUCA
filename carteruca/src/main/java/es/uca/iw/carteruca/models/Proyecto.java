@@ -23,16 +23,16 @@ public class Proyecto {
     private Solicitud solicitud;
 
     @Column
-    private String presupuesto; // es un documento especificando la financiacion aportada
+    private String presupuesto; // es un documento especificando la financiación aportada
 
     @Column
-    private String especificacion_tecnica;// es un documento con las especificaciones tecnologicas
+    private String especificacion_tecnica;// es un documento con las especificaciones tecnológicas
 
     @Column
     private Float puntuacionTotal; // este se debe calcular mediante los criterios
 
     @Column
-    private Float porcentaje; // este campo mostrará el porcentaje de avance del proyecto que este en marcha.
+    private Float porcentaje; // este campo mostrará el porcentaje de avance del proyecto que esté en marcha.
 
     @Column
     private Float horas;
