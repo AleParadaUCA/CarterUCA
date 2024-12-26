@@ -59,8 +59,7 @@ public class ProyectoService {
         repository.save(proyecto);
     }
 
-    public void update(Proyecto proyecto) {
-
+    public void cambiarPorcentaje(Proyecto proyecto) {
         repository.save(proyecto);
     }
 

@@ -111,7 +111,7 @@ public class ProyectoUpdateView extends Composite<VerticalLayout> {
                     }
                     
                     proyecto.setPorcentaje(porcentaje.getValue().floatValue());
-                    proyectoService.update(proyecto);
+                    proyectoService.cambiarPorcentaje(proyecto);
                     common.showSuccessNotification("Porcentaje Actualizado");
                     actualizarTabla();
                     dialog.close();
