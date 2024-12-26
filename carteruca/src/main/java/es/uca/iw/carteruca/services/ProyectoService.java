@@ -98,7 +98,14 @@ public class ProyectoService {
         proyecto.setPuntuacionTotal(puntuacionTotal);
         proyecto.setPuntuaciones(puntuaciones.toString()); // Guardar puntuaciones como cadena JSON o similar
 
-        repository.save(proyecto); // Persistir en la base de datos
+        String subject = "Proyecto Puntuado";
+        String body = "Hola " + proyecto.getSolicitud().getSolicitante().getNombre() + ",\n\n" +
+                "Le comunicamos que el proyecto con título "+
+                proyecto.getSolicitud().getTitulo() +
+                " ha sido puntuado por el CIO.\n\nSaludos,\nEl equipo de Carteruca.";
+
+        repository.save(proyecto);
+        emailService.enviarCorreo(proyecto.getSolicitud().getSolicitante().getEmail(),subject, body);
     }
 
     public List<Proyecto> getProyectosFinalizadosPorCartera(Long carteraId) {
@@ -167,7 +174,7 @@ public class ProyectoService {
                 .filter(proyecto -> proyecto.getSolicitud() != null)
                 // Filtra proyectos donde presupuesto no sea nulo ni vacío
                 .filter(proyecto -> proyecto.getPresupuesto() != null && !proyecto.getPresupuesto().isEmpty())
-                // Filtra proyectos donde especificacion_tecnica no sea nula ni vacía
+                // Filtra proyectos donde especificación_técnica no sea nula ni vacía
                 .filter(proyecto -> proyecto.getEspecificacion_tecnica() != null && !proyecto.getEspecificacion_tecnica().isEmpty())
                 // Filtra proyectos donde porcentaje no sea nulo
                 .filter(proyecto -> proyecto.getPorcentaje() != null)
