@@ -42,13 +42,17 @@ public class ProyectoService {
     public List<Proyecto> getProyectosFinalizadosPorCartera(Long carteraId) {
         List<Estado> estadosPermitidos = List.of(Estado.ACEPTADO, Estado.TERMINADO);
         return repository.findBySolicitud_Cartera_IdAndSolicitud_EstadoIn(carteraId, estadosPermitidos).stream()
-                .filter(proyecto -> proyecto.getHoras() > 0.0f)
-                .filter(proyecto -> proyecto.getPresupuesto() != null && !proyecto.getPresupuesto().isEmpty())
-                .filter(proyecto -> proyecto.getPorcentaje() > 0.0f)
-                .filter(proyecto -> proyecto.getEspecificacion_tecnica() != null && !proyecto.getEspecificacion_tecnica().isEmpty())
-                .filter(proyecto -> proyecto.getPuntuacionTotal() > 0.0f)
+                // Filtrar proyectos donde todos los campos necesarios están completos
+                .filter(proyecto -> proyecto.getHoras() > 0.0f)  // Verifica que las horas estén completas
+                .filter(proyecto -> proyecto.getPresupuesto() != null && !proyecto.getPresupuesto().isEmpty())  // Verifica que el presupuesto no esté vacío
+                .filter(proyecto -> proyecto.getPorcentaje() >= 0.0f)  // Verifica que el porcentaje esté completo
+                .filter(proyecto -> proyecto.getEspecificacion_tecnica() != null && !proyecto.getEspecificacion_tecnica().isEmpty())  // Verifica la especificación técnica
+                .filter(proyecto -> proyecto.getPuntuacionTotal() > 0.0f)  // Verifica que la puntuación total esté completa
+                .filter(proyecto -> proyecto.getDirector_de_proyecto() != null && !proyecto.getDirector_de_proyecto().isEmpty())  // Verifica que el director esté asignado
+                .filter(proyecto -> proyecto.getJefe() != null)  // Verifica que el jefe esté asignado
                 .collect(Collectors.toList());
     }
+
 
     public List<Proyecto> getProyectosSinConfigurar() {
         // Obtenemos todos los proyectos de la base de datos
