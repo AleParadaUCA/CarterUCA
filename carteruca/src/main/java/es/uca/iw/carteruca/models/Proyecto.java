@@ -6,8 +6,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -24,6 +24,9 @@ public class Proyecto {
 
     @Column
     private String presupuesto; // es un documento especificando la financiación aportada
+
+    @Column
+    private Float presupuesto_valor; // presupuesto en número para mostrarlo si procede
 
     @Column
     private String especificacion_tecnica;// es un documento con las especificaciones tecnológicas
@@ -75,4 +78,9 @@ public class Proyecto {
 
     public String getDirector_de_proyecto() {return director_de_proyecto;}
     public void setDirector_de_proyecto(String director_de_proyecto) {this.director_de_proyecto = director_de_proyecto;}
+
+    public Float getPresupuesto_valor() {
+        return presupuesto_valor;
+    }
+    public void setPresupuesto_valor( float presupuesto) { this.presupuesto_valor = presupuesto; }
 }

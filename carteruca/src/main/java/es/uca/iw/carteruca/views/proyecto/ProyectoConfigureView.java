@@ -15,7 +15,6 @@ import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.shared.Tooltip;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.upload.Upload;
@@ -43,13 +42,13 @@ public class ProyectoConfigureView extends Composite<VerticalLayout> {
     private final ComboBox<Usuario> otp = new ComboBox<>();
     private final TextField director = new TextField();
     private final NumberField n_horasField = new NumberField();
+    private final NumberField presupuesto_valorField = new NumberField();
     private final Grid<Proyecto> proyectos_tabla = new Grid<>(Proyecto.class);
 
     private final MultiFileMemoryBuffer especificacionBuffer = new MultiFileMemoryBuffer();
     private final Upload especificacionUpload = new Upload(especificacionBuffer);
     private final MultiFileMemoryBuffer presupuestoBuffer = new MultiFileMemoryBuffer();
     private final Upload presupuestoUpload = new Upload(presupuestoBuffer);
-
 
     @Autowired
     public ProyectoConfigureView(ProyectoService proyectoService,
@@ -58,12 +57,11 @@ public class ProyectoConfigureView extends Composite<VerticalLayout> {
         this.proyectoService = proyectoService;
         this.usuarioService = usuarioService;
 
-        common.creartitulo("Configurar Proyectos",this);
+        common.creartitulo("Configurar Proyectos", this);
 
         crearTabla();
 
         getContent().add(common.boton_dinamico(authenticatedUser.get().get()));
-
     }
 
     private void crearTabla() {
@@ -105,13 +103,6 @@ public class ProyectoConfigureView extends Composite<VerticalLayout> {
         director.getElement().setAttribute("aria-label", "Director del Proyecto");
         director.setTooltipText("Director que debe dirigir el proyecto");
 
-        Button director_toggleTooltip = new Button("Mostrar/Ocultar Tooltip");
-        director_toggleTooltip.addClickListener(event -> {
-            Tooltip directorTooltip = director.getTooltip();
-            if (directorTooltip != null) {
-                directorTooltip.setOpened(!directorTooltip.isOpened());
-            }
-        });
         director.setRequiredIndicatorVisible(true);
 
         otp.setLabel("Jefe de Proyecto");
@@ -121,10 +112,9 @@ public class ProyectoConfigureView extends Composite<VerticalLayout> {
         otp.setItemLabelGenerator(Usuario::getNombre);
         otp.setRequiredIndicatorVisible(true);
 
-
-
         // Se obtiene el total de horas usadas en la cartera
         float totalHorasCartera = proyectoService.sumarHorasByCarteraAndEstado(proyecto.getSolicitud().getCartera().getId());
+        float totalPresupuestoCartera = proyectoService.sumarPresupuestoByCartera(proyecto.getSolicitud().getCartera().getId());
 
         // Definimos los campos para las horas, validando el máximo permitido
         n_horasField.setLabel("Número de Horas");
@@ -133,14 +123,16 @@ public class ProyectoConfigureView extends Composite<VerticalLayout> {
         n_horasField.setMax(horasMaximas - totalHorasCartera);  // El máximo de horas será lo que queda disponible en la cartera
         n_horasField.getElement().setAttribute("aria-label", "Numero de Horas");
         n_horasField.setTooltipText("Número de Horas disponibles para este proyecto");
-        Button n_horas_toggleTooltip = new Button("Mostrar/Ocultar Tooltip");
-        n_horas_toggleTooltip.addClickListener(event -> {
-            Tooltip n_horasTooltip = n_horasField.getTooltip();
-            if (n_horasTooltip != null) {
-                n_horasTooltip.setOpened(!n_horasTooltip.isOpened());
-            }
-        });
         n_horasField.setRequiredIndicatorVisible(true);
+
+        // Configuración del campo presupuesto_valor
+        presupuesto_valorField.setLabel("Presupuesto Valor");
+        presupuesto_valorField.setMin(0.0);
+        float presupuestoMaximo = proyecto.getSolicitud().getCartera().getPresupuesto_total();
+        presupuesto_valorField.setMax(presupuestoMaximo - totalPresupuestoCartera);
+        presupuesto_valorField.getElement().setAttribute("aria-label", "Presupuesto Valor");
+        presupuesto_valorField.setTooltipText("Este campo va en relación al PDF de presupuesto");
+        presupuesto_valorField.setRequiredIndicatorVisible(true);
 
         // Configurar los componentes de subida de archivos
         Span especificacion = new Span("Especificación Técnica (20MB)");
@@ -173,9 +165,12 @@ public class ProyectoConfigureView extends Composite<VerticalLayout> {
         // Configuramos el botón de "Guardar" para verificar las horas
         Button guardarButton = new Button("Guardar", event -> {
             float horasNuevas = n_horasField.getValue().floatValue();
+            float presupuestoValor = presupuesto_valorField.getValue().floatValue();
             // Si las horas ingresadas exceden el límite, mostramos un mensaje de error
             if (totalHorasCartera + horasNuevas > horasMaximas) {
                 common.showErrorNotification("El número de horas excede el límite permitido en la cartera.");
+            } else if (totalPresupuestoCartera + presupuestoValor > horasMaximas) {
+                common.showErrorNotification("El Presupuesto excede el límite de la cartera.");
             } else {
                 try {
                     // Si la validación es exitosa, asignamos los valores al proyecto
@@ -188,6 +183,7 @@ public class ProyectoConfigureView extends Composite<VerticalLayout> {
 
                     // Asignamos las horas al proyecto
                     proyecto.setHoras(horasNuevas);
+                    proyecto.setPresupuesto_valor(presupuestoValor);
 
                     // Llamamos al servicio para actualizar el proyecto
                     proyectoService.changeProyecto(proyecto, presupuestoBuffer, especificacionBuffer);
@@ -217,7 +213,7 @@ public class ProyectoConfigureView extends Composite<VerticalLayout> {
         boton.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
         boton.setAlignItems(FlexComponent.Alignment.END);
 
-        formulario.add(director, otp, n_horasField, especificacion, especificacionUpload, presupuesto, presupuestoUpload);
+        formulario.add(director, otp, n_horasField, presupuesto_valorField, especificacion, especificacionUpload, presupuesto, presupuestoUpload);
 
         formulario.setColspan(director,1);
         formulario.setColspan(otp,1);
