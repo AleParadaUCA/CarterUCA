@@ -142,9 +142,6 @@ public class CarteraService {
         return updatedCartera;
     }
 
-
-
-
     //Eliminar un centro
     public void deleteCartera(Long id) {
         Optional<Cartera> cartera = carteraRepository.findById(id);
