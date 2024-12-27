@@ -123,6 +123,7 @@ public class ProyectoService {
                 .filter(proyecto -> proyecto.getPuntuacionTotal() != null && proyecto.getPuntuacionTotal() > 0.0f)  // Verifica que la puntuación total esté completa y no sea nula
                 .filter(proyecto -> proyecto.getDirector_de_proyecto() != null && !proyecto.getDirector_de_proyecto().isEmpty())  // Verifica que el director esté asignado
                 .filter(proyecto -> proyecto.getJefe() != null)  // Verifica que el jefe esté asignado
+                .filter(proyecto -> proyecto.getPresupuesto_valor() != null && proyecto.getPresupuesto_valor() > 0.0f)
                 .collect(Collectors.toList());
     }
 
@@ -145,6 +146,7 @@ public class ProyectoService {
                 // Filtra proyectos donde el jefe es nulo
                 .filter(proyecto -> proyecto.getJefe() == null)
                 .filter(proyecto -> proyecto.getSolicitud().getEstado() == Estado.ACEPTADO)
+                .filter(proyecto -> proyecto.getPresupuesto_valor() != null && proyecto.getPresupuesto_valor() > 0.0f)
                 .collect(Collectors.toList());
     }
 
@@ -201,6 +203,7 @@ public class ProyectoService {
                 .filter(proyecto -> proyecto.getDirector_de_proyecto() != null && !proyecto.getDirector_de_proyecto().isEmpty())
                 // Filtra proyectos donde jefe no sea nulo
                 .filter(proyecto -> proyecto.getJefe() != null)
+                .filter(proyecto -> proyecto.getPresupuesto_valor() != null && proyecto.getPresupuesto_valor() > 0.0f)
                 // Recoge los proyectos que cumplen todos los criterios
                 .collect(Collectors.toList());
     }
