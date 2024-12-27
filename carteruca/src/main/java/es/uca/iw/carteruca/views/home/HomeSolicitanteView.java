@@ -55,26 +55,6 @@ public class HomeSolicitanteView extends Composite<VerticalLayout>{
             getContent().add(proyectos);
         }
 
-        /*
-        if (userRol == Rol.CIO) {
-
-            Div aceptacion_a_proyectosproyectos = common.createSquare("Aceptación a Proyectos", VaadinIcon.CHECK_CIRCLE);
-            aceptacion_a_proyectosproyectos.getElement().setAttribute("aria-label", "Proyectos");
-            aceptacion_a_proyectosproyectos.addClickListener(event -> UI.getCurrent().navigate(SolicitudChangeView.class));
-            getContent().add(aceptacion_a_proyectosproyectos);
-
-        }
-
-        if (userRol == Rol.OTP) {
-
-            Div proyectos = common.createSquare("Proyectos", VaadinIcon.COG);
-            proyectos.getElement().setAttribute("aria-label", "Proyectos");
-            proyectos.addClickListener(event -> UI.getCurrent().navigate(ProyectoConfigureView.class));
-            getContent().add(proyectos);
-            
-        }
-
-         */
 
     }
 
