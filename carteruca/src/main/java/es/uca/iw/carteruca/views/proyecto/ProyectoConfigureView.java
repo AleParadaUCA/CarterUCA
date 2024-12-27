@@ -2,6 +2,7 @@ package es.uca.iw.carteruca.views.proyecto;
 
 import java.util.List;
 
+import com.vaadin.flow.component.shared.Tooltip;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.vaadin.flow.component.Composite;
@@ -103,6 +104,14 @@ public class ProyectoConfigureView extends Composite<VerticalLayout> {
         director.getElement().setAttribute("aria-label", "Director del Proyecto");
         director.setTooltipText("Director que debe dirigir el proyecto");
 
+        Button director_toggleTooltip = new Button("Mostrar/Ocultar Tooltip");
+        director_toggleTooltip.addClickListener(event -> {
+            Tooltip directorTooltip = director.getTooltip();
+            if (directorTooltip != null) {
+                directorTooltip.setOpened(!directorTooltip.isOpened());
+            }
+        });
+
         director.setRequiredIndicatorVisible(true);
 
         otp.setLabel("Jefe de Proyecto");
@@ -125,6 +134,14 @@ public class ProyectoConfigureView extends Composite<VerticalLayout> {
         n_horasField.setTooltipText("Número de Horas disponibles para este proyecto");
         n_horasField.setRequiredIndicatorVisible(true);
 
+        Button n_horas_toggleTooltip = new Button("Mostrar/Ocultar Tooltip");
+        n_horas_toggleTooltip.addClickListener(event -> {
+            Tooltip n_horasTooltip = n_horasField.getTooltip();
+            if (n_horasTooltip != null) {
+                n_horasTooltip.setOpened(!n_horasTooltip.isOpened());
+            }
+        });
+
         // Configuración del campo presupuesto_valor
         presupuesto_valorField.setLabel("Presupuesto Valor");
         presupuesto_valorField.setMin(0.0);
@@ -133,6 +150,14 @@ public class ProyectoConfigureView extends Composite<VerticalLayout> {
         presupuesto_valorField.getElement().setAttribute("aria-label", "Presupuesto Valor");
         presupuesto_valorField.setTooltipText("Este campo va en relación al PDF de presupuesto");
         presupuesto_valorField.setRequiredIndicatorVisible(true);
+
+        Button presupuesto_toggleTooltip = new Button("Mostrar/Ocultar Tooltip");
+        presupuesto_toggleTooltip.addClickListener(event -> {
+            Tooltip presupuesto_Tooltip = n_horasField.getTooltip();
+            if (presupuesto_Tooltip != null) {
+                presupuesto_Tooltip.setOpened(!presupuesto_Tooltip.isOpened());
+            }
+        });
 
         // Configurar los componentes de subida de archivos
         Span especificacion = new Span("Especificación Técnica (20MB)");
