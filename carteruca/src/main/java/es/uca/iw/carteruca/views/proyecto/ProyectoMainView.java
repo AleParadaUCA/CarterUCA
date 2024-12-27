@@ -14,7 +14,6 @@ import es.uca.iw.carteruca.views.common.common;
 import es.uca.iw.carteruca.views.layout.MainLayout;
 import es.uca.iw.carteruca.views.solicitud.SolicitudChangeView;
 import jakarta.annotation.security.RolesAllowed;
-import org.springframework.beans.factory.annotation.Autowired;
 
 @PageTitle("Proyectos")
 @Route(value = "/proyecto", layout = MainLayout.class)
@@ -27,6 +26,11 @@ public class ProyectoMainView extends Composite<VerticalLayout> {
         currentUser = authenticatedUser.get().get();
 
         common.creartitulo("Proyectos",this);
+
+        Div consultar = common.createSquare("Consultar Proyectos",VaadinIcon.SEARCH);
+        consultar.getElement().setAttribute("aria-label", "Consultar Proyectos");
+        consultar.addClickListener(event -> UI.getCurrent().navigate(ProyectoConsultarView.class));
+        getContent().add(consultar);
 
         if(currentUser.getRol() == Rol.CIO){
 
