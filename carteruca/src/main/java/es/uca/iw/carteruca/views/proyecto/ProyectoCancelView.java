@@ -1,5 +1,9 @@
 package es.uca.iw.carteruca.views.proyecto;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -13,18 +17,14 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import es.uca.iw.carteruca.models.Estado;
+
 import es.uca.iw.carteruca.models.Proyecto;
-import es.uca.iw.carteruca.models.Rol;
 import es.uca.iw.carteruca.models.Solicitud;
 import es.uca.iw.carteruca.services.ProyectoService;
 import es.uca.iw.carteruca.services.SolicitudService;
 import es.uca.iw.carteruca.views.common.common;
 import es.uca.iw.carteruca.views.layout.MainLayout;
 import jakarta.annotation.security.RolesAllowed;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.List;
 
 @PageTitle("Cancelar Proyectos")
 @Route(value = "proyectos/cancelar-proyectos", layout = MainLayout.class)
@@ -48,8 +48,6 @@ public class ProyectoCancelView extends Composite<VerticalLayout> {
         crearTabla();
 
         getContent().add(common.botones_proyecto());
-
-
         
     }
 

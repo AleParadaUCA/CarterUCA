@@ -1,5 +1,10 @@
 package es.uca.iw.carteruca.views.proyecto;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -11,20 +16,16 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+
 import es.uca.iw.carteruca.models.Criterio;
 import es.uca.iw.carteruca.models.Proyecto;
 import es.uca.iw.carteruca.models.Usuario;
 import es.uca.iw.carteruca.security.AuthenticatedUser;
 import es.uca.iw.carteruca.services.CriterioService;
 import es.uca.iw.carteruca.services.ProyectoService;
-import es.uca.iw.carteruca.services.UsuarioService;
 import es.uca.iw.carteruca.views.common.common;
 import es.uca.iw.carteruca.views.layout.MainLayout;
 import jakarta.annotation.security.RolesAllowed;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @PageTitle("Puntuar Proyectos")
 @Route(value = "/proyectos/puntuar", layout = MainLayout.class)
@@ -33,8 +34,7 @@ public class ProyectoPuntuarView extends Composite<VerticalLayout> {
 
     private final CriterioService criterioService;
     private final ProyectoService proyectoService;
-    private final AuthenticatedUser authenticatedUser;
-    private Usuario currentUser;
+    private final Usuario currentUser;
 
     private final Grid<Criterio> criterio_tabla = new Grid<>(Criterio.class);
     private final Grid<Proyecto> proyecto_tabla = new Grid<>(Proyecto.class);
@@ -45,7 +45,6 @@ public class ProyectoPuntuarView extends Composite<VerticalLayout> {
                                AuthenticatedUser authenticatedUser) {
         this.criterioService = criterioService;
         this.proyectoService = proyectoService;
-        this.authenticatedUser = authenticatedUser;
         this.currentUser = authenticatedUser.get().get();
 
         common.creartitulo("Puntuar Proyectos", this);
