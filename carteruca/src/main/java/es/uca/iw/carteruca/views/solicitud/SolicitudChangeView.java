@@ -46,7 +46,7 @@ public class SolicitudChangeView extends Composite<VerticalLayout> {
 
         common.creartitulo("Aceptación a Proyectos",this);
         crearTabla();
-        getContent().add(common.boton_dinamico(currentUser));
+        getContent().add(common.botones_proyecto());
 
     }
 
