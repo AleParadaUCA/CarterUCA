@@ -1,34 +1,23 @@
 package es.uca.iw.carteruca.views.solicitud;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.vaadin.flow.component.Composite;
-import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.Span;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
-import es.uca.iw.carteruca.models.Estado;
 import es.uca.iw.carteruca.models.Solicitud;
 import es.uca.iw.carteruca.models.Usuario;
 import es.uca.iw.carteruca.security.AuthenticatedUser;
 import es.uca.iw.carteruca.services.SolicitudService;
 import es.uca.iw.carteruca.views.common.common;
-import es.uca.iw.carteruca.services.CommonService;
 import es.uca.iw.carteruca.views.layout.MainLayout;
 import jakarta.annotation.security.RolesAllowed;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.List;
-
-import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.html.Anchor;
 
 @PageTitle("Ver Solicitudes")
 @Route(value = "/solicitudes/all-solicitudes", layout = MainLayout.class)
@@ -36,7 +25,6 @@ import com.vaadin.flow.component.html.Anchor;
 public class SolicitudSeeView extends Composite<VerticalLayout> {
 
     private final SolicitudService solicitudService;
-    private final AuthenticatedUser authenticatedUser;
     private final Usuario usuario;
 
     private final Grid<Solicitud> solicitudes = new Grid<>(Solicitud.class, false);
@@ -44,7 +32,6 @@ public class SolicitudSeeView extends Composite<VerticalLayout> {
     @Autowired
     public SolicitudSeeView(SolicitudService solicitudService, AuthenticatedUser authenticatedUser) {
         this.solicitudService = solicitudService;
-        this.authenticatedUser = authenticatedUser;
         this.usuario = authenticatedUser.get().get();
 
         common.creartitulo("Ver Solicitudes",this);

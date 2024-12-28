@@ -1,8 +1,12 @@
 package es.uca.iw.carteruca.views.proyecto;
 
+import java.util.Arrays;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
@@ -17,6 +21,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+
 import es.uca.iw.carteruca.models.Criterio;
 import es.uca.iw.carteruca.models.Proyecto;
 import es.uca.iw.carteruca.services.CommonService;
@@ -25,10 +30,6 @@ import es.uca.iw.carteruca.services.ProyectoService;
 import es.uca.iw.carteruca.views.common.common;
 import es.uca.iw.carteruca.views.layout.MainLayout;
 import jakarta.annotation.security.RolesAllowed;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.Arrays;
-import java.util.List;
 
 @PageTitle("Consultar Proyectos")
 @Route(value = "/proyecto/consultar-proyectos", layout = MainLayout.class)
@@ -95,8 +96,6 @@ public class ProyectoConsultarView extends Composite<VerticalLayout> {
                     .set("color", "grey") // Color del texto
                     .set("margin-bottom", "8px"); // Espaciado inferior
 
-
-
             // ProgressBar para Porcentaje con Span
             Div progressBarContainer = new Div();
             //Span porcentajeSpan = new Span(proyecto.getPorcentaje() + "%");
@@ -119,7 +118,6 @@ public class ProyectoConsultarView extends Composite<VerticalLayout> {
             TextField jefeField = new TextField("Jefe del Proyecto");
             jefeField.setValue(proyecto.getJefe().getNombre());
             jefeField.setReadOnly(true);
-
 
             Button verCriteriosButton = new Button("Ver Criterios", event -> {
                 List<Criterio> criterios = criterioService.getAllCriterios();
@@ -157,11 +155,38 @@ public class ProyectoConsultarView extends Composite<VerticalLayout> {
                 criteriosDialog.setHeight("80%");
                 criteriosDialog.open();
             });
+
+            Span presupuestoSpan = new Span("Presupuesto");
+            presupuestoSpan.getElement().setAttribute("aria-label", "Adjunte la memoria del proyecto");
+            presupuestoSpan.getStyle()
+                    .set("font-size", "14px") // Tamaño de fuente
+                    .set("font-weight", "600") // Negrita
+                    .set("color", "grey") // Color del texto
+                    .set("margin-bottom", "8px"); // Espaciado inferior
+
+            String presupuestoPath = proyecto.getPresupuesto();
+            Anchor downloadPresupuestoAnchor = CommonService.descargarFile(presupuestoPath, "Descargar Presupuesto");
+
+            Span especificacionSpan = new Span("Especificacion");
+            especificacionSpan.getElement().setAttribute("aria-label", "Adjunte la memoria del proyecto");
+            especificacionSpan.getStyle()
+                    .set("font-size", "14px") // Tamaño de fuente
+                    .set("font-weight", "600") // Negrita
+                    .set("color", "grey") // Color del texto
+                    .set("margin-bottom", "8px"); // Espaciado inferior
+
+            String especificacionPath = proyecto.getEspecificacion_tecnica();
+            Anchor downloadEspecificacionAnchor = CommonService.descargarFile(especificacionPath, "Descargar Especificación Técnica");
+
             // Añadir los campos al formulario
-            formLayout.add(presupuestoValorField, puntuacionTotalField);
-            formLayout.add(horasField, directorField);
-            formLayout.add(jefeField);
-            formLayout.add(porcentaje);
+            formLayout.add(
+                presupuestoValorField, puntuacionTotalField, 
+                horasField, directorField, 
+                jefeField,  new Span(""),
+                porcentaje,
+                presupuestoSpan, especificacionSpan,
+                downloadPresupuestoAnchor,downloadEspecificacionAnchor);
+
 
             // Contenedor para el porcentaje
             Div porcentajeContainer = new Div();
