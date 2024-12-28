@@ -230,6 +230,8 @@ public class ProyectoService {
                 .filter(proyecto -> proyecto.getSolicitud().getEstado() == Estado.ACEPTADO || proyecto.getSolicitud().getEstado() == Estado.TERMINADO)
                 // Filtra proyectos donde el presupuesto_valor no sea nulo y mayor a 0
                 .filter(proyecto -> proyecto.getPresupuesto_valor() != null && proyecto.getPresupuesto_valor() > 0.0f)
+                .filter(proyecto -> proyecto.getPuntuacionTotal() != null && proyecto.getPuntuacionTotal() > 0.0f)
+                .filter(proyecto -> proyecto.getPuntuaciones() != null && !proyecto.getPuntuaciones().isEmpty())
                 // Recoge los proyectos que cumplen todos los criterios
                 .collect(Collectors.toList());
     }
@@ -248,6 +250,8 @@ public class ProyectoService {
                 .filter(proyecto -> proyecto.getJefe() != null)
                 .filter(proyecto -> proyecto.getDirector_de_proyecto() != null)
                 .filter(proyecto -> proyecto.getPorcentaje() >= 0.0f)
+                .filter(proyecto -> proyecto.getPuntuaciones() != null && !proyecto.getPuntuaciones().isEmpty())
+
                 .collect(Collectors.toList());
     }
 
