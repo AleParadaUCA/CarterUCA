@@ -21,9 +21,13 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
-
 import com.vaadin.flow.data.renderer.ComponentRenderer;
-import es.uca.iw.carteruca.models.*;
+
+import es.uca.iw.carteruca.models.Centro;
+import es.uca.iw.carteruca.models.Estado;
+import es.uca.iw.carteruca.models.Proyecto;
+import es.uca.iw.carteruca.models.Solicitud;
+import es.uca.iw.carteruca.models.Usuario;
 import es.uca.iw.carteruca.services.CentroService;
 import es.uca.iw.carteruca.services.CommonService;
 import es.uca.iw.carteruca.views.avalar.AvalarMainView;
@@ -300,7 +304,6 @@ public class common {
         });
     }
 
-
     public static ComponentRenderer<Div,Solicitud> createStaticDetailsRenderer() {
         return new ComponentRenderer<>(solicitud -> {
             FormLayout formLayout = new FormLayout();
@@ -466,12 +469,11 @@ public class common {
         });
     }
 
-    public static HorizontalLayout botones_proyecto(){
+    public static HorizontalLayout botones_proyecto() {
 
         HorizontalLayout botones = new HorizontalLayout();
         botones.setWidthFull();
         botones.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
-
 
         Button volver = new Button("Volver", event -> {
             // Redirigir al usuario a la vista HomeAdminView
@@ -483,7 +485,4 @@ public class common {
         botones.add(volver);
         return botones;
     }
-
-
-
 }

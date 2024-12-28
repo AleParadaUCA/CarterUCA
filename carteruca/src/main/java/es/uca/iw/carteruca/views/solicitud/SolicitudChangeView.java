@@ -31,8 +31,7 @@ public class SolicitudChangeView extends Composite<VerticalLayout> {
 
     private final SolicitudService solicitudService;
     private final ProyectoService proyectoService;
-    private final AuthenticatedUser authenticatedUser;
-    private Usuario currentUser;
+    private final Usuario currentUser;
 
     private final Grid<Solicitud> solicitud_tabla = new Grid<>(Solicitud.class);
 
@@ -41,7 +40,6 @@ public class SolicitudChangeView extends Composite<VerticalLayout> {
                                AuthenticatedUser authenticatedUser) {
         this.solicitudService = solicitudService;
         this.proyectoService = proyectoService;
-        this.authenticatedUser = authenticatedUser;
         this.currentUser = authenticatedUser.get().get();
 
         common.creartitulo("Aceptación a Proyectos",this);

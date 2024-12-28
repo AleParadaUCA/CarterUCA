@@ -36,3 +36,9 @@ html {
         gap: 20px;
     }
 }
+
+@media (max-height: 640px) {
+    .responsive-grid {
+        height: 50vh;
+    }
+}

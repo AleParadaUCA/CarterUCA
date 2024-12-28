@@ -1,5 +1,9 @@
 package es.uca.iw.carteruca.views.proyecto;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.accordion.Accordion;
 import com.vaadin.flow.component.button.Button;
@@ -8,13 +12,12 @@ import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.progressbar.ProgressBar;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
+
 import es.uca.iw.carteruca.models.Cartera;
 import es.uca.iw.carteruca.models.Proyecto;
 import es.uca.iw.carteruca.security.AuthenticatedUser;
@@ -22,9 +25,6 @@ import es.uca.iw.carteruca.services.CarteraService;
 import es.uca.iw.carteruca.services.ProyectoService;
 import es.uca.iw.carteruca.views.common.common;
 import es.uca.iw.carteruca.views.layout.MainLayout;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.List;
 
 @PageTitle("Proyectos")
 @Route(value = "/proyectos", layout = MainLayout.class)
@@ -73,6 +73,7 @@ public class ProyectoAllView extends Composite<VerticalLayout> {
             } else {
                 // Crear un Grid para mostrar los proyectos
                 Grid<Proyecto> proyect = new Grid<>(Proyecto.class, false);
+                proyect.addClassName("responsive-grid");
 
                 // Columna de nombre del proyecto con enlace a diálogo
                 proyect.addComponentColumn(proyecto -> {
