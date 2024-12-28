@@ -446,24 +446,27 @@ public class common {
                     .set("font-weight", "600") // Negrita
                     .set("color", "grey") // Color del texto
                     .set("margin-bottom", "8px"); // Espaciado inferior
-            formLayout.add(memoria);
+            formLayout.add(memoria,1);
             formLayout.setColspan(memoria, 2);
+
             // Botón para descargar el archivo de memoria
             String memoriaPath = proyecto.getSolicitud().getMemoria();
+            VerticalLayout descargar = new VerticalLayout();
             if (memoriaPath != null && !memoriaPath.isEmpty()) {
                 Anchor downloadAnchor = CommonService.descargarFile(memoriaPath, "Descargar Memoria");
-                formLayout.add(downloadAnchor);
-                formLayout.setColspan(downloadAnchor, 1);
+                descargar.add(downloadAnchor);
             } else {
-
                 Button descargarMemoriaButton = new Button("Descargar Memoria");
                 descargarMemoriaButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
                 descargarMemoriaButton.addClassName("disabled-button");
-                formLayout.add(descargarMemoriaButton);
                 descargarMemoriaButton.setEnabled(false);
-                formLayout.setColspan(descargarMemoriaButton, 1);
+                descargar.add(descargarMemoriaButton);
             }
+
+            formLayout.add(descargar);
             detailsLayout.add(formLayout);
+
+
 
             return detailsLayout;
         });
