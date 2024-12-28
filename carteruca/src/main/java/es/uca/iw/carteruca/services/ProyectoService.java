@@ -235,6 +235,21 @@ public class ProyectoService {
     }
 
 
+    public List<Proyecto> findAllByEstadoAndSolicitante(Usuario solicitante) {
+        return repository.findAllBySolicitudEstadoInAndSolicitudSolicitante(
+                        List.of(Estado.ACEPTADO, Estado.TERMINADO),
+                        solicitante)
+                .stream()
+                .filter(proyecto -> proyecto.getPresupuesto() != null && !proyecto.getPresupuesto().isEmpty())
+                .filter(proyecto -> proyecto.getPresupuesto_valor() != null)
+                .filter(proyecto -> proyecto.getEspecificacion_tecnica() != null && !proyecto.getEspecificacion_tecnica().isEmpty())
+                .filter(proyecto -> proyecto.getPuntuacionTotal() != null)
+                .filter(proyecto -> proyecto.getHoras() > 0.0f)
+                .filter(proyecto -> proyecto.getJefe() != null)
+                .filter(proyecto -> proyecto.getDirector_de_proyecto() != null)
+                .filter(proyecto -> proyecto.getPorcentaje() >= 0.0f)
+                .collect(Collectors.toList());
+    }
 
 
 }

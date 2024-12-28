@@ -13,6 +13,7 @@ import es.uca.iw.carteruca.security.AuthenticatedUser;
 import es.uca.iw.carteruca.views.avalar.AvalarMainView;
 import es.uca.iw.carteruca.views.layout.MainLayout;
 import es.uca.iw.carteruca.views.proyecto.ProyectoMainView;
+import es.uca.iw.carteruca.views.proyecto.ProyectoSeeView;
 import es.uca.iw.carteruca.views.solicitud.SolicitudesMainView;
 import jakarta.annotation.security.RolesAllowed;
 import es.uca.iw.carteruca.views.common.common;
@@ -54,6 +55,11 @@ public class HomeSolicitanteView extends Composite<VerticalLayout>{
             proyectos.addClickListener(event -> UI.getCurrent().navigate(ProyectoMainView.class));
             getContent().add(proyectos);
         }
+
+        Div consultar_proyectos = common.createSquare("Consultar Proyectos", VaadinIcon.RECORDS);
+        consultar_proyectos.getElement().setAttribute("aria-label", "Consultar");
+        consultar_proyectos.addClickListener(event -> UI.getCurrent().navigate(ProyectoSeeView.class));
+        getContent().add(consultar_proyectos);
 
 
     }
