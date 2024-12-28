@@ -3,6 +3,7 @@ package es.uca.iw.carteruca.views.proyecto;
 import java.util.Arrays;
 import java.util.List;
 
+import com.vaadin.flow.component.button.ButtonVariant;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.vaadin.flow.component.Composite;
@@ -119,6 +120,17 @@ public class ProyectoConsultarView extends Composite<VerticalLayout> {
             jefeField.setValue(proyecto.getJefe().getNombre());
             jefeField.setReadOnly(true);
 
+            formLayout.add(presupuestoValorField,horasField,directorField,jefeField);
+            formLayout.add(puntuacionTotalField);
+
+            Span criterioSpan = new Span("Criterios");
+            criterioSpan.getStyle()
+                    .set("font-size", "14px") // Tamaño de fuente
+                    .set("font-weight", "600") // Negrita
+                    .set("color", "grey") // Color del texto
+                    .set("margin-bottom", "8px"); // Espaciado inferior
+
+
             Button verCriteriosButton = new Button("Ver Criterios", event -> {
                 List<Criterio> criterios = criterioService.getAllCriterios();
                 Dialog criteriosDialog = new Dialog();
@@ -155,6 +167,8 @@ public class ProyectoConsultarView extends Composite<VerticalLayout> {
                 criteriosDialog.setHeight("80%");
                 criteriosDialog.open();
             });
+            verCriteriosButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+
 
             Span presupuestoSpan = new Span("Presupuesto");
             presupuestoSpan.getElement().setAttribute("aria-label", "Adjunte la memoria del proyecto");
@@ -178,15 +192,6 @@ public class ProyectoConsultarView extends Composite<VerticalLayout> {
             String especificacionPath = proyecto.getEspecificacion_tecnica();
             Anchor downloadEspecificacionAnchor = CommonService.descargarFile(especificacionPath, "Descargar Especificación Técnica");
 
-            // Añadir los campos al formulario
-            formLayout.add(
-                presupuestoValorField, puntuacionTotalField, 
-                horasField, directorField, 
-                jefeField,  new Span(""),
-                porcentaje,
-                presupuestoSpan, especificacionSpan,
-                downloadPresupuestoAnchor,downloadEspecificacionAnchor);
-
 
             // Contenedor para el porcentaje
             Div porcentajeContainer = new Div();
@@ -196,7 +201,21 @@ public class ProyectoConsultarView extends Composite<VerticalLayout> {
 
             // El ProgressBar ocupa toda la fila
             formLayout.add(progressBarContainer, 1);
-            formLayout.add(verCriteriosButton, 1);
+
+            formLayout.add(criterioSpan,2);
+            VerticalLayout criterioBotones = new VerticalLayout();
+            criterioBotones.add(verCriteriosButton);
+
+            formLayout.add(criterioBotones);
+
+            formLayout.add(presupuestoSpan,2);
+            VerticalLayout presupuestoButtonLayout = new VerticalLayout();
+            presupuestoButtonLayout.add(downloadPresupuestoAnchor);
+            formLayout.add(presupuestoButtonLayout, 2);
+            formLayout.add(especificacionSpan, 2);
+            VerticalLayout especificacionButtonLayout = new VerticalLayout();
+            especificacionButtonLayout.add(downloadEspecificacionAnchor);
+            formLayout.add(especificacionButtonLayout, 2);
 
             
 
