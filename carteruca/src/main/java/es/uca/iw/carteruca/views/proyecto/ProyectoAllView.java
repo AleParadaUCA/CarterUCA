@@ -123,17 +123,6 @@ public class ProyectoAllView extends Composite<VerticalLayout> {
                     return badge;
                 }).setHeader("Presupuesto");
 
-                // Columna de progreso con ProgressBar
-                /*
-                proyect.addComponentColumn(proyecto -> {
-                    ProgressBar progressBar = new ProgressBar();
-                    progressBar.setValue(proyecto.getPorcentaje() / 100f); // Convertir el porcentaje a valor entre 0 y 1
-                    progressBar.setWidth("100%");
-                    return progressBar;
-                }).setHeader("Progreso");
-
-                 */
-
                 // Asignar los proyectos al Grid
                 proyect.setItems(listaDeProyectos);
 
