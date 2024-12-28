@@ -241,11 +241,12 @@ public class AvalarAllView extends Composite<VerticalLayout> {
             common.showSuccessNotification("Solicitud cancelada");
             refrescarTabla();
         });
-        btnNo.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        btnNo.addThemeVariants(ButtonVariant.LUMO_ERROR);
 
         // Layout de botones
         HorizontalLayout botonesLayout = new HorizontalLayout(btnSi, btnNo);
         botonesLayout.setSpacing(true);
+        botonesLayout.setMargin(true);
         botonesLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
         botonesLayout.setWidthFull();
 
