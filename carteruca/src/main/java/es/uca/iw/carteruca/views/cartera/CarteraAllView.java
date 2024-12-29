@@ -77,14 +77,8 @@ public class CarteraAllView extends VerticalLayout {
         tablaCarteras.addComponentColumn(cartera -> {
             Icon delete = VaadinIcon.TRASH.create();
             Button deleteButton = new Button(delete, click -> {
-                try {
-                    carteraService.deleteCartera(cartera.getId());
-                    updateGrid();
-                    common.showSuccessNotification("Cartera eliminada con éxito");
-                } catch (IllegalArgumentException e) {
-                    common.showErrorNotification("Error al eliminar la cartera: " + e.getMessage());
-                }
-                });
+                showDeleteConfirmationDialog(cartera);
+            });
             deleteButton.addThemeVariants(ButtonVariant.LUMO_ERROR, ButtonVariant.LUMO_TERTIARY);
             return deleteButton;
         }).setHeader("Eliminar");
@@ -252,9 +246,13 @@ public class CarteraAllView extends VerticalLayout {
 
         Span message = new Span("¿Desea eliminar esta cartera?");
         Button confirmButton = new Button("Sí", event -> {
-            carteraService.deleteCartera(cartera.getId());
-            updateGrid();
-            common.showSuccessNotification("Cartera eliminada con éxito");
+            try {
+                carteraService.deleteCartera(cartera.getId());
+                updateGrid();
+                common.showSuccessNotification("Cartera eliminada con éxito");
+            } catch (IllegalArgumentException e) {
+                common.showErrorNotification("Error al eliminar la cartera: " + e.getMessage());
+            }
             dialog.close();
         });
         confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
