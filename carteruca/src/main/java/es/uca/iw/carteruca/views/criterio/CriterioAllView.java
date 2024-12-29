@@ -1,6 +1,9 @@
 package es.uca.iw.carteruca.views.criterio;
 
-import com.vaadin.flow.component.UI;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
@@ -11,20 +14,16 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+
 import es.uca.iw.carteruca.models.Criterio;
 import es.uca.iw.carteruca.services.CriterioService;
 import es.uca.iw.carteruca.views.common.common;
-import es.uca.iw.carteruca.views.home.HomeAdminView;
 import es.uca.iw.carteruca.views.layout.MainLayout;
 import jakarta.annotation.security.RolesAllowed;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.List;
 
 @PageTitle("Crtierios")
 @Route(value = "/home-admin/criterio", layout = MainLayout.class)
@@ -57,9 +56,6 @@ public class CriterioAllView extends VerticalLayout {
 
         add(common.botones_Admin());
 
-    }
-    private void crearTitulo(String titulo) {
-        add(new com.vaadin.flow.component.html.H1(titulo));
     }
 
 
