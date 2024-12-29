@@ -11,17 +11,21 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import es.uca.iw.carteruca.models.Cartera;
+import es.uca.iw.carteruca.models.Solicitud;
 import es.uca.iw.carteruca.repository.CarteraRepository;
+import es.uca.iw.carteruca.repository.SolicitudRepository;
 
 @Service
 public class CarteraService {
 
     private static final Logger logger = LoggerFactory.getLogger(CarteraService.class);
     private final CarteraRepository carteraRepository;
+    private final SolicitudRepository solicitudRepository;
 
     @Autowired
-    public CarteraService(CarteraRepository carteraRepository) {
+    public CarteraService(CarteraRepository carteraRepository, SolicitudRepository solicitudRepository) {
         this.carteraRepository = carteraRepository;
+        this.solicitudRepository = solicitudRepository;
     }
 
     // Obtener todas las carteras
@@ -145,11 +149,14 @@ public class CarteraService {
     //Eliminar un centro
     public void deleteCartera(Long id) {
         Optional<Cartera> cartera = carteraRepository.findById(id);
-        if(cartera.isPresent()) {
+        if (cartera.isPresent()) {
+            List<Solicitud> solicitudes = solicitudRepository.findByCartera(cartera.get());
+            if (!solicitudes.isEmpty()) {
+                throw new IllegalArgumentException("No se puede eliminar la cartera porque tiene solicitudes asociadas.");
+            }
             carteraRepository.deleteById(id);
-        }else{
-            logger.warn("Intento de eliminar una cartera con ID inexistente: {}", id);
-            throw new IllegalArgumentException("La cartera no existe");
+        } else {
+            throw new IllegalArgumentException("La cartera no existe.");
         }
     }
 
