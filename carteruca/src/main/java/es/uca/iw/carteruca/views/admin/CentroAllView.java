@@ -108,10 +108,11 @@ public class CentroAllView extends Composite<VerticalLayout> {
         guardar.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
         Button cancelar = new Button("Cancelar", event -> dialog.close());
+        cancelar.addThemeVariants(ButtonVariant.LUMO_ERROR);
 
         HorizontalLayout botones = new HorizontalLayout(guardar, cancelar);
         VerticalLayout dialogLayout = new VerticalLayout(formLayout, botones);
-        dialogLayout.setAlignItems(FlexComponent.Alignment.CENTER);
+        dialogLayout.setAlignItems(FlexComponent.Alignment.END);
 
         dialog.add(dialogLayout);
         dialog.open();
@@ -155,10 +156,10 @@ public class CentroAllView extends Composite<VerticalLayout> {
         guardar.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
         Button cancelar = new Button("Cancelar", event -> dialog.close());
-
+        cancelar.addThemeVariants(ButtonVariant.LUMO_ERROR);
         HorizontalLayout botones = new HorizontalLayout(guardar, cancelar);
         VerticalLayout dialogLayout = new VerticalLayout(formLayout, botones);
-        dialogLayout.setAlignItems(FlexComponent.Alignment.CENTER);
+        dialogLayout.setAlignItems(FlexComponent.Alignment.END);
 
         dialog.add(dialogLayout);
         dialog.open();

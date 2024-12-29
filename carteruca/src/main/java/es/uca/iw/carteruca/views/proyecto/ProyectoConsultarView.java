@@ -70,8 +70,9 @@ public class ProyectoConsultarView extends Composite<VerticalLayout> {
         proyectos_tabla.setDetailsVisibleOnClick(true);  // Hacemos visibles los detalles cuando se hace clic en una fila
 
 
-        List<Proyecto> proyectos = proyectoService.getProyectosConfiguradosSegunEstado();
+        List<Proyecto> proyectos = proyectoService.getProyectosValidosPorEstadoAceptadoOTerminado();
         proyectos_tabla.setItems(proyectos);
+
         getContent().add(proyectos_tabla);
     }
 
@@ -226,8 +227,5 @@ public class ProyectoConsultarView extends Composite<VerticalLayout> {
             return detailsLayout;
         });
     }
-
-
-
 
 }

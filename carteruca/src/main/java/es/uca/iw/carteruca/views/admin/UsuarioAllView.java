@@ -175,7 +175,7 @@ public class UsuarioAllView extends Composite<VerticalLayout> {
                 common.showErrorNotification("Error: " + result);
             }
         });
-
+        saveButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         // Botón para cancelar
         Button cancelButton = new Button("Cancelar", event -> dialogo.close());
         cancelButton.addThemeVariants(ButtonVariant.LUMO_ERROR);

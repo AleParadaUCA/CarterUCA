@@ -64,7 +64,7 @@ public class ProyectoCancelView extends Composite<VerticalLayout> {
                 proyecto.getSolicitud().getTitulo()).setHeader("Título de la Solicitud");
 
         proyectos_tabla.addComponentColumn(proyecto -> {
-            Button cancelarButton = new Button("Cancelar Proyecto", new Icon(VaadinIcon.TRASH));
+            Button cancelarButton = new Button(VaadinIcon.TRASH.create());
             cancelarButton.addThemeVariants(ButtonVariant.LUMO_ERROR, ButtonVariant.LUMO_TERTIARY);
             cancelarButton.getElement().setAttribute("aria-label", "Cancelar Proyecto");
 

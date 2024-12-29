@@ -258,6 +258,7 @@ public class SolicitudUpdateView extends Composite<VerticalLayout> {
                 common.showErrorNotification("Error al actualizar la solicitud: " + e.getMessage());
             }
         });
+        save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
         Button cancel = new Button("Cancelar",click-> dialog.close());
         cancel.addThemeVariants(ButtonVariant.LUMO_ERROR);

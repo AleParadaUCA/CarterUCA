@@ -10,6 +10,7 @@ import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
@@ -241,6 +242,36 @@ public class CarteraAllView extends VerticalLayout {
     private void updateGrid() {
         List<Cartera> carteras = carteraService.getAllCarteras();
         tablaCarteras.setItems(carteras);
+    }
+
+    // Método para mostrar el diálogo de confirmación
+    private void showDeleteConfirmationDialog(Cartera cartera) {
+        Dialog dialog = new Dialog();
+        dialog.setCloseOnEsc(false);
+        dialog.setCloseOnOutsideClick(false);
+
+        Span message = new Span("¿Desea eliminar esta cartera?");
+        Button confirmButton = new Button("Sí", event -> {
+            carteraService.deleteCartera(cartera.getId());
+            updateGrid();
+            common.showSuccessNotification("Cartera eliminada con éxito");
+            dialog.close();
+        });
+        confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+
+        Button cancelButton = new Button("No", event -> {
+            dialog.close();
+        });
+        cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+
+        HorizontalLayout buttons = new HorizontalLayout(confirmButton, cancelButton);
+        VerticalLayout dialogLayout = new VerticalLayout(message, buttons);
+        dialogLayout.setSizeFull();
+        dialogLayout.setSpacing(true);
+        dialogLayout.setAlignItems(Alignment.CENTER);
+        dialogLayout.setJustifyContentMode(JustifyContentMode.CENTER);
+        dialog.add(dialogLayout);
+        dialog.open();
     }
 
 }

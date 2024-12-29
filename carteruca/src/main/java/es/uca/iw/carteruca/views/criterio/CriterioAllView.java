@@ -6,6 +6,7 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -76,9 +77,7 @@ public class CriterioAllView extends VerticalLayout {
         tabla_criterio.addComponentColumn(criterio -> {
             Icon delete = VaadinIcon.TRASH.create();
             Button deleteButton = new Button(delete, click -> {
-                criterioService.deleteCriterio(criterio.getId());
-                updateGrid();
-                common.showSuccessNotification("Cartera eliminada con éxito");
+                showDeleteConfirmationDialog(criterio);
             });
             deleteButton.addThemeVariants(ButtonVariant.LUMO_ERROR, ButtonVariant.LUMO_TERTIARY);
             return deleteButton;
@@ -218,6 +217,34 @@ public class CriterioAllView extends VerticalLayout {
         dialog.open();
     }
 
+    private void showDeleteConfirmationDialog(Criterio criterio) {
+        Dialog dialog = new Dialog();
+        dialog.setCloseOnEsc(false);
+        dialog.setCloseOnOutsideClick(false);
+
+        Span message = new Span("¿Desea eliminar este criterio?");
+        Button confirmButton = new Button("Sí", event -> {
+            criterioService.deleteCriterio(criterio.getId());
+            updateGrid();
+            common.showSuccessNotification("Criterio eliminado con éxito");
+            dialog.close();
+        });
+        confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+
+        Button cancelButton = new Button("No", event -> {
+            dialog.close();
+        });
+        cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+
+        HorizontalLayout buttons = new HorizontalLayout(confirmButton, cancelButton);
+        VerticalLayout dialogLayout = new VerticalLayout(message, buttons);
+        dialogLayout.setSizeFull();
+        dialogLayout.setSpacing(true);
+        dialogLayout.setAlignItems(Alignment.CENTER);
+        dialogLayout.setJustifyContentMode(JustifyContentMode.CENTER);
+        dialog.add(dialogLayout);
+        dialog.open();
+    }
 
 
 }
