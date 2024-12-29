@@ -1,11 +1,14 @@
 package es.uca.iw.carteruca.repository;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import es.uca.iw.carteruca.models.Cartera;
 import es.uca.iw.carteruca.models.Estado;
 import es.uca.iw.carteruca.models.Solicitud;
 import es.uca.iw.carteruca.models.Usuario;
-import org.springframework.data.jpa.repository.JpaRepository;
-import java.util.List;
-import java.time.LocalDateTime;
 
 public interface SolicitudRepository extends JpaRepository<Solicitud, Long> {
 
@@ -22,5 +25,7 @@ public interface SolicitudRepository extends JpaRepository<Solicitud, Long> {
 
     List<Solicitud> findBySolicitanteAndEstadoNot(Usuario solicitante, Estado estado);  // Excluye el estado CANCELADO
 
-    // void deleteById(Long id);
+    List<Solicitud> findByEstado(Estado estado);
+
+    public List<Solicitud> findByCartera(Cartera get);
 }

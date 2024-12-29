@@ -19,10 +19,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import es.uca.iw.carteruca.models.Cartera;
-import es.uca.iw.carteruca.models.Estado;
-import es.uca.iw.carteruca.models.Solicitud;
-import es.uca.iw.carteruca.models.Usuario;
+import es.uca.iw.carteruca.models.*;
 import es.uca.iw.carteruca.security.AuthenticatedUser;
 import es.uca.iw.carteruca.services.CarteraService;
 import es.uca.iw.carteruca.services.CommonService;
@@ -42,7 +39,6 @@ import java.util.List;
 public class AvalarAllView extends Composite<VerticalLayout> {
 
     private final SolicitudService solicitudService;
-    private final AuthenticatedUser authenticatedUser;
     private final Usuario currentUser;
     private final Cartera carteraActual;
 
@@ -53,7 +49,6 @@ public class AvalarAllView extends Composite<VerticalLayout> {
     public AvalarAllView(SolicitudService solicitudService,
                          AuthenticatedUser authenticatedUser, CarteraService carteraService) {
         this.solicitudService = solicitudService;
-        this.authenticatedUser = authenticatedUser;
         this.currentUser = authenticatedUser.get().get();
         this.carteraActual = carteraService.getCarteraActual().orElse(null);
 
@@ -89,7 +84,7 @@ public class AvalarAllView extends Composite<VerticalLayout> {
         solicitudes_tabla.addColumn(Solicitud::getTitulo).setHeader("Título del Proyecto");
         solicitudes_tabla.addColumn(Solicitud::getNombre).setHeader("Nombre Corto del Proyecto");
 
-        solicitudes_tabla.addColumn(createToggleDetailsRenderer(solicitudes_tabla)).setHeader("Detalles");
+        solicitudes_tabla.addColumn(common.createToggleDetailsRenderer(solicitudes_tabla)).setHeader("Detalles");
         // Renderizar detalles (detalles ocultos por defecto)
         solicitudes_tabla.setItemDetailsRenderer(createStaticDetailsRenderer());
         solicitudes_tabla.setDetailsVisibleOnClick(true);
@@ -109,18 +104,6 @@ public class AvalarAllView extends Composite<VerticalLayout> {
         getContent().add(solicitudes_tabla);
     }
 
-    // Crear el renderizado para alternar los detalles
-    private ComponentRenderer<Button, Solicitud> createToggleDetailsRenderer(Grid<Solicitud> grid) {
-        return new ComponentRenderer<>(solicitud -> {
-            Button toggleButton = new Button("Detalles", e -> {
-                // Alternar la visibilidad de los detalles
-                boolean visible = grid.isDetailsVisible(solicitud);
-                grid.setDetailsVisible(solicitud, !visible);
-            });
-            toggleButton.getElement().setAttribute("theme", "tertiary"); // Estilo del botón
-            return toggleButton;
-        });
-    }
 
     private ComponentRenderer<Div, Solicitud> createStaticDetailsRenderer() {
         return new ComponentRenderer<>(solicitud -> {
@@ -210,7 +193,7 @@ public class AvalarAllView extends Composite<VerticalLayout> {
 
     private void abrirDialogAvalar(Solicitud solicitud) {
         // Crear el diálogo
-        Dialog dialog = new com.vaadin.flow.component.dialog.Dialog();
+        Dialog dialog = new Dialog();
         dialog.setHeaderTitle("Avalar Solicitud");
 
         dialog.setWidth("40%"); // Tamaño relativo (40% del ancho del contenedor)
@@ -244,9 +227,7 @@ public class AvalarAllView extends Composite<VerticalLayout> {
                 importanciaField.setInvalid(true);
                 importanciaField.setErrorMessage("La importancia debe estar entre 1 y 10");
             } else {
-                solicitud.setEstado(Estado.EN_TRAMITE_AVALADO);
-                solicitud.setImportancia_promotor(importanciaField.getValue());
-                solicitudService.updateSolicitud(solicitud);
+                solicitudService.AvalarSolicitud(solicitud, importanciaField.getValue());
                 dialog.close();
                 common.showSuccessNotification("Solicitud avalada correctamente");
                 refrescarTabla();
@@ -255,17 +236,17 @@ public class AvalarAllView extends Composite<VerticalLayout> {
         btnSi.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
         Button btnNo = new Button("No", e -> {
-            solicitud.setEstado(Estado.RECHAZADO);
-            solicitudService.updateSolicitud(solicitud);
+            solicitudService.AvalarSolicitud(solicitud, null);
             dialog.close();
             common.showSuccessNotification("Solicitud cancelada");
             refrescarTabla();
         });
-        btnNo.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        btnNo.addThemeVariants(ButtonVariant.LUMO_ERROR);
 
         // Layout de botones
         HorizontalLayout botonesLayout = new HorizontalLayout(btnSi, btnNo);
         botonesLayout.setSpacing(true);
+        botonesLayout.setMargin(true);
         botonesLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
         botonesLayout.setWidthFull();
 

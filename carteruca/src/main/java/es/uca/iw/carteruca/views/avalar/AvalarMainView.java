@@ -14,7 +14,6 @@ import com.vaadin.flow.router.Route;
 import es.uca.iw.carteruca.views.home.HomeSolicitanteView;
 import es.uca.iw.carteruca.views.layout.MainLayout;
 import es.uca.iw.carteruca.views.common.common;
-import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 
 
@@ -32,9 +31,10 @@ public class AvalarMainView extends Composite<VerticalLayout> {
         // Botón "Volver"
         Button volver = new Button("Volver");
         volver.setWidth("min-content");
-        volver.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        volver.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         volver.addClassName("boton-avalar");
         volver.getElement().setAttribute("aria-label", "Volver");
+
         // Footer layout para el botón
         HorizontalLayout footer = new HorizontalLayout();
         footer.setWidthFull();

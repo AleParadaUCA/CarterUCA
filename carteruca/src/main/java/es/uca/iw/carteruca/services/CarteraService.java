@@ -1,26 +1,31 @@
 package es.uca.iw.carteruca.services;
 
-import es.uca.iw.carteruca.models.Cartera;
-import es.uca.iw.carteruca.repository.CarteraRepository;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
+import es.uca.iw.carteruca.models.Cartera;
+import es.uca.iw.carteruca.models.Solicitud;
+import es.uca.iw.carteruca.repository.CarteraRepository;
+import es.uca.iw.carteruca.repository.SolicitudRepository;
 
 @Service
 public class CarteraService {
 
     private static final Logger logger = LoggerFactory.getLogger(CarteraService.class);
     private final CarteraRepository carteraRepository;
+    private final SolicitudRepository solicitudRepository;
 
     @Autowired
-    public CarteraService(CarteraRepository carteraRepository) {
+    public CarteraService(CarteraRepository carteraRepository, SolicitudRepository solicitudRepository) {
         this.carteraRepository = carteraRepository;
+        this.solicitudRepository = solicitudRepository;
     }
 
     // Obtener todas las carteras
@@ -141,17 +146,17 @@ public class CarteraService {
         return updatedCartera;
     }
 
-
-
-
     //Eliminar un centro
     public void deleteCartera(Long id) {
         Optional<Cartera> cartera = carteraRepository.findById(id);
-        if(cartera.isPresent()) {
+        if (cartera.isPresent()) {
+            List<Solicitud> solicitudes = solicitudRepository.findByCartera(cartera.get());
+            if (!solicitudes.isEmpty()) {
+                throw new IllegalArgumentException("No se puede eliminar la cartera porque tiene solicitudes asociadas.");
+            }
             carteraRepository.deleteById(id);
-        }else{
-            logger.warn("Intento de eliminar una cartera con ID inexistente: {}", id);
-            throw new IllegalArgumentException("La cartera no existe");
+        } else {
+            throw new IllegalArgumentException("La cartera no existe.");
         }
     }
 
@@ -159,17 +164,4 @@ public class CarteraService {
         LocalDateTime now = LocalDateTime.now();
         return carteraRepository.findByFechaInicioLessThanEqualAndFechaFinGreaterThanEqual(now, now);
     }
-
-    //Es la que funciona cuando hay mas de una cartera
-    public Optional<Cartera> getCartera() {
-        LocalDateTime fechaActual = LocalDateTime.now();
-        Optional<Cartera> carteraActual = carteraRepository.buscarCarteraVigente(fechaActual);
-
-        if(carteraActual.isPresent()) {
-            return carteraActual;
-        } else {
-            throw new IllegalStateException("No hay cartera vigente");
-        }
-    }
-
 }

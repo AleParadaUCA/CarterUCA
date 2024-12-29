@@ -284,9 +284,14 @@ public class SolicitudAddView extends Composite<VerticalLayout> {
             confirmDialog.close();  // Solo cierra el diálogo sin realizar ninguna acción
         });
         cancelButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
-
+        HorizontalLayout buttons = new HorizontalLayout();
+        buttons.add(acceptButton,cancelButton);
+        buttons.setAlignItems(FlexComponent.Alignment.END);
+        buttons.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
+        buttons.setWidthFull();
+        buttons.setSpacing(true);
         // Agregar botones al pie del diálogo
-        confirmDialog.getFooter().add(acceptButton, cancelButton);
+        confirmDialog.add(buttons);
 
         // Mostrar el diálogo
         confirmDialog.open();
@@ -294,7 +299,7 @@ public class SolicitudAddView extends Composite<VerticalLayout> {
 
     private void guardar(){
 
-        solicitudService.guardar(
+        solicitudService.crearSolicitud(
                 titulo.getValue(),
                 nombre.getValue(),
                 fecha_puesta.getValue().atStartOfDay(),

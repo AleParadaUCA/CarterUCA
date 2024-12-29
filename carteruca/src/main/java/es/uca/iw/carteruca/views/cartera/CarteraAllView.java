@@ -1,29 +1,32 @@
 package es.uca.iw.carteruca.views.cartera;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.component.datepicker.DatePicker;
-import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+
 import es.uca.iw.carteruca.models.Cartera;
 import es.uca.iw.carteruca.services.CarteraService;
 import es.uca.iw.carteruca.views.common.common;
 import es.uca.iw.carteruca.views.layout.MainLayout;
 import jakarta.annotation.security.RolesAllowed;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.List;
 
 @PageTitle("Carteras")
 @Route(value = "/home-admin/cartera", layout = MainLayout.class)
@@ -74,19 +77,11 @@ public class CarteraAllView extends VerticalLayout {
         tablaCarteras.addComponentColumn(cartera -> {
             Icon delete = VaadinIcon.TRASH.create();
             Button deleteButton = new Button(delete, click -> {
-                carteraService.deleteCartera(cartera.getId());
-                updateGrid();
-                common.showSuccessNotification("Cartera eliminada con éxito");
+                showDeleteConfirmationDialog(cartera);
             });
             deleteButton.addThemeVariants(ButtonVariant.LUMO_ERROR, ButtonVariant.LUMO_TERTIARY);
             return deleteButton;
         }).setHeader("Eliminar");
-
-        tablaCarteras.addComponentColumn( cartera -> {
-            Button add_criterios = new Button("Añadir Criterios", click -> openAddCriterios(cartera));
-            add_criterios.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
-            return add_criterios;
-        });
 
         updateGrid();
     }
@@ -243,9 +238,38 @@ public class CarteraAllView extends VerticalLayout {
         tablaCarteras.setItems(carteras);
     }
 
-    private void openAddCriterios(Cartera cartera) {
+    // Método para mostrar el diálogo de confirmación
+    private void showDeleteConfirmationDialog(Cartera cartera) {
+        Dialog dialog = new Dialog();
+        dialog.setCloseOnEsc(false);
+        dialog.setCloseOnOutsideClick(false);
 
-        Dialog dialog = new Dialog("Nuevo Criterio");
+        Span message = new Span("¿Desea eliminar esta cartera?");
+        Button confirmButton = new Button("Sí", event -> {
+            try {
+                carteraService.deleteCartera(cartera.getId());
+                updateGrid();
+                common.showSuccessNotification("Cartera eliminada con éxito");
+            } catch (IllegalArgumentException e) {
+                common.showErrorNotification("Error al eliminar la cartera: " + e.getMessage());
+            }
+            dialog.close();
+        });
+        confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
+        Button cancelButton = new Button("No", event -> {
+            dialog.close();
+        });
+        cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+
+        HorizontalLayout buttons = new HorizontalLayout(confirmButton, cancelButton);
+        VerticalLayout dialogLayout = new VerticalLayout(message, buttons);
+        dialogLayout.setSizeFull();
+        dialogLayout.setSpacing(true);
+        dialogLayout.setAlignItems(Alignment.CENTER);
+        dialogLayout.setJustifyContentMode(JustifyContentMode.CENTER);
+        dialog.add(dialogLayout);
+        dialog.open();
     }
+
 }

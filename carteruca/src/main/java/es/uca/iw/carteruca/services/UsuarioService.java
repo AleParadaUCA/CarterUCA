@@ -34,7 +34,7 @@ public class UsuarioService implements UserDetailsService {
 
     private final UsuarioRepository repository;
     private final PasswordEncoder passwordEncoder;
-    // private final EmailService emailService;
+    private final EmailService emailService;
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[\\w.%+-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$");
     //private final ExplicitNullableTypeChecker typeChecker;
 
@@ -42,7 +42,7 @@ public class UsuarioService implements UserDetailsService {
     public UsuarioService(UsuarioRepository repository, PasswordEncoder passwordEncoder, EmailService emailService) {
         this.repository = repository;
         this.passwordEncoder = passwordEncoder;
-        // this.emailService = emailService;
+        this.emailService = emailService;
         //this.typeChecker = typeChecker;
     }
 
@@ -104,26 +104,11 @@ public class UsuarioService implements UserDetailsService {
 
         try {
             repository.save(nuevoUsuario);
-//            emailService.sendRegistrationEmail(nuevoUsuario);
+            emailService.enviarCorreoRegistro(nuevoUsuario);
             return "Exito";
         } catch (DataIntegrityViolationException e) {
             return "Error: "+ e;
         }
-    }
-
-    @Transactional
-    public String activateUser(String token) {
-        Optional<Usuario> usuarioOptional = repository.findByCodigoRegistro(token);
-        if (usuarioOptional.isEmpty()) {
-            return "Token de activación inválido.";
-        }
-
-        Usuario usuario = usuarioOptional.get();
-        usuario.setActivo(true);
-        usuario.setCodigoRegistro(null);
-        repository.save(usuario);
-
-        return "Cuenta activada correctamente.";
     }
 
     private Rol obtenerRol(String usuario) {
@@ -150,7 +135,6 @@ public class UsuarioService implements UserDetailsService {
         } catch (JsonProcessingException ex) {}
         return rol;
     }
-
 
     @Override
     @Transactional
@@ -246,6 +230,8 @@ public class UsuarioService implements UserDetailsService {
         return repository.findByRol(Rol.Promotor);
     }
 
+    public List<Usuario> getOTP(){ return repository.findByRol(Rol.OTP); }
+
     public boolean checkPassword(Usuario currentUser, String value) {
         return passwordEncoder.matches(value, currentUser.getPassword());
     }
@@ -253,5 +239,21 @@ public class UsuarioService implements UserDetailsService {
     public void updatePassword(Usuario currentUser, String value) {
         currentUser.setPassword(passwordEncoder.encode(value));
         repository.save(currentUser);
+    }
+
+        public boolean activateUser(String email, String registerCode) {
+
+        Optional<Usuario> user = repository.findByEmail(email);
+
+        if (user.isPresent() && !user.get().isActivo() && user.get().getCodigoRegistro().equals(registerCode)) {
+            user.get().setActivo(true);
+            user.get().setCodigoRegistro(null);
+            repository.save(user.get());
+            return true;
+
+        } else {
+            return false;
+        }
+
     }
 }

@@ -15,7 +15,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long>, JpaSpec
 
     Usuario findByNombreAndApellidos(String nombre, String apellidos); //devuelve usuario con nombre y apellidos dado
 
-    Usuario findByEmail(String Email); //devuelve un usuario con email dado
+    Optional<Usuario> findByEmail(String Email); //devuelve un usuario con email dado
 
     List<Usuario> findByRol(Rol rol); //devuelve lista de usuarios con un rol
 

@@ -80,6 +80,15 @@ public class UsuarioAllView extends Composite<VerticalLayout> {
             return editar;
         }).setHeader("Editar");
 
+        // Añadir columna para eliminar usuarios
+        tablaUsuarios.addComponentColumn(usuario -> {
+            Button eliminar = new Button(VaadinIcon.TRASH.create(), click -> mostrarDialogoEliminar(usuario));
+            eliminar.addThemeVariants(ButtonVariant.LUMO_ERROR, ButtonVariant.LUMO_TERTIARY);
+            eliminar.getElement().setAttribute("aria-label", "Eliminar");
+            return eliminar;
+        }).setHeader("Eliminar");
+
+
         // Filtrar usuarios con roles distintos a Admin
         List<Usuario> usuarios = usuarioService.findAllUsuariosExcludingAdmin();
         tablaUsuarios.setItems(usuarios);
@@ -166,7 +175,7 @@ public class UsuarioAllView extends Composite<VerticalLayout> {
                 common.showErrorNotification("Error: " + result);
             }
         });
-
+        saveButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         // Botón para cancelar
         Button cancelButton = new Button("Cancelar", event -> dialogo.close());
         cancelButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
@@ -185,6 +194,34 @@ public class UsuarioAllView extends Composite<VerticalLayout> {
         dialogo.add(dialogLayout); // Añadir solo una vez
         dialogo.open();
     }
+
+    private void mostrarDialogoEliminar(Usuario usuario) {
+        Dialog dialogo = new Dialog();
+        VerticalLayout contenido = new VerticalLayout();
+
+        contenido.add("¿Estás seguro de que deseas eliminar al usuario " + usuario.getUsername() + "? Esta acción no se puede deshacer.");
+
+        Button botonSi = new Button("Sí", e -> {
+            usuarioService.deleteUser(usuario.getId()); // Eliminar usuario
+            dialogo.close();
+            common.showSuccessNotification("Usuario eliminado con éxito.");
+            recargarTabla(); // Actualizar la tabla
+        });
+
+        Button botonNo = new Button("No", e -> dialogo.close());
+
+        // Estilo de los botones
+        botonSi.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        botonNo.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+
+        HorizontalLayout botones = new HorizontalLayout(botonSi, botonNo);
+        contenido.add(botones);
+        contenido.setAlignItems(FlexComponent.Alignment.CENTER);
+
+        dialogo.add(contenido);
+        dialogo.open();
+    }
+
 
     private void updateGrid() {
         List<Usuario> usuarios = usuarioService.findAllUsuariosExcludingAdmin();
