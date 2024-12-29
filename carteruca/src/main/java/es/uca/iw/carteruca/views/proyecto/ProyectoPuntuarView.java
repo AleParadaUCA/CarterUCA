@@ -1,6 +1,7 @@
 package es.uca.iw.carteruca.views.proyecto;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,7 +90,6 @@ public class ProyectoPuntuarView extends Composite<VerticalLayout> {
     }
 
     private void DialogCriterio(Proyecto proyecto) {
-
         Dialog dialog = new Dialog();
         dialog.setHeaderTitle(proyecto.getSolicitud().getTitulo());
 
@@ -97,7 +97,12 @@ public class ProyectoPuntuarView extends Composite<VerticalLayout> {
 
         // Listas para almacenar IDs de criterios y puntuaciones
         List<Long> idsCriterios = new ArrayList<>();
-        List<Float> puntuaciones = new ArrayList<>();
+        List<Float> puntuaciones = new ArrayList<>(Collections.nCopies(criterios.size(), null));
+
+        // Llenar la lista de IDs de criterios
+        for (Criterio criterio : criterios) {
+            idsCriterios.add(criterio.getId());
+        }
 
         // Grid de criterios
         Grid<Criterio> gridCriterios = new Grid<>(Criterio.class, false);
@@ -114,11 +119,8 @@ public class ProyectoPuntuarView extends Composite<VerticalLayout> {
             numberField.addValueChangeListener(event -> {
                 Float valor = event.getValue() != null ? event.getValue().floatValue() : null;
                 if (valor != null) {
-                    int index = idsCriterios.indexOf(criterio.getId());
-                    if (index == -1) {
-                        idsCriterios.add(criterio.getId());
-                        puntuaciones.add(valor);
-                    } else {
+                    int index = criterios.indexOf(criterio);
+                    if (index != -1) {
                         puntuaciones.set(index, valor);
                     }
                 }
@@ -131,11 +133,11 @@ public class ProyectoPuntuarView extends Composite<VerticalLayout> {
         // Botón guardar
         Button guardarButton = new Button("Guardar", e -> {
             try {
-                if (idsCriterios.size() != criterios.size()) {
+                if (puntuaciones.contains(null)) {
                     common.showErrorNotification("Debe completar todas las puntuaciones.");
+                    return;
                 }
 
-                // Lógica para guardar las puntuaciones
                 proyectoService.guardarPuntuaciones(proyecto, idsCriterios, puntuaciones);
                 common.showSuccessNotification("Puntuaciones guardadas correctamente.");
 
@@ -146,9 +148,10 @@ public class ProyectoPuntuarView extends Composite<VerticalLayout> {
                 dialog.close();
             } catch (Exception ex) {
                 // Manejar excepciones
-                common.showErrorNotification("Error al guardar las puntuaciones. Intente de nuevo.");
+                common.showErrorNotification("Error al guardar las puntuaciones. Intente de nuevo." + ex.toString());
             }
         });
+
         guardarButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         Button cancelarButton = new Button("Cancelar", e -> dialog.close());
         cancelarButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
@@ -163,4 +166,3 @@ public class ProyectoPuntuarView extends Composite<VerticalLayout> {
     }
 
 }
-
