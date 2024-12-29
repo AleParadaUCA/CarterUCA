@@ -39,6 +39,7 @@ public class ProyectoService {
         proyecto.setSolicitud(solicitud);
         proyecto.setPorcentaje(0.0f);  // Puedes inicializar el porcentaje si es necesario
         proyecto.setHoras(0.0f);
+        proyecto.setPresupuesto_valor(0.0f);
 
         String subject = "Proyecto Aceptado";
         String body = "Hola " + proyecto.getSolicitud().getSolicitante().getNombre() + ",\n\n" +
@@ -146,7 +147,7 @@ public class ProyectoService {
                 // Filtra proyectos donde el jefe es nulo
                 .filter(proyecto -> proyecto.getJefe() == null)
                 .filter(proyecto -> proyecto.getSolicitud().getEstado() == Estado.ACEPTADO)
-                .filter(proyecto -> proyecto.getPresupuesto_valor() != null && proyecto.getPresupuesto_valor() > 0.0f)
+                .filter(proyecto -> proyecto.getPresupuesto_valor() == 0.0f)
                 .collect(Collectors.toList());
     }
 
