@@ -166,13 +166,33 @@ public class ProyectoAllView extends Composite<VerticalLayout>  implements Befor
         FormLayout formLayout = new FormLayout();
 
         // Crear los campos de texto
-        TextField tituloField = new TextField("Título", proyecto.getSolicitud().getTitulo());
-        TextField solicitanteField = new TextField("Solicitante", proyecto.getSolicitud().getSolicitante().getNombre());
-        TextField promotorField = new TextField("Promotor", proyecto.getSolicitud().getAvalador().getNombre());
-        TextField interesadosField = new TextField("Interesados", proyecto.getSolicitud().getInteresados());
-        TextField alineamientoField = new TextField("Alineamiento", proyecto.getSolicitud().getAlineamiento());
-        TextField alcanceField = new TextField("Alcance", proyecto.getSolicitud().getAlcance());
-        TextField normativaField = new TextField("Normativa", proyecto.getSolicitud().getNormativa());
+        TextField tituloField = new TextField("Título");
+        tituloField.setValue(proyecto.getSolicitud().getTitulo());
+        tituloField.setReadOnly(true);
+
+        TextField solicitanteField = new TextField("Solicitante");
+        solicitanteField.setValue(proyecto.getSolicitud().getSolicitante().getNombre());
+        solicitanteField.setReadOnly(true);
+
+        TextField promotorField = new TextField("Promotor");
+        promotorField.setValue(proyecto.getSolicitud().getAvalador().getNombre());
+        promotorField.setReadOnly(true);
+
+        TextField interesadosField = new TextField("Interesados");
+        interesadosField.setValue(proyecto.getSolicitud().getInteresados());
+        interesadosField.setReadOnly(true);
+
+        TextField alineamientoField = new TextField("Alineamiento");
+        alineamientoField.setValue(proyecto.getSolicitud().getAlineamiento());
+        alineamientoField.setReadOnly(true);
+
+        TextField alcanceField = new TextField("Alcance");
+        alcanceField.setValue(proyecto.getSolicitud().getAlcance());
+        alcanceField.setReadOnly(true);
+
+        TextField normativaField = new TextField("Normativa");
+        normativaField.setValue(proyecto.getSolicitud().getNormativa());
+        normativaField.setReadOnly(true);
 
         // Configurar el diseño del formulario para mostrar pares en la misma línea
         formLayout.setResponsiveSteps(
