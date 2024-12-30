@@ -224,6 +224,14 @@ public class Header extends Composite<VerticalLayout> {
         searchIcon.addClassName("menu-item");
         searchField.setSuffixComponent(searchIcon);
 
+        searchIcon.addClickListener(e -> {
+            String searchText = searchField.getValue();
+            if (!searchText.isEmpty()) {
+                UI.getCurrent().navigate("/proyectos?search=" + searchText);
+            } else {
+                UI.getCurrent().navigate("/proyectos");
+            }
+        });
         return searchField;
     }
 

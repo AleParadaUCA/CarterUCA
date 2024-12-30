@@ -14,6 +14,8 @@ import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.router.BeforeEnterEvent;
+import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
@@ -30,12 +32,26 @@ import es.uca.iw.carteruca.views.layout.MainLayout;
 @Route(value = "/proyectos", layout = MainLayout.class)
 @AnonymousAllowed
 
-public class ProyectoAllView extends Composite<VerticalLayout> {
+public class ProyectoAllView extends Composite<VerticalLayout>  implements BeforeEnterObserver  {
 
     private final CarteraService carteraService;
     private final ProyectoService proyectoService;
 
-    private final Accordion carteras = new Accordion();
+    private Accordion carteras = new Accordion();
+    private String searchValue = null; 
+
+    @Override
+    public void beforeEnter(BeforeEnterEvent event) {
+        // Obtener el valor del parámetro search
+        searchValue = event.getLocation().getQueryParameters()
+                .getParameters()
+                .getOrDefault("search", List.of(""))
+                .stream()
+                .findFirst()
+                .orElse(null);
+        this.carteras.getElement().removeAllChildren();
+        loadCarteras();
+    }
 
     @Autowired
     public ProyectoAllView(CarteraService carteraService, ProyectoService proyectoService, AuthenticatedUser authenticatedUser) {
@@ -50,7 +66,7 @@ public class ProyectoAllView extends Composite<VerticalLayout> {
         common.creartitulo("Proyectos", this);
 
         carteras.setSizeFull();
-        loadCarteras();
+        // loadCarteras();
         getContent().add(carteras);
         getContent().add(common.boton_dinamico(authenticatedUser.get().orElse(null)));
     }
@@ -67,6 +83,13 @@ public class ProyectoAllView extends Composite<VerticalLayout> {
 
             // Obtener proyectos finalizados con todos los campos completos para la cartera actual
             List<Proyecto> listaDeProyectos = proyectoService.getProyectosFinalizadosPorCartera(cartera.getId());
+
+            // Filtrar proyectos si hay un valor de búsqueda
+            if (searchValue != null && !searchValue.isEmpty()) {
+                listaDeProyectos = listaDeProyectos.stream()
+                        .filter(proyecto -> proyecto.getSolicitud().getNombre().equalsIgnoreCase(searchValue))
+                        .toList();
+            }
 
             if (listaDeProyectos.isEmpty()) {
                 proyectosLayout.add(new Span("No hay proyectos para esta cartera."));
