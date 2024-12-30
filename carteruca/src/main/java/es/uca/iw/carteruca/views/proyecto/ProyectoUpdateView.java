@@ -34,7 +34,7 @@ public class ProyectoUpdateView extends Composite<VerticalLayout> {
     private final Usuario currentUser;
 
     private final Grid<Proyecto> proyecto_tabla = new Grid<>(Proyecto.class);
-    private NumberField porcentaje = new NumberField();
+    private final NumberField porcentaje = new NumberField();
     @Autowired
     public ProyectoUpdateView(ProyectoService proyectoService, AuthenticatedUser authenticatedUser,
                               SolicitudService solicitudService) {
