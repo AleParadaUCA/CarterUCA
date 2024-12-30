@@ -20,7 +20,7 @@ import jakarta.annotation.security.RolesAllowed;
 @RolesAllowed({"CIO","OTP"})
 
 public class ProyectoMainView extends Composite<VerticalLayout> {
-    private Usuario currentUser;
+    private final Usuario currentUser;
 
     public ProyectoMainView(AuthenticatedUser authenticatedUser) {
         currentUser = authenticatedUser.get().get();
