@@ -3,6 +3,9 @@ package es.uca.iw.carteruca.views.registro;
 import java.util.List;
 import java.util.Objects;
 
+import com.vaadin.flow.component.Text;
+import com.vaadin.flow.component.html.Anchor;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.shared.Tooltip;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import es.uca.iw.carteruca.models.Centro;
@@ -133,7 +136,17 @@ public class RegistroView extends Composite<VerticalLayout> {
 
 
         // Checkbox para términos y condiciones
-        Checkbox checkbox = new Checkbox("He podido leer y entiendo la Política de Privacidad y Cookies");
+        Checkbox checkbox = new Checkbox();
+        Anchor anchor = new Anchor("https://www.uca.es/politica-de-privacidad/", "Política de Privacidad y Cookies");
+        anchor.setTarget("_blank"); // Abrir en una nueva pestaña
+
+        Span checkboxLabel = new Span();
+        checkboxLabel.add(new Text("He podido leer y entiendo la "), anchor);
+
+        // Añadir el Span al layout y luego al checkbox
+        HorizontalLayout checkboxLayout = new HorizontalLayout(checkbox, checkboxLabel);
+        checkboxLayout.setAlignItems(FlexComponent.Alignment.CENTER);
+
         checkbox.getElement().setAttribute("aria-label","He podido leer y entiendo la Política de Privacidad y Cookies");
 
         // Agregar campos al formulario
@@ -215,7 +228,7 @@ public class RegistroView extends Composite<VerticalLayout> {
         layoutRow.add(buttonRow);
 
         // Agregar componentes al layout principal
-        layoutColumn2.add(h2, formLayout2Col, checkbox, layoutRow);
+        layoutColumn2.add(h2, formLayout2Col, checkboxLayout, layoutRow);
         getContent().add(layoutColumn2);
     }
 
