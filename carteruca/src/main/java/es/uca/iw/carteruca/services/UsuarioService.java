@@ -1,8 +1,6 @@
 package es.uca.iw.carteruca.services;
 
 import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -24,10 +22,17 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import es.uca.iw.carteruca.models.Estado;
+import es.uca.iw.carteruca.models.Solicitud;
 import es.uca.iw.carteruca.models.Centro;
 import es.uca.iw.carteruca.models.Rol;
 import es.uca.iw.carteruca.models.Usuario;
 import es.uca.iw.carteruca.repository.UsuarioRepository;
+
+import java.util.List;
+import java.util.Optional;
+
+import es.uca.iw.carteruca.models.Proyecto;
 
 @Service
 public class UsuarioService implements UserDetailsService {
@@ -35,15 +40,17 @@ public class UsuarioService implements UserDetailsService {
     private final UsuarioRepository repository;
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
+    private final SolicitudService solicitudService;
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[\\w.%+-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$");
-    //private final ExplicitNullableTypeChecker typeChecker;
+    private final ProyectoService proyectoService;
 
     @Autowired
-    public UsuarioService(UsuarioRepository repository, PasswordEncoder passwordEncoder, EmailService emailService) {
+    public UsuarioService(UsuarioRepository repository, PasswordEncoder passwordEncoder, EmailService emailService, SolicitudService solicitudService, ProyectoService proyectoService) {
         this.repository = repository;
         this.passwordEncoder = passwordEncoder;
         this.emailService = emailService;
-        //this.typeChecker = typeChecker;
+        this.solicitudService = solicitudService;
+        this.proyectoService = proyectoService;
     }
 
     @Transactional
@@ -168,11 +175,27 @@ public class UsuarioService implements UserDetailsService {
     public void deleteUser(Long id) {
         Optional<Usuario> userOptional = repository.findById(id);
         if (userOptional.isPresent()) {
+            Usuario usuario = userOptional.get();
+
+            // Establecer jefe_id a null en todos los proyectos donde este usuario es jefe
+            List<Proyecto> proyectos = proyectoService.findByJefe(usuario);
+            for (Proyecto proyecto : proyectos) {
+                if (proyecto.getPorcentaje() != 100) { proyecto.setJefe(null);} //solo aquellos no terminados
+                proyectoService.cambiarPorcentaje(proyecto); //IMPORTANTE 
+            }
+
+            // Buscar todas las solicitudes del usuario con estado diferente de ACEPTADO
+            List<Solicitud> solicitudes = solicitudService.getSolicitudesByUsuario(usuario);
+            for (Solicitud solicitud : solicitudes) {
+                if (solicitud.getEstado() != Estado.ACEPTADO) {
+                    solicitudService.CancelarSolicitud(solicitud);
+                }
+            }
+
             try {
                 repository.deleteById(id);
             } catch (Exception e) {
-                Usuario usuario = userOptional.get();
-                
+
                 // Actualizar los datos del usuario a valores nulos o "usuario eliminado"
                 usuario.setNombre("Cuenta eliminada");
                 usuario.setApellidos("Cuenta eliminada");
