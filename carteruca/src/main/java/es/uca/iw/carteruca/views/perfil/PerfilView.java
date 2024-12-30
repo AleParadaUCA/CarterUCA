@@ -1,5 +1,6 @@
 package es.uca.iw.carteruca.views.perfil;
 
+import com.vaadin.flow.component.html.Span;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.vaadin.flow.component.Composite;
@@ -170,7 +171,8 @@ public class PerfilView extends Composite<VerticalLayout> {
         Dialog eliminarDialog = new Dialog();
 
         // Título de la confirmación
-        H4 titulo = new H4("¿Estás seguro de querer eliminar la cuenta?");
+        Span titulo = new Span("¿Estás seguro de querer eliminar la cuenta?");
+
 
         // Botones de acción
         Button eliminarButton = new Button("Eliminar");
@@ -192,7 +194,9 @@ public class PerfilView extends Composite<VerticalLayout> {
 
         // Crear un HorizontalLayout para los botones
         HorizontalLayout buttonLayout = new HorizontalLayout(eliminarButton, volverButton);
+        buttonLayout.setWidthFull();
         buttonLayout.setSpacing(true); // Para un espacio entre los botones
+        buttonLayout.setPadding(true);
         buttonLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER); // Centra los botones
         buttonLayout.setAlignItems(FlexComponent.Alignment.CENTER);
 

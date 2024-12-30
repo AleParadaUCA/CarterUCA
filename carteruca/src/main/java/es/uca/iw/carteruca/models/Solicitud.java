@@ -36,7 +36,7 @@ public class Solicitud {
     private String normativa;//Codigo y/o descripcion de la normativa de aplicación obligatoria
 
     @Column
-    private String memoria; //Por ahora usaremos una URL
+    private String memoria; //Ruta en la que se encuentra el archivo "Memoria"
     // *hasta aqui lo rellena el solicitante
 
     @Column

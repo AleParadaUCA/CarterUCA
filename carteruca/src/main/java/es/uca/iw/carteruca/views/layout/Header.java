@@ -69,10 +69,7 @@ public class Header extends Composite<VerticalLayout> {
         iconsLayout.setAlignItems(FlexComponent.Alignment.END);
         iconsLayout.setSpacing(false);
         iconsLayout.setPadding(false);
-
-        Icon languageIcon = new Icon(VaadinIcon.GLOBE);
-        languageIcon.setClassName("icon-button");
-        iconsLayout.add(languageIcon);
+        
 
         if (authenticatedUser.get().isPresent()) {
 

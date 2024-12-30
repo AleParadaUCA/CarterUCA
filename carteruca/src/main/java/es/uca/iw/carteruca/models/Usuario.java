@@ -51,9 +51,9 @@ public class Usuario implements UserDetails {
     private Rol rol = Rol.Solicitante;
 
     @Column(name = "activo")
-    private boolean activo = false;
+    private boolean activo = false; // con este booleano se vera si se llevo a cabo el registro completo
 
-    private String codigoRegistro = "";
+    private String codigoRegistro = ""; // codigo generado para el registro en 2 pasos
 
     // @Column(columnDefinition = "VARCHAR(255) DEFAULT 'icons/profile.svg'")
     // private String fotoPerfil = "icons/profile.svg";

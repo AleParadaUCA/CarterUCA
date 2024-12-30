@@ -9,6 +9,6 @@ Bienvenido a nuestro proyecto de la asignatura de Ingeniería Web(IW) del curso 
 
 - Celia García Gutiérrez: Diseñadora, Product Owner, Scrum Master, Programadora, Documentación(principal).
 
-- Alejandro Parada Espinosa: Programador, Tester, DevOps, Seguiridad.
+- Alejandro Parada Espinosa: Programador, Tester, DevOps, Seguridad.
 
 - Iván Guillén Márquez: Programador, Tester, Analista, Administrador de Base de Datos.

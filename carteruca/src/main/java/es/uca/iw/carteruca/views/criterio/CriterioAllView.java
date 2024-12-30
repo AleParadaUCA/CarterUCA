@@ -70,6 +70,7 @@ public class CriterioAllView extends VerticalLayout {
             return editButton;
         }).setHeader("Editar");
 
+        /*
         tabla_criterio.addComponentColumn(criterio -> {
             Icon delete = VaadinIcon.TRASH.create();
             Button deleteButton = new Button(delete, click -> {
@@ -78,6 +79,8 @@ public class CriterioAllView extends VerticalLayout {
             deleteButton.addThemeVariants(ButtonVariant.LUMO_ERROR, ButtonVariant.LUMO_TERTIARY);
             return deleteButton;
         }).setHeader("Eliminar");
+
+         */
 
         updateGrid();
     }
@@ -213,6 +216,7 @@ public class CriterioAllView extends VerticalLayout {
         dialog.open();
     }
 
+    /*
     private void showDeleteConfirmationDialog(Criterio criterio) {
         Dialog dialog = new Dialog();
         dialog.setCloseOnEsc(false);
@@ -241,6 +245,8 @@ public class CriterioAllView extends VerticalLayout {
         dialog.add(dialogLayout);
         dialog.open();
     }
+
+     */
 
 
 }

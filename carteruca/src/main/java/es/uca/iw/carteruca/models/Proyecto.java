@@ -23,13 +23,15 @@ public class Proyecto {
     private Solicitud solicitud;
 
     @Column
-    private String presupuesto; // es un documento especificando la financiación aportada
+    private String presupuesto; //Ruta en la que se encuentra el archivo "Presupuesto",
+    // que es un documento especificando la financiación aportada
 
     @Column
     private Float presupuesto_valor; // presupuesto en número para mostrarlo si procede
 
     @Column
-    private String especificacion_tecnica;// es un documento con las especificaciones tecnológicas
+    private String especificacion_tecnica;//Ruta en la que se encuentra el archivo "Especficacion Tecnica",
+    // que es un documento con las especificaciones tecnológicas
 
     @Column
     private Float puntuacionTotal; // este se debe calcular mediante los criterios
@@ -41,15 +43,17 @@ public class Proyecto {
     private Float horas;
 
     @Column
-    private String puntuaciones;
+    private String puntuaciones; // vector con las puntuaciones dadas a cada criterio para un proyecto
 
     @Column
-    private String director_de_proyecto;
+    private String director_de_proyecto;// persona que sera el director de proyecto,
+    // no tiene porque estar registrada en la aplicacion
 
     @ManyToOne
     @JoinColumn(name = "jefe_id")
-    private Usuario jefe;
+    private Usuario jefe; // FK a usuario OTP, que será el jefe de proyecto.
 
+    //GETTERS Y SETTERS
     public Long getId() {return id; }
 
     public String getPresupuesto() {return presupuesto;}

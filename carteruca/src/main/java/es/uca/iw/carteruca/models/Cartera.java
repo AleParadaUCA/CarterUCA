@@ -45,7 +45,7 @@ public class Cartera {
     private float n_horas;
 
     @Column(nullable = false)
-    private int n_max_tecnicos;
+    private int n_max_tecnicos; // tecnicos disponibles para esta Cartera
 
     @Column(nullable = false)
     private float presupuesto_total;
