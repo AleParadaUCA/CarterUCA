@@ -12,18 +12,18 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import es.uca.iw.carteruca.models.Proyecto;
-import es.uca.iw.carteruca.models.Rol;
 import es.uca.iw.carteruca.models.Usuario;
 import es.uca.iw.carteruca.services.ProyectoService;
 import es.uca.iw.carteruca.services.UsuarioService;
 import es.uca.iw.carteruca.views.common.common;
+import es.uca.iw.carteruca.views.layout.MainLayout;
 import jakarta.annotation.security.RolesAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
 @PageTitle("Reasignar Jefe")
-@Route(value = "proyectos/reasignar-jefe")
+@Route(value = "proyectos/reasignar-jefe", layout = MainLayout.class)
 @RolesAllowed("OTP")
 
 public class ProyectoReasignarView extends Composite<VerticalLayout> {
@@ -64,6 +64,10 @@ public class ProyectoReasignarView extends Composite<VerticalLayout> {
             actualizar.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
             return actualizar;
         });
+
+        List<Proyecto> lista = proyectoService.getProyectosSinJefeConDirector();
+        proyectos_tabla.setItems(lista);
+        getContent().add(proyectos_tabla);
     }
 
     private void reasignarJefe(Proyecto proyecto) {
@@ -107,6 +111,7 @@ public class ProyectoReasignarView extends Composite<VerticalLayout> {
     }
 
     private void actualizarTabla() {
-
+        List<Proyecto> listaActualizada = proyectoService.getProyectosSinJefeConDirector();
+        proyectos_tabla.setItems(listaActualizada);
     }
 }

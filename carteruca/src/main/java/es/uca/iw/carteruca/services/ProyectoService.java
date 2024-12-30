@@ -245,7 +245,12 @@ public class ProyectoService {
                 .collect(Collectors.toList());
     }
 
-
+public List<Proyecto> getProyectosSinJefeConDirector() {
+    return repository.findAll().stream()
+            .filter(proyecto -> proyecto.getJefe() == null)
+            .filter(proyecto -> proyecto.getDirector_de_proyecto() != null && !proyecto.getDirector_de_proyecto().isEmpty())
+            .collect(Collectors.toList());
+}
 
     public List<Proyecto> findAllByEstadoAndSolicitante(Usuario solicitante) {
         return repository.findAllBySolicitudEstadoInAndSolicitudSolicitante(
@@ -263,6 +268,10 @@ public class ProyectoService {
                 .filter(proyecto -> proyecto.getPuntuaciones() != null && !proyecto.getPuntuaciones().isEmpty())
 
                 .collect(Collectors.toList());
+    }
+
+    List<Proyecto> findByJefe(Usuario usuario) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
 
