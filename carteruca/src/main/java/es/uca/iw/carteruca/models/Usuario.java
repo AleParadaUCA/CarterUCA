@@ -48,7 +48,7 @@ public class Usuario implements UserDetails {
 
     @Column(columnDefinition = "VARCHAR(255) DEFAULT 'Solicitante'")
     @Enumerated(EnumType.STRING)
-    private Rol rol;
+    private Rol rol = Rol.Solicitante;
 
     @Column(name = "activo")
     private boolean activo = false; // con este booleano se vera si se llevo a cabo el registro completo

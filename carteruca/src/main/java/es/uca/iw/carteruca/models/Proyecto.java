@@ -27,7 +27,7 @@ public class Proyecto {
     // que es un documento especificando la financiación aportada
 
     @Column
-    private Float presupuesto_valor; // presupuesto en número para mostrarlo si procede
+    private Float presupuesto_valor = 0.0f; // presupuesto en número para mostrarlo si procede
 
     @Column
     private String especificacion_tecnica;//Ruta en la que se encuentra el archivo "Especficacion Tecnica",

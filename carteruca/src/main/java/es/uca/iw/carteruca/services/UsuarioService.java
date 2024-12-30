@@ -96,7 +96,6 @@ public class UsuarioService implements UserDetailsService {
         nuevoUsuario.setApellidos(apellidos);
         nuevoUsuario.setUsername(usuario);
         nuevoUsuario.setEmail(email);
-        nuevoUsuario.setRol(obtenerRol(usuario));
         nuevoUsuario.setPassword(passwordEncoder.encode(password));
         nuevoUsuario.setCentro(centro);
 
@@ -167,7 +166,26 @@ public class UsuarioService implements UserDetailsService {
     }
 
     public void deleteUser(Long id) {
-        repository.deleteById(id);
+        Optional<Usuario> userOptional = repository.findById(id);
+        if (userOptional.isPresent()) {
+            try {
+                repository.deleteById(id);
+            } catch (Exception e) {
+                Usuario usuario = userOptional.get();
+                
+                // Actualizar los datos del usuario a valores nulos o "usuario eliminado"
+                usuario.setNombre("Cuenta eliminada");
+                usuario.setApellidos("Cuenta eliminada");
+                usuario.setEmail(null);
+                usuario.setUsername("Cuenta eliminada");
+                usuario.setPassword(null);
+                usuario.setActivo(false);
+                usuario.setCentro(null);
+                usuario.setRol(null);
+                
+                repository.save(usuario);
+            }
+        }
     }
 
     @Transactional
@@ -248,6 +266,7 @@ public class UsuarioService implements UserDetailsService {
         if (user.isPresent() && !user.get().isActivo() && user.get().getCodigoRegistro().equals(registerCode)) {
             user.get().setActivo(true);
             user.get().setCodigoRegistro(null);
+            user.get().setRol( obtenerRol(user.get().getUsername()));
             repository.save(user.get());
             return true;
 

@@ -45,11 +45,11 @@ public class EmailService {
 
         MimeMessageHelper helper = new MimeMessageHelper(message, "utf-8");
 
-        String subject = "Welcome";
-        String body = "You should active your account. "
-                + "Go to " + getServerUrl() + "useractivation "
-                + "and introduce your mail and the following code: "
-                + user.getCodigoRegistro();
+        String subject = "Validar Correo";
+        String body = "Bienvenido" + user.getNombre()
+                + ".\n\nPara activar tu cuenta de CarterUCA entra en: " + getServerUrl()
+                + ".\nTu código secreto es: " + user.getCodigoRegistro()
+                + "\\n\\nSaludos,\\nEl equipo de Carteruca.\";";
 
         try {
             helper.setFrom(defaultMail);
