@@ -96,7 +96,6 @@ public class UsuarioService implements UserDetailsService {
         nuevoUsuario.setApellidos(apellidos);
         nuevoUsuario.setUsername(usuario);
         nuevoUsuario.setEmail(email);
-        nuevoUsuario.setRol(obtenerRol(usuario));
         nuevoUsuario.setPassword(passwordEncoder.encode(password));
         nuevoUsuario.setCentro(centro);
 
@@ -248,6 +247,7 @@ public class UsuarioService implements UserDetailsService {
         if (user.isPresent() && !user.get().isActivo() && user.get().getCodigoRegistro().equals(registerCode)) {
             user.get().setActivo(true);
             user.get().setCodigoRegistro(null);
+            user.get().setRol( obtenerRol(user.get().getUsername()));
             repository.save(user.get());
             return true;
 
