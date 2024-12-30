@@ -166,7 +166,26 @@ public class UsuarioService implements UserDetailsService {
     }
 
     public void deleteUser(Long id) {
-        repository.deleteById(id);
+        Optional<Usuario> userOptional = repository.findById(id);
+        if (userOptional.isPresent()) {
+            try {
+                repository.deleteById(id);
+            } catch (Exception e) {
+                Usuario usuario = userOptional.get();
+                
+                // Actualizar los datos del usuario a valores nulos o "usuario eliminado"
+                usuario.setNombre("Cuenta eliminada");
+                usuario.setApellidos("Cuenta eliminada");
+                usuario.setEmail(null);
+                usuario.setUsername("Cuenta eliminada");
+                usuario.setPassword(null);
+                usuario.setActivo(false);
+                usuario.setCentro(null);
+                usuario.setRol(null);
+                
+                repository.save(usuario);
+            }
+        }
     }
 
     @Transactional
