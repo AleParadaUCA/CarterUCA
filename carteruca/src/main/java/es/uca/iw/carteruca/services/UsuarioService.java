@@ -31,6 +31,7 @@ import es.uca.iw.carteruca.repository.UsuarioRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import es.uca.iw.carteruca.models.Proyecto;
 
@@ -177,19 +178,19 @@ public class UsuarioService implements UserDetailsService {
         if (userOptional.isPresent()) {
             Usuario usuario = userOptional.get();
 
-            // Establecer jefe_id a null en todos los proyectos donde este usuario es jefe
-            List<Proyecto> proyectos = proyectoService.findByJefe(usuario);
-            for (Proyecto proyecto : proyectos) {
-                if (proyecto.getPorcentaje() != 100) { proyecto.setJefe(null);} //solo aquellos no terminados
-                proyectoService.cambiarPorcentaje(proyecto); //IMPORTANTE 
-            }
-
             // Buscar todas las solicitudes del usuario con estado diferente de ACEPTADO
             List<Solicitud> solicitudes = solicitudService.getSolicitudesByUsuario(usuario);
             for (Solicitud solicitud : solicitudes) {
                 if (solicitud.getEstado() != Estado.ACEPTADO) {
                     solicitudService.CancelarSolicitud(solicitud);
                 }
+            }
+
+            // Establecer jefe_id a null en todos los proyectos donde este usuario es jefe
+            List<Proyecto> proyectos = proyectoService.findByJefe(usuario);
+            for (Proyecto proyecto : proyectos) {
+                if (proyecto.getPorcentaje() != 100) { proyecto.setJefe(null);} //solo aquellos no terminados
+                proyectoService.cambiarPorcentaje(proyecto); //IMPORTANTE 
             }
 
             try {
@@ -201,7 +202,7 @@ public class UsuarioService implements UserDetailsService {
                 usuario.setApellidos("Cuenta eliminada");
                 usuario.setEmail(null);
                 usuario.setUsername("Cuenta eliminada");
-                usuario.setPassword(null);
+                usuario.setPassword("none");
                 usuario.setActivo(false);
                 usuario.setCentro(null);
                 usuario.setRol(null);
@@ -249,8 +250,18 @@ public class UsuarioService implements UserDetailsService {
         }
     }
 
-    public List<Usuario> findAllUsuariosExcludingAdmin(){
-        return repository.findByRolNot(Rol.Admin);
+    public List<Usuario> findAllUsuariosExcludingAdmin() {
+        return repository.findByRolNot(Rol.Admin).stream()
+                .filter(usuario -> !(
+                    "Cuenta eliminada".equals(usuario.getApellidos()) &&
+                    usuario.getEmail() == null &&
+                    "Cuenta eliminada".equals(usuario.getUsername()) &&
+                    usuario.getPassword() == null &&
+                    !usuario.isActivo() &&
+                    usuario.getCentro() == null &&
+                    usuario.getRol() == null
+                ))
+                .collect(Collectors.toList());
     }
 
     @Transactional

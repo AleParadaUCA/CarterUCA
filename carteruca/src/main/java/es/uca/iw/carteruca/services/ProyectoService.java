@@ -271,7 +271,7 @@ public class ProyectoService {
     }
 
     List<Proyecto> findByJefe(Usuario usuario) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return repository.findByJefe(usuario);
     }
 
 
