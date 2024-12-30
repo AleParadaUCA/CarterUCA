@@ -15,5 +15,5 @@ public interface ProyectoRepository extends JpaRepository<Proyecto, Long> {
     List<Proyecto> findAll();
     List<Proyecto> findByPuntuacionesIsNullAndPuntuacionTotalIsNull();
     List<Proyecto> findAllBySolicitudEstadoInAndSolicitudSolicitante(List<Estado> estados, Usuario solicitante);
-
+    List<Proyecto> findByJefe(Usuario jefe);
 }
