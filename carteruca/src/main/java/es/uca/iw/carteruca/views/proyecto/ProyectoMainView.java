@@ -66,7 +66,7 @@ public class ProyectoMainView extends Composite<VerticalLayout> {
 
             Div reasignar = common.createSquare("Reasignar Jefe", VaadinIcon.USER_STAR);
             reasignar.getElement().setAttribute("aria-label", "Reasignar Jefe");
-            //reasignar.addClickListener();
+            reasignar.addClickListener(event -> UI.getCurrent().navigate(ProyectoReasignarView.class));
             getContent().add(reasignar);
         }
 
