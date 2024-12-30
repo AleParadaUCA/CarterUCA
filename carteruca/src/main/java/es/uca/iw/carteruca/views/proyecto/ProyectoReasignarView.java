@@ -89,7 +89,8 @@ public class ProyectoReasignarView extends Composite<VerticalLayout> {
                 common.showSuccessNotification("Jefe reasignado correctamente");
                 dialog.close();
                 // Actualizar la tabla de proyectos si es necesario
-                actualizarTabla();
+                //actualizarTabla();
+                proyectos_tabla.getDataProvider().refreshAll();
             }
         });
         guardarButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
