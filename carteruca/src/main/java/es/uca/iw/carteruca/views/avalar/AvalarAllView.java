@@ -66,7 +66,7 @@ public class AvalarAllView extends Composite<VerticalLayout> {
 
         getContent().setSizeFull();
 
-        common.creartitulo("Avalar Solicitudes",this);
+        common.creartituloComposite("Avalar Solicitudes",this);
 
         crearTabla();
 
@@ -252,12 +252,11 @@ public class AvalarAllView extends Composite<VerticalLayout> {
 
 
         // FormLayout para campos
-        FormLayout formLayout = new FormLayout();
-        formLayout.add(importanciaField);
-        formLayout.setWidthFull(); // Ajustar ancho completo del FormLayout
+        importancia.add(importanciaField);
+        importancia.setWidthFull(); // Ajustar ancho completo del FormLayout
 
         // Añadir componentes al diálogo
-        VerticalLayout contentLayout = new VerticalLayout(formLayout, botonesLayout);
+        VerticalLayout contentLayout = new VerticalLayout(importancia, botonesLayout);
         contentLayout.setPadding(false); // Ajustar diseño sin relleno extra
         contentLayout.setSpacing(true);
         dialog.add(contentLayout);

@@ -62,7 +62,7 @@ public class SolicitudUpdateView extends Composite<VerticalLayout> {
         this.usuarioService = usuarioService;
         this.currentUser = authenticatedUser.get().get();
 
-        common.creartitulo("Modificar Solicitudes",this);
+        common.creartituloComposite("Modificar Solicitudes",this);
         crearTabla();
         getContent().add(solicitud_tabla);
         getContent().add(common.botones_solicitud());

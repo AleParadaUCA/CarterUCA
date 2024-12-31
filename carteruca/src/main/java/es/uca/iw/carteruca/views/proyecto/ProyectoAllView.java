@@ -37,7 +37,7 @@ public class ProyectoAllView extends Composite<VerticalLayout>  implements Befor
     private final CarteraService carteraService;
     private final ProyectoService proyectoService;
 
-    private Accordion carteras = new Accordion();
+    private final Accordion carteras = new Accordion();
     private String searchValue = null; 
 
     @Override
@@ -63,7 +63,7 @@ public class ProyectoAllView extends Composite<VerticalLayout>  implements Befor
         getContent().setPadding(true);
         getContent().setSpacing(true);
 
-        common.creartitulo("Proyectos", this);
+        common.creartituloComposite("Proyectos", this);
 
         carteras.setSizeFull();
         // loadCarteras();
@@ -118,11 +118,7 @@ public class ProyectoAllView extends Composite<VerticalLayout>  implements Befor
                     } else {
                         color = "#f44336"; // Rojo para muchas horas
                     }
-                    badge.getElement().getStyle().set("font-size", "var(--lumo-font-size-m)");
-                    badge.getElement().getStyle().set("background-color", color);
-                    badge.getElement().getStyle().set("color", "white");
-                    badge.getElement().getStyle().set("border-radius", "12px");
-                    badge.getElement().getStyle().set("padding", "2px 6px");
+                    common.applyBadgeStyles(badge, color);
                     return badge;
                 }).setHeader("Horas");
 
@@ -138,11 +134,7 @@ public class ProyectoAllView extends Composite<VerticalLayout>  implements Befor
                     } else {
                         color = "#f44336"; // Rojo para presupuestos altos
                     }
-                    badge.getElement().getStyle().set("font-size", "var(--lumo-font-size-m)");
-                    badge.getElement().getStyle().set("background-color", color);
-                    badge.getElement().getStyle().set("color", "white");
-                    badge.getElement().getStyle().set("border-radius", "12px");
-                    badge.getElement().getStyle().set("padding", "2px 6px");
+                    common.applyBadgeStyles(badge, color);
                     return badge;
                 }).setHeader("Presupuesto");
 
@@ -170,13 +162,6 @@ public class ProyectoAllView extends Composite<VerticalLayout>  implements Befor
         tituloField.setValue(proyecto.getSolicitud().getTitulo());
         tituloField.setReadOnly(true);
 
-        TextField solicitanteField = new TextField("Solicitante");
-        solicitanteField.setValue(proyecto.getSolicitud().getSolicitante().getNombre());
-        solicitanteField.setReadOnly(true);
-
-        TextField promotorField = new TextField("Promotor");
-        promotorField.setValue(proyecto.getSolicitud().getAvalador().getNombre());
-        promotorField.setReadOnly(true);
 
         TextField interesadosField = new TextField("Interesados");
         interesadosField.setValue(proyecto.getSolicitud().getInteresados());
@@ -200,8 +185,7 @@ public class ProyectoAllView extends Composite<VerticalLayout>  implements Befor
         );
 
         // Añadir los campos al formulario, con alineamiento ocupando toda la fila
-        formLayout.add(tituloField, solicitanteField);
-        formLayout.add(promotorField, interesadosField);
+        formLayout.add(tituloField, interesadosField);
         formLayout.add(alineamientoField, 2); // Campo "Alineamiento" ocupa ambas columnas
         formLayout.add(alcanceField, normativaField);
 

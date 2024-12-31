@@ -25,7 +25,7 @@ public class ProyectoMainView extends Composite<VerticalLayout> {
     public ProyectoMainView(AuthenticatedUser authenticatedUser) {
         currentUser = authenticatedUser.get().get();
 
-        common.creartitulo("Proyectos",this);
+        common.creartituloComposite("Proyectos",this);
 
         Div consultar = common.createSquare("Consultar Proyectos",VaadinIcon.SEARCH);
         consultar.getElement().setAttribute("aria-label", "Consultar Proyectos");

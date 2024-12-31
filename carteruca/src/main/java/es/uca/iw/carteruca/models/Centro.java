@@ -24,11 +24,6 @@ public class Centro {
 
     public Centro() {}
 
-    public Centro(String nombre, String acronimo) {
-
-        this.nombre = nombre;
-        this.acronimo = acronimo;
-    }
 
     //GETTERS Y SETTERS
 

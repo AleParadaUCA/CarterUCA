@@ -2,21 +2,14 @@ package es.uca.iw.carteruca.views.solicitud;
 
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.UI;
-import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.Span;
-import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import es.uca.iw.carteruca.views.solicitud.SolicitudAddView;
-import es.uca.iw.carteruca.views.home.HomeSolicitanteView;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import es.uca.iw.carteruca.views.layout.MainLayout;
-import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import es.uca.iw.carteruca.views.common.common;
 
@@ -43,8 +36,8 @@ public class SolicitudesMainView extends Composite<VerticalLayout> {
         twoColumnsLayout.setSpacing(true); // Espaciado entre columnas
 
         // Añadir Solicitud
-        Div añadir = common.createSquare("Añadir Solicitud", VaadinIcon.PLUS);
-        añadir.addClickListener(e -> UI.getCurrent().navigate(SolicitudAddView.class));
+        Div add = common.createSquare("Añadir Solicitud", VaadinIcon.PLUS);
+        add.addClickListener(e -> UI.getCurrent().navigate(SolicitudAddView.class));
 
         // Modificar Solicitud
         Div modificar = common.createSquare("Modificar Solicitud", VaadinIcon.EDIT);
@@ -59,7 +52,7 @@ public class SolicitudesMainView extends Composite<VerticalLayout> {
         solicitudes.addClickListener(e -> UI.getCurrent().navigate(SolicitudSeeView.class));
 
         // Agregar elementos a las dos columnas
-        VerticalLayout column1 = new VerticalLayout(añadir, modificar);
+        VerticalLayout column1 = new VerticalLayout(add, modificar);
         column1.setSpacing(false);
         column1.setPadding(false);
         column1.setDefaultHorizontalComponentAlignment(FlexComponent.Alignment.CENTER);

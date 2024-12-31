@@ -1,7 +1,6 @@
 package es.uca.iw.carteruca.views.admin;
 
 import com.vaadin.flow.component.html.H4;
-import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import es.uca.iw.carteruca.models.Centro;
 import es.uca.iw.carteruca.services.CentroService;
@@ -35,7 +34,7 @@ public class CentroAllView extends Composite<VerticalLayout> {
     public CentroAllView(CentroService centroService) {
         this.centroService = centroService;
 
-        common.creartitulo("Centros", this); // Usar el título común
+        common.creartituloComposite("Centros", this); // Usar el título común
         configurar_tabla(); // Configurar la tabla
 
         VerticalLayout layout = new VerticalLayout();

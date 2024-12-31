@@ -9,11 +9,9 @@ import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import es.uca.iw.carteruca.models.Estado;
-import es.uca.iw.carteruca.models.Rol;
 import es.uca.iw.carteruca.models.Solicitud;
 import es.uca.iw.carteruca.models.Usuario;
 import es.uca.iw.carteruca.security.AuthenticatedUser;
@@ -43,7 +41,7 @@ public class SolicitudDeleteView extends Composite<VerticalLayout> {
         this.authenticatedUser = authenticatedUser;
         currentUser = authenticatedUser.get().get();
 
-        common.creartitulo("Eliminar Solicitudes",this);
+        common.creartituloComposite("Eliminar Solicitudes",this);
         crearTabla();
         getContent().add(solicitudes);
         getContent().add(common.botones_solicitud());

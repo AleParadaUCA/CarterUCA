@@ -42,7 +42,7 @@ public class SolicitudChangeView extends Composite<VerticalLayout> {
         this.proyectoService = proyectoService;
         this.currentUser = authenticatedUser.get().get();
 
-        common.creartitulo("Aceptación a Proyectos",this);
+        common.creartituloComposite("Aceptación a Proyectos",this);
         crearTabla();
         getContent().add(common.botones_proyecto());
 

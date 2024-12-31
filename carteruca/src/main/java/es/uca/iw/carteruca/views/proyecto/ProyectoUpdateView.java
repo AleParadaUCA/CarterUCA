@@ -42,7 +42,7 @@ public class ProyectoUpdateView extends Composite<VerticalLayout> {
         this.solicitudService = solicitudService;
         this.currentUser = authenticatedUser.get().get();
 
-        common.creartitulo("Actualizar Proyecto",this);
+        common.creartituloComposite("Actualizar Proyecto",this);
 
         crearTabla();
 

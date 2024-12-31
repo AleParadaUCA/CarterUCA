@@ -48,7 +48,7 @@ public class ProyectoPuntuarView extends Composite<VerticalLayout> {
         this.proyectoService = proyectoService;
         this.currentUser = authenticatedUser.get().get();
 
-        common.creartitulo("Puntuar Proyectos", this);
+        common.creartituloComposite("Puntuar Proyectos", this);
 
         crearTabla();
 
@@ -148,7 +148,8 @@ public class ProyectoPuntuarView extends Composite<VerticalLayout> {
                 dialog.close();
             } catch (Exception ex) {
                 // Manejar excepciones
-                common.showErrorNotification("Error al guardar las puntuaciones. Intente de nuevo." + ex.toString());
+                common.showErrorNotification("Error al guardar las puntuaciones. Intente de nuevo." + ex);
+
             }
         });
 

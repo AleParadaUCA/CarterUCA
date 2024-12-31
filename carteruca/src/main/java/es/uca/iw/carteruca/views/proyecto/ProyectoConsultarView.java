@@ -49,7 +49,7 @@ public class ProyectoConsultarView extends Composite<VerticalLayout> {
         this.proyectoService = proyectoService;
         this.criterioService = criterioService;
 
-        common.creartitulo("Consultar Proyectos",this);
+        common.creartituloComposite("Consultar Proyectos",this);
 
         crearTabla();
 

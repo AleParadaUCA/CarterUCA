@@ -75,7 +75,7 @@ public class common {
     }
 
 
-    public static void creartitulo(String title, Composite<VerticalLayout> composite) {
+    public static void creartituloComposite(String title, Composite<VerticalLayout> composite) {
         // Crear el título
         H2 titulo = new H2(title);
         titulo.getElement().setAttribute("aria-label", title);
@@ -435,4 +435,13 @@ public class common {
         botones.add(volver);
         return botones;
     }
+
+    public static void applyBadgeStyles(Span badge, String backgroundColor) {
+        badge.getElement().getStyle().set("font-size", "var(--lumo-font-size-m)");
+        badge.getElement().getStyle().set("background-color", backgroundColor);
+        badge.getElement().getStyle().set("color", "white");
+        badge.getElement().getStyle().set("border-radius", "12px");
+        badge.getElement().getStyle().set("padding", "2px 6px");
+    }
+
 }

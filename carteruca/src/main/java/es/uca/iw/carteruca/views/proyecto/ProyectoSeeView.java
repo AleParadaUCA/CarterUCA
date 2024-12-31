@@ -31,7 +31,7 @@ public class ProyectoSeeView extends Composite<VerticalLayout> {
     private final AuthenticatedUser authenticatedUser;
     private final ProyectoService proyectoService;
 
-    private Usuario currentUser;
+    private final Usuario currentUser;
 
     private final Grid<Proyecto> proyectos_tabla = new Grid<>(Proyecto.class);
 
@@ -41,7 +41,7 @@ public class ProyectoSeeView extends Composite<VerticalLayout> {
         this.proyectoService = proyectoService;
         this.currentUser = authenticatedUser.get().get();
 
-        common.creartitulo("Consultar Proyectos",this);
+        common.creartituloComposite("Consultar Proyectos",this);
 
         crearTabla();
 
