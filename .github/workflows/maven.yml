@@ -1,0 +1,51 @@
+name: Java CI with Maven and SonarQube
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+    types: [opened, synchronize, reopened]
+
+jobs:
+  build:
+    name: Build and Analyze
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the code
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Importante para análisis relevantes de SonarQube
+
+      # Set up JDK 21
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: 21
+          distribution: 'temurin'  # Puedes usar 'zulu' o 'temurin' según prefieras
+          cache: maven
+
+      # Cache SonarQube packages
+      - name: Cache SonarQube packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+
+      # Cache Maven dependencies
+      - name: Cache Maven packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
+      # Build and analyze with SonarQube
+      - name: Build and analyze with SonarQube
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Token para obtener información del PR
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  # Debes configurar este secreto en tu repositorio
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+          -Dsonar.projectKey=AleParadaUCA_iw2024-2025-CarterUCA
