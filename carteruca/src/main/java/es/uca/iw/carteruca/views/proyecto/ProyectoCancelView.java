@@ -42,7 +42,7 @@ public class ProyectoCancelView extends Composite<VerticalLayout> {
         this.proyectoService = proyectoService;
         this.solicitudService = solicitudService;
 
-        common.creartitulo("Cancelar Proyectos",this);
+        common.creartituloComposite("Cancelar Proyectos",this);
 
         crearTabla();
 

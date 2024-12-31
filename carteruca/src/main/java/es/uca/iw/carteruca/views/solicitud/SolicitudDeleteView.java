@@ -41,7 +41,7 @@ public class SolicitudDeleteView extends Composite<VerticalLayout> {
         this.authenticatedUser = authenticatedUser;
         currentUser = authenticatedUser.get().get();
 
-        common.creartitulo("Eliminar Solicitudes",this);
+        common.creartituloComposite("Eliminar Solicitudes",this);
         crearTabla();
         getContent().add(solicitudes);
         getContent().add(common.botones_solicitud());

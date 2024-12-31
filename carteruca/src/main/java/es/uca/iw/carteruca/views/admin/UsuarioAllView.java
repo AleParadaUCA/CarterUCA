@@ -41,7 +41,7 @@ public class UsuarioAllView extends Composite<VerticalLayout> {
 
     private void configurarVista() {
         // Configurar el título
-        common.creartitulo("Usuarios", this);
+        common.creartituloComposite("Usuarios", this);
 
         // Configurar la tabla
         configurarGrid();

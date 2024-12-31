@@ -58,7 +58,7 @@ public class ProyectoConfigureView extends Composite<VerticalLayout> {
         this.proyectoService = proyectoService;
         this.usuarioService = usuarioService;
 
-        common.creartitulo("Configurar Proyectos", this);
+        common.creartituloComposite("Configurar Proyectos", this);
 
         crearTabla();
 

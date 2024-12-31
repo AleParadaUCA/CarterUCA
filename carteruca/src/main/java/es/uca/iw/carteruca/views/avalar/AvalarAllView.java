@@ -66,7 +66,7 @@ public class AvalarAllView extends Composite<VerticalLayout> {
 
         getContent().setSizeFull();
 
-        common.creartitulo("Avalar Solicitudes",this);
+        common.creartituloComposite("Avalar Solicitudes",this);
 
         crearTabla();
 

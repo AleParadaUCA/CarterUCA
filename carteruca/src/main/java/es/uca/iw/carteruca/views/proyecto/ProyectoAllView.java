@@ -63,7 +63,7 @@ public class ProyectoAllView extends Composite<VerticalLayout>  implements Befor
         getContent().setPadding(true);
         getContent().setSpacing(true);
 
-        common.creartitulo("Proyectos", this);
+        common.creartituloComposite("Proyectos", this);
 
         carteras.setSizeFull();
         // loadCarteras();

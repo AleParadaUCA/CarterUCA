@@ -75,7 +75,7 @@ public class common {
     }
 
 
-    public static void creartitulo(String title, Composite<VerticalLayout> composite) {
+    public static void creartituloComposite(String title, Composite<VerticalLayout> composite) {
         // Crear el título
         H2 titulo = new H2(title);
         titulo.getElement().setAttribute("aria-label", title);

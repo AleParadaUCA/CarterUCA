@@ -41,7 +41,7 @@ public class ProyectoSeeView extends Composite<VerticalLayout> {
         this.proyectoService = proyectoService;
         this.currentUser = authenticatedUser.get().get();
 
-        common.creartitulo("Consultar Proyectos",this);
+        common.creartituloComposite("Consultar Proyectos",this);
 
         crearTabla();
 

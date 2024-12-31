@@ -40,7 +40,7 @@ public class ProyectoReasignarView extends Composite<VerticalLayout> {
         this.proyectoService = proyectoService;
         this.usuarioService = usuarioService;
 
-        common.creartitulo("Reasignar Jefe",this);
+        common.creartituloComposite("Reasignar Jefe",this);
 
         crearTabla();
 

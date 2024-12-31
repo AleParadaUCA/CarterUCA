@@ -34,7 +34,7 @@ public class CentroAllView extends Composite<VerticalLayout> {
     public CentroAllView(CentroService centroService) {
         this.centroService = centroService;
 
-        common.creartitulo("Centros", this); // Usar el título común
+        common.creartituloComposite("Centros", this); // Usar el título común
         configurar_tabla(); // Configurar la tabla
 
         VerticalLayout layout = new VerticalLayout();

@@ -34,7 +34,7 @@ public class SolicitudSeeView extends Composite<VerticalLayout> {
         this.solicitudService = solicitudService;
         this.usuario = authenticatedUser.get().get();
 
-        common.creartitulo("Ver Solicitudes",this);
+        common.creartituloComposite("Ver Solicitudes",this);
         crearTabla();
         getContent().add(common.botones_solicitud());
     }
