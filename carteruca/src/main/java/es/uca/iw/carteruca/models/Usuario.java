@@ -55,8 +55,6 @@ public class Usuario implements UserDetails {
 
     private String codigoRegistro = ""; // codigo generado para el registro en 2 pasos
 
-    // @Column(columnDefinition = "VARCHAR(255) DEFAULT 'icons/profile.svg'")
-    // private String fotoPerfil = "icons/profile.svg";
 
     public List<GrantedAuthority> getAuthorities() {
         return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + this.getRol().name()));
