@@ -76,9 +76,7 @@ public class CarteraAllView extends VerticalLayout {
 
         tablaCarteras.addComponentColumn(cartera -> {
             Icon delete = VaadinIcon.TRASH.create();
-            Button deleteButton = new Button(delete, click -> {
-                showDeleteConfirmationDialog(cartera);
-            });
+            Button deleteButton = new Button(delete, click -> showDeleteConfirmationDialog(cartera));
             deleteButton.addThemeVariants(ButtonVariant.LUMO_ERROR, ButtonVariant.LUMO_TERTIARY);
             return deleteButton;
         }).setHeader("Eliminar");
@@ -257,9 +255,8 @@ public class CarteraAllView extends VerticalLayout {
         });
         confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
-        Button cancelButton = new Button("No", event -> {
-            dialog.close();
-        });
+        Button cancelButton = new Button("No", event -> dialog.close());
+
         cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
 
         HorizontalLayout buttons = new HorizontalLayout(confirmButton, cancelButton);

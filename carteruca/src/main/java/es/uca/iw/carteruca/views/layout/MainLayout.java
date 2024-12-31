@@ -11,7 +11,7 @@ import es.uca.iw.carteruca.security.AuthenticatedUser;
 @AnonymousAllowed
 public class MainLayout extends Composite<VerticalLayout> implements RouterLayout {
 
-    private AuthenticatedUser authenticatedUser;
+    private final AuthenticatedUser authenticatedUser;
 
     public MainLayout(AuthenticatedUser authenticatedUser) {
         this.authenticatedUser = authenticatedUser;

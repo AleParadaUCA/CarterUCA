@@ -29,7 +29,7 @@ public class CarteraActualView extends Composite<VerticalLayout> {
 
     private final CarteraService carteraService;
 
-    private Cartera carteraActual;
+    private final Cartera carteraActual;
 
     @Autowired
     public CarteraActualView(CarteraService carteraService, AuthenticatedUser authenticatedUser) {
