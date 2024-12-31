@@ -162,13 +162,6 @@ public class ProyectoAllView extends Composite<VerticalLayout>  implements Befor
         tituloField.setValue(proyecto.getSolicitud().getTitulo());
         tituloField.setReadOnly(true);
 
-        TextField solicitanteField = new TextField("Solicitante");
-        solicitanteField.setValue(proyecto.getSolicitud().getSolicitante().getNombre());
-        solicitanteField.setReadOnly(true);
-
-        TextField promotorField = new TextField("Promotor");
-        promotorField.setValue(proyecto.getSolicitud().getAvalador().getNombre());
-        promotorField.setReadOnly(true);
 
         TextField interesadosField = new TextField("Interesados");
         interesadosField.setValue(proyecto.getSolicitud().getInteresados());
@@ -192,8 +185,7 @@ public class ProyectoAllView extends Composite<VerticalLayout>  implements Befor
         );
 
         // Añadir los campos al formulario, con alineamiento ocupando toda la fila
-        formLayout.add(tituloField, solicitanteField);
-        formLayout.add(promotorField, interesadosField);
+        formLayout.add(tituloField, interesadosField);
         formLayout.add(alineamientoField, 2); // Campo "Alineamiento" ocupa ambas columnas
         formLayout.add(alcanceField, normativaField);
 
