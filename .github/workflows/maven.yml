@@ -47,5 +47,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Token para obtener información del PR
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  # Debes configurar este secreto en tu repositorio
+        cd carteruca
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
           -Dsonar.projectKey=AleParadaUCA_iw2024-2025-CarterUCA
