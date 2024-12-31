@@ -37,7 +37,7 @@ public class ProyectoAllView extends Composite<VerticalLayout>  implements Befor
     private final CarteraService carteraService;
     private final ProyectoService proyectoService;
 
-    private Accordion carteras = new Accordion();
+    private final Accordion carteras = new Accordion();
     private String searchValue = null; 
 
     @Override
@@ -118,11 +118,7 @@ public class ProyectoAllView extends Composite<VerticalLayout>  implements Befor
                     } else {
                         color = "#f44336"; // Rojo para muchas horas
                     }
-                    badge.getElement().getStyle().set("font-size", "var(--lumo-font-size-m)");
-                    badge.getElement().getStyle().set("background-color", color);
-                    badge.getElement().getStyle().set("color", "white");
-                    badge.getElement().getStyle().set("border-radius", "12px");
-                    badge.getElement().getStyle().set("padding", "2px 6px");
+                    common.applyBadgeStyles(badge, color);
                     return badge;
                 }).setHeader("Horas");
 
@@ -138,11 +134,7 @@ public class ProyectoAllView extends Composite<VerticalLayout>  implements Befor
                     } else {
                         color = "#f44336"; // Rojo para presupuestos altos
                     }
-                    badge.getElement().getStyle().set("font-size", "var(--lumo-font-size-m)");
-                    badge.getElement().getStyle().set("background-color", color);
-                    badge.getElement().getStyle().set("color", "white");
-                    badge.getElement().getStyle().set("border-radius", "12px");
-                    badge.getElement().getStyle().set("padding", "2px 6px");
+                    common.applyBadgeStyles(badge, color);
                     return badge;
                 }).setHeader("Presupuesto");
 

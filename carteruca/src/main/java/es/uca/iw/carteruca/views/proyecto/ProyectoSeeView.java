@@ -31,7 +31,7 @@ public class ProyectoSeeView extends Composite<VerticalLayout> {
     private final AuthenticatedUser authenticatedUser;
     private final ProyectoService proyectoService;
 
-    private Usuario currentUser;
+    private final Usuario currentUser;
 
     private final Grid<Proyecto> proyectos_tabla = new Grid<>(Proyecto.class);
 

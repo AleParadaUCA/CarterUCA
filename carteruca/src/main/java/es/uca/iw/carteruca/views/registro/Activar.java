@@ -78,9 +78,9 @@ public class Activar extends VerticalLayout {
         status.setVisible(true);
 
         if (usuarioService.activateUser(email.getValue(), secretCode.getValue())) {
-            status.setText("Congrats. The user has been activated");
+            status.setText("Felicidades. El usuario ha sido activado");
         } else {
-            status.setText("Ups. The user could not be activated");
+            status.setText("Ups. No se ha podido activar el usuario");
         }
     }
 }

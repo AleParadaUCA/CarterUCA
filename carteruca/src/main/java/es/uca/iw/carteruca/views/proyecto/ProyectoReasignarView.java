@@ -75,14 +75,14 @@ public class ProyectoReasignarView extends Composite<VerticalLayout> {
         Dialog dialog = new Dialog();
         dialog.setHeaderTitle("Reasignar Jefe");
 
-        ComboBox<Usuario> comboBoxUsuarios = new ComboBox<>("Seleccionar nuevo jefe");
+        otp.setLabel("Seleccionar nuevo jefe");
         List<Usuario> usuariosOTP = usuarioService.getOTP();
-        comboBoxUsuarios.setItems(usuariosOTP);
-        comboBoxUsuarios.setItemLabelGenerator(Usuario::getNombre);
-        comboBoxUsuarios.setRequired(true);
+        otp.setItems(usuariosOTP);
+        otp.setItemLabelGenerator(Usuario::getNombre);
+        otp.setRequired(true);
 
         Button guardarButton = new Button("Guardar", event -> {
-            Usuario nuevoJefe = comboBoxUsuarios.getValue();
+            Usuario nuevoJefe = otp.getValue();
             if (nuevoJefe != null) {
                 proyecto.setJefe(nuevoJefe);
                 proyectoService.cambiarPorcentaje(proyecto);
@@ -104,7 +104,7 @@ public class ProyectoReasignarView extends Composite<VerticalLayout> {
         buttonsLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
         buttonsLayout.setAlignItems(FlexComponent.Alignment.END);
 
-        VerticalLayout dialogLayout = new VerticalLayout(comboBoxUsuarios, buttonsLayout);
+        VerticalLayout dialogLayout = new VerticalLayout(otp, buttonsLayout);
         dialog.add(dialogLayout);
         dialog.open();
 
