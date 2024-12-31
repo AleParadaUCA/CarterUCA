@@ -37,6 +37,7 @@ public class CriterioService {
     }
 
     //Eliminar un criterio
+
     public void deleteCriterio(Long id) {
         Optional<Criterio> criterioOptional = criterioRepository.findById(id);
         if (criterioOptional.isPresent()) {

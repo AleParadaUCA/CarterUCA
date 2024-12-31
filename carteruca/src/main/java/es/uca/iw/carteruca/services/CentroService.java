@@ -27,11 +27,6 @@ public class CentroService {
         return centroRepository.findAll();
     }
 
-    // Buscar un centro por su nombre
-    public Centro getCentroByNombre(String nombre) {
-        return centroRepository.findByNombre(nombre);
-    }
-
     // Agregar un nuevo centro
     public Centro addCentro(Centro centro) {
         if (centro.getNombre() == null || centro.getNombre().trim().isEmpty()) {
