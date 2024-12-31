@@ -23,7 +23,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: 21
-          distribution: 'temurin'  # Puedes usar 'zulu' o 'temurin' según prefieras
+          distribution: 'temurin'
           cache: maven
 
       # Cache SonarQube packages
@@ -45,8 +45,9 @@ jobs:
       # Build and analyze with SonarQube
       - name: Build and analyze with SonarQube
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Token para obtener información del PR
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  # Debes configurar este secreto en tu repositorio
-        cd carteruca
-        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
-          -Dsonar.projectKey=AleParadaUCA_iw2024-2025-CarterUCA
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          cd carteruca  # Cambiar al directorio donde está el archivo pom.xml
+          mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+            -Dsonar.projectKey=AleParadaUCA_iw2024-2025-CarterUCA
