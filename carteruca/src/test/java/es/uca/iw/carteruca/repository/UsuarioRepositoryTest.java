@@ -1,14 +1,14 @@
 package es.uca.iw.carteruca.repository;
 
-import es.uca.iw.carteruca.models.Usuario;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-
 import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+
+import es.uca.iw.carteruca.models.Usuario;
 
 @DataJpaTest
 public class UsuarioRepositoryTest {
@@ -37,6 +37,8 @@ public class UsuarioRepositoryTest {
         testUsuario.setNombre("Test");
         testUsuario.setApellidos("User");
         testUsuario.setEmail("test.user@example.com");
+        testUsuario.setPassword("password");
+        testUsuario.setUsername("Test");
         // stored in the repository
         usuarioRepository.save(testUsuario);
 
