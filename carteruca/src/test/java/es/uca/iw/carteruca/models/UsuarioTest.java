@@ -8,17 +8,12 @@ public class UsuarioTest {
 
     public static Usuario createTestUsuario() {
         Usuario testUsuario = new Usuario();
+        testUsuario.setNombre(faker.name().fullName());
+        testUsuario.setApellidos(faker.name().fullName());
         testUsuario.setUsername(faker.name().username());
         testUsuario.setEmail(faker.internet().emailAddress());
         testUsuario.setPassword("password");
         return testUsuario;
     }
 
-    public static Usuario createTestUsuario(String username) {
-        Usuario testUsuario = new Usuario();
-        testUsuario.setUsername(username);
-        testUsuario.setEmail(faker.internet().emailAddress());
-        testUsuario.setPassword("password");
-        return testUsuario;
-    }
 }
