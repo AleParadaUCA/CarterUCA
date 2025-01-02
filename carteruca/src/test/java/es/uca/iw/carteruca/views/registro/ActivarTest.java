@@ -1,5 +1,6 @@
 package es.uca.iw.carteruca.views.registro;
 
+import es.uca.iw.carteruca.models.Centro;
 import es.uca.iw.carteruca.models.UsuarioTest;
 import es.uca.iw.carteruca.models.Usuario;
 import es.uca.iw.carteruca.services.UsuarioService;
@@ -23,6 +24,7 @@ import java.time.Duration;
 import static org.assertj.core.api.Assertions.assertThat;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import es.uca.iw.carteruca.services.CentroService;
 import es.uca.iw.carteruca.services.EmailService;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -40,17 +42,18 @@ public class ActivarTest {
     @Autowired
     private UsuarioService usuarioService;
 
+    @Autowired
+    private CentroService centroService;
+
     @BeforeAll
     public static void setupClass() {
         WebDriverManager.chromedriver().setup();
-
     }
 
     @BeforeEach
     public void setUp() {
         ChromeOptions chromeOptions = new ChromeOptions();
         chromeOptions.addArguments("--no-sandbox");
-        chromeOptions.addArguments("--headless");
         chromeOptions.addArguments("disable-gpu");
         chromeOptions.addArguments("--window-size=1920,1200");
         driver = new ChromeDriver(chromeOptions);
@@ -97,11 +100,16 @@ public class ActivarTest {
     public void shouldActivateAnExistingUser() {
 
         // Given
+        Centro testCentro = new Centro();
+        testCentro.setNombre("Centro de Prueba");
+        testCentro.setAcronimo("CP");
+        centroService.addCentro(testCentro);
         // a certain user
         testUser = UsuarioTest.createTestUsuario();
-
+        System.out.println("mail text: " + testUser.getEmail());
+        System.out.println("cod text: " + testUser.getCodigoRegistro());
         //who is registered
-        usuarioService.createUser(testUser.getNombre(), testUser.getApellidos(), testUser.getUsername(), testUser.getEmail(), testUser.getPassword(), testUser.getCentro());
+        usuarioService.createUser(testUser.getNombre(), testUser.getApellidos(), testUser.getUsername(), testUser.getEmail(), testUser.getPassword(), testCentro);
 
         // When
 
@@ -110,7 +118,11 @@ public class ActivarTest {
 
         // and introduce form data
         driver.findElement(By.id("email")).sendKeys(testUser.getEmail());
-        driver.findElement(By.id("secretCode")).sendKeys(testUser.getCodigoRegistro());
+        driver.findElement(By.id("secretCode")).sendKeys(
+                usuarioService.findAllUsuariosExcludingAdmin().stream()
+                .filter(usuario -> testUser.getEmail().equals(usuario.getEmail()))
+                .findFirst().get().getCodigoRegistro()
+        );
 
         // and press the activate button
         driver.findElement(By.id("activate")).click();
