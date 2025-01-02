@@ -4,6 +4,7 @@ import es.uca.iw.carteruca.models.UsuarioTest;
 import es.uca.iw.carteruca.models.Usuario;
 import es.uca.iw.carteruca.services.UsuarioService;
 import io.github.bonigarcia.wdm.WebDriverManager;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,10 +21,9 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import java.time.Duration;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
-/**
- * @author ivanruizrube
- */
+import es.uca.iw.carteruca.services.EmailService;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 //La etiqueta @Transactional no funciona con selenium y hay que restaurar manualmente el estado de la BD
@@ -33,6 +33,9 @@ public class ActivarTest {
     private int port;
     private WebDriver driver;
     private Usuario testUser;
+
+    @MockBean
+    private EmailService emailService; // Inyecta el EmailFakeService
 
     @Autowired
     private UsuarioService usuarioService;
@@ -85,7 +88,7 @@ public class ActivarTest {
         // and
         WebElement element = driver.findElement(By.id("status"));
 
-        assertThat(element.getText().equals("Ups. The user could not be activated")).isTrue();
+        assertThat(element.getText().equals("Ups. No se ha podido activar el usuario")).isTrue();
 
     }
 
@@ -115,7 +118,7 @@ public class ActivarTest {
         // Then
         WebElement element = driver.findElement(By.id("status"));
 
-        assertThat(element.getText().equals("Congrats. The user has been activated")).isTrue();
+        assertThat(element.getText().equals("Felicidades. El usuario ha sido activado")).isTrue();
 
     }
 }
