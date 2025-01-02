@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
+// import org.mockito.Mock;
 
 @SpringBootTest
 @Transactional(propagation = Propagation.REQUIRES_NEW) // después de cada test se hace un rollback de la base de datos
@@ -28,6 +29,9 @@ public class UsuarioServiceTest {
 
     @MockBean
     private UsuarioRepository usuarioRepository;
+    
+    @MockBean
+    private EmailService emailService; // Inyecta el EmailFakeService
 
     @Test
     public void shouldNotActivateANoExistingUsuario() {
