@@ -2,6 +2,7 @@ package es.uca.iw.carteruca.models;
 
 import com.github.javafaker.Faker;
 
+import java.util.Random;
 
 public class UsuarioTest {
 
