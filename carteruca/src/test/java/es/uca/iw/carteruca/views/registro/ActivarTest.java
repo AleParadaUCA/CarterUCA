@@ -50,7 +50,7 @@ public class ActivarTest {
     public void setUp() {
         ChromeOptions chromeOptions = new ChromeOptions();
         chromeOptions.addArguments("--no-sandbox");
-//        chromeOptions.addArguments("--headless");
+        chromeOptions.addArguments("--headless");
         chromeOptions.addArguments("disable-gpu");
         chromeOptions.addArguments("--window-size=1920,1200");
         driver = new ChromeDriver(chromeOptions);
