@@ -2,9 +2,9 @@ name: Java CI with Maven and SonarQube
 
 on:
   push:
-    branches: [ "main", "ale" ]
+    branches: [ "main", "Ale" ]
   pull_request:
-    branches: [ "main", "ale"  ]
+    branches: [ "main", "Ale"  ]
     types: [opened, synchronize, reopened]
 
 jobs:
