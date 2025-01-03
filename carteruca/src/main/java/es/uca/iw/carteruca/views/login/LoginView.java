@@ -44,7 +44,7 @@ public class LoginView extends Composite<VerticalLayout> implements BeforeEnterO
         loginI18n.getForm().setUsername("Usuario");
         loginI18n.getForm().setPassword("Contraseña");
         loginI18n.getForm().setSubmit("Iniciar sesión");
-        loginI18n.getForm().setForgotPassword("¿Olvidó su contraseña?");
+        //loginI18n.getForm().setForgotPassword("¿Olvidó su contraseña?");
         loginForm.setI18n(loginI18n);
 
         // Diseño principal
