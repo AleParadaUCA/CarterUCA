@@ -1,7 +1,7 @@
 package es.uca.iw.carteruca.views.registro;
 
+import es.uca.iw.carteruca.CommonObjets;
 import es.uca.iw.carteruca.models.Centro;
-import es.uca.iw.carteruca.models.UsuarioTest;
 import es.uca.iw.carteruca.models.Usuario;
 import es.uca.iw.carteruca.services.UsuarioService;
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -77,7 +77,7 @@ public class ActivarTest {
 
         // Given
         // a certain user
-        testUser = UsuarioTest.createTestUsuario();
+        testUser = CommonObjets.createTestUsuario();
 
         // point the browser to the activation page
         driver.get(uribase + port + "/useractivation");
@@ -106,7 +106,7 @@ public class ActivarTest {
         testCentro.setAcronimo("CP");
         centroService.addCentro(testCentro);
         // a certain user
-        testUser = UsuarioTest.createTestUsuario();
+        testUser = CommonObjets.createTestUsuario();
         System.out.println("mail text: " + testUser.getEmail());
         System.out.println("cod text: " + testUser.getCodigoRegistro());
         //who is registered

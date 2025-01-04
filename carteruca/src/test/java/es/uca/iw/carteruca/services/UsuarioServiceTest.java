@@ -1,8 +1,8 @@
 package es.uca.iw.carteruca.services;
 
+import es.uca.iw.carteruca.CommonObjets;
 import es.uca.iw.carteruca.models.Usuario;
 import es.uca.iw.carteruca.repository.UsuarioRepository;
-import es.uca.iw.carteruca.models.UsuarioTest;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +37,7 @@ public class UsuarioServiceTest {
     public void shouldNotActivateANoExistingUsuario() {
 
         // Given a certain user (not stored on the database)
-        Usuario testUsuario = UsuarioTest.createTestUsuario();
+        Usuario testUsuario = CommonObjets.createTestUsuario();
 
         // When invoking the method ActivateUser
         boolean result = usuarioService.activateUser(testUsuario.getEmail(), testUsuario.getCodigoRegistro());
@@ -59,7 +59,7 @@ public class UsuarioServiceTest {
 
         // Given
         // a certain user
-        Usuario testUsuario = UsuarioTest.createTestUsuario();
+        Usuario testUsuario = CommonObjets.createTestUsuario();
 
         // the repo methods are stubbed
         given(usuarioRepository.findByEmail(anyString())).willReturn(Optional.of(testUsuario));
