@@ -3,18 +3,19 @@ package es.uca.iw.carteruca.views.registro;
 import java.time.Duration;
 
 import static org.assertj.core.api.Assertions.assertThat;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.server.LocalServerPort;
 
 import es.uca.iw.carteruca.models.Centro;
 import es.uca.iw.carteruca.models.Usuario;
 import es.uca.iw.carteruca.services.CentroService;
+import es.uca.iw.carteruca.services.EmailService;
 import es.uca.iw.carteruca.services.UsuarioService;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
@@ -38,6 +39,9 @@ public class UserRegistrationAndActivation {
 
     @Autowired
     private CentroService centroService;
+
+    @MockBean
+    private EmailService emailService; // Inyecta el EmailFakeService
 
     private Usuario testUser;
 
@@ -94,20 +98,23 @@ public class UserRegistrationAndActivation {
         // and introduce form data
         driver.findElement(By.id("nombre")).sendKeys(testUser.getNombre());
         driver.findElement(By.id("apellidos")).sendKeys(testUser.getApellidos());
-        driver.findElement(By.id("usuario")).sendKeys(testUser.getUsername());
+        driver.findElement(By.id("usuario")).sendKeys("u00000001");
         driver.findElement(By.id("email")).sendKeys(testUser.getEmail());
         driver.findElement(By.id("centro")).sendKeys(testUser.getCentro().getNombre());
         driver.findElement(By.id("password")).sendKeys(testUser.getPassword());
         driver.findElement(By.id("repetir_password")).sendKeys(testUser.getPassword());
-        driver.findElement(By.id("checkbox-id")).click();
+        driver.findElement(By.id("checkbox")).click();
 
         // and press the activate button
-        driver.findElement(By.id("register")).click();
+        driver.findElement(By.id("registro")).click();
 
         // Then
-        WebElement notification = driver.findElement(By.tagName("vaadin-notification"));
+        try {
+            Thread.sleep(250);
+        } catch (InterruptedException e) {}
 
-        assertThat(notification.getText().equals("Registro exitoso")).isTrue();
+//        assertThat(driver.getCurrentUrl()).isNotEqualTo(uribase + port + "/registro");
+        assertThat(driver.getCurrentUrl()).isEqualTo(uribase + port + "/");
     }
 
     @When("The user {string} introduces their email {string} and a verification code to activate")
@@ -119,10 +126,12 @@ public class UserRegistrationAndActivation {
         // user interaction
         driver.findElement(By.id("email")).sendKeys(email);
 
-        Usuario testUser = (Usuario) usuarioService.loadUserByUsername(username);
-
         if (testUser != null) {
-            driver.findElement(By.id("secretCode")).sendKeys(testUser.getCodigoRegistro());
+            driver.findElement(By.id("secretCode")).sendKeys(
+                    usuarioService.findAllUsuariosExcludingAdmin().stream()
+                            .filter(usuario -> testUser.getEmail().equals(usuario.getEmail()))
+                            .findFirst().get().getCodigoRegistro()
+            );
         } else {
             driver.findElement(By.id("secretCode")).sendKeys("randomkey");
         }
