@@ -1,25 +1,25 @@
 package es.uca.iw.carteruca.models;
 
-import com.github.javafaker.Faker;
+import es.uca.iw.carteruca.CommonObjets;
+import org.junit.jupiter.api.Test;
 
-import java.util.Random;
+import static org.assertj.core.api.Assertions.assertThat;
+
 
 public class UsuarioTest {
+    @Test
+    public void shouldProvideUsername() {
 
-    private static final Faker faker = new Faker();
-    private static final Random random = new Random();
+        // Given
+        // a certain user (not stored on the database)
+        Usuario testUser = CommonObjets.createTestUsuario("Fernando");
 
-    public static Usuario createTestUsuario() {
+        // When
+        // I invoke getUsername method
+        String nombre = testUser.getNombre();
 
-        String username = "u" + String.format("%08d", random.nextInt(100000000));
+        // Then the result is equals to the provided username
+        assertThat(nombre.equals("Fernando")).isTrue();
 
-        Usuario testUsuario = new Usuario();
-        testUsuario.setNombre(faker.name().fullName());
-        testUsuario.setApellidos(faker.name().fullName());
-        testUsuario.setUsername(username);
-        testUsuario.setEmail(faker.internet().emailAddress());
-        testUsuario.setPassword("password");
-        return testUsuario;
     }
-
 }
