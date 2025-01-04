@@ -3,36 +3,35 @@ package es.uca.iw.carteruca.views.registro;
 import java.util.List;
 import java.util.Objects;
 
-import com.vaadin.flow.component.Text;
-import com.vaadin.flow.component.html.Anchor;
-import com.vaadin.flow.component.html.Span;
-import com.vaadin.flow.component.shared.Tooltip;
-import com.vaadin.flow.data.binder.BeanValidationBinder;
-import es.uca.iw.carteruca.models.Centro;
-
 import com.vaadin.flow.component.Composite;
+import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.shared.Tooltip;
 import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 
+import es.uca.iw.carteruca.models.Centro;
 import es.uca.iw.carteruca.models.Usuario;
-import es.uca.iw.carteruca.services.UsuarioService;
 import es.uca.iw.carteruca.services.CentroService;
+import es.uca.iw.carteruca.services.UsuarioService;
 import es.uca.iw.carteruca.views.common.common;
 import es.uca.iw.carteruca.views.home.HomeView;
 import es.uca.iw.carteruca.views.layout.MainLayout;
@@ -202,13 +201,10 @@ public class RegistroView extends Composite<VerticalLayout> {
         guardar.addClickListener(event -> {
             if (password.getValue().equals(repetir_password.getValue())) {
 
-                String res = userService.createUser( nombre.getValue(), apellidos.getValue(), usuario.getValue(), email.getValue(), password.getValue(), centro.getValue() );
 
-                if (Objects.equals(res, "Exito")){
                     common.showSuccessNotification("Registro exitoso");
                     UI.getCurrent().navigate("/");
                 }else{
-                    common.showErrorNotification(res);
                 }
 
             } else {
@@ -232,4 +228,14 @@ public class RegistroView extends Composite<VerticalLayout> {
         getContent().add(layoutColumn2);
     }
 
+        nombre.setId("nombre");
+        apellidos.setId("apellidos");
+        usuario.setId("usuario");
+        email.setId("email");
+        password.setId("password");
+        repetir_password.setId("repetir_password");
+        centro.setId("centro");
+        checkbox.setId("checkbox");
+        guardar.setId("registro");
+    }
 }
