@@ -201,10 +201,13 @@ public class RegistroView extends Composite<VerticalLayout> {
         guardar.addClickListener(event -> {
             if (password.getValue().equals(repetir_password.getValue())) {
 
+                String res = userService.createUser( nombre.getValue(), apellidos.getValue(), usuario.getValue(), email.getValue(), password.getValue(), centro.getValue() );
 
+                if (Objects.equals(res, "Exito")){
                     common.showSuccessNotification("Registro exitoso");
                     UI.getCurrent().navigate("/");
                 }else{
+                    common.showErrorNotification(res);
                 }
 
             } else {
@@ -226,7 +229,6 @@ public class RegistroView extends Composite<VerticalLayout> {
         // Agregar componentes al layout principal
         layoutColumn2.add(h2, formLayout2Col, checkboxLayout, layoutRow);
         getContent().add(layoutColumn2);
-    }
 
         nombre.setId("nombre");
         apellidos.setId("apellidos");
