@@ -15,9 +15,10 @@ import es.uca.iw.carteruca.views.admin.UsuarioAllView;
 import es.uca.iw.carteruca.views.cartera.CarteraAllView;
 import es.uca.iw.carteruca.views.common.common;
 import es.uca.iw.carteruca.views.criterio.CriterioAllView;
+import es.uca.iw.carteruca.views.layout.MainLayout;
 import jakarta.annotation.security.RolesAllowed;
 
-@Route("/home-admin")
+@Route(value = "/home-admin", layout = MainLayout.class)
 @PageTitle("Home")
 @RolesAllowed("Admin")
 public class HomeAdminView extends Composite<VerticalLayout> {
