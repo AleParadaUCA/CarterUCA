@@ -46,7 +46,7 @@ public class Usuario implements UserDetails {
     @ManyToOne
     private Centro centro;
 
-    @Column(columnDefinition = "ENUM DEFAULT 'Solicitante'")
+    @Column(columnDefinition = "VARCHAR(255) DEFAULT 'Solicitante'")
     @Enumerated(EnumType.STRING)
     private Rol rol = Rol.Solicitante;
 
