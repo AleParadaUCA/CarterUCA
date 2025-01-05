@@ -60,8 +60,8 @@ public class HomeSolicitanteView extends Composite<VerticalLayout>{
         if (userRol == Rol.CIO) {
             // Div para Cartera
             Div cartera = common.createSquare("Cartera", VaadinIcon.CLIPBOARD);
+            cartera.getElement().setAttribute("aria-label", "Cartera");
             cartera.addClickListener(e -> UI.getCurrent().navigate(CarteraAllView.class));
-            cartera.getStyle().set("margin-top", "10px");
             getContent().add(cartera);
         }
 
