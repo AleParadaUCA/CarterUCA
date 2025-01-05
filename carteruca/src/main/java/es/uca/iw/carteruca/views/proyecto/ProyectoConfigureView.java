@@ -194,7 +194,7 @@ public class ProyectoConfigureView extends Composite<VerticalLayout> {
             // Si las horas ingresadas exceden el límite, mostramos un mensaje de error
             if (totalHorasCartera + horasNuevas > horasMaximas) {
                 common.showErrorNotification("El número de horas excede el límite permitido en la cartera.");
-            } else if (totalPresupuestoCartera + presupuestoValor > horasMaximas) {
+            } else if (totalPresupuestoCartera + presupuestoValor > presupuestoMaximo) {
                 common.showErrorNotification("El Presupuesto excede el límite de la cartera.");
             } else {
                 try {
