@@ -11,6 +11,7 @@ import com.vaadin.flow.router.Route;
 import es.uca.iw.carteruca.models.Rol;
 import es.uca.iw.carteruca.security.AuthenticatedUser;
 import es.uca.iw.carteruca.views.avalar.AvalarMainView;
+import es.uca.iw.carteruca.views.cartera.CarteraAllView;
 import es.uca.iw.carteruca.views.layout.MainLayout;
 import es.uca.iw.carteruca.views.proyecto.ProyectoMainView;
 import es.uca.iw.carteruca.views.proyecto.ProyectoSeeView;
@@ -54,6 +55,14 @@ public class HomeSolicitanteView extends Composite<VerticalLayout>{
             proyectos.getElement().setAttribute("aria-label", "Proyectos");
             proyectos.addClickListener(event -> UI.getCurrent().navigate(ProyectoMainView.class));
             getContent().add(proyectos);
+        }
+
+        if (userRol == Rol.CIO) {
+            // Div para Cartera
+            Div cartera = common.createSquare("Cartera", VaadinIcon.CLIPBOARD);
+            cartera.addClickListener(e -> UI.getCurrent().navigate(CarteraAllView.class));
+            cartera.getStyle().set("margin-top", "10px");
+            getContent().add(cartera);
         }
 
         Div consultar_proyectos = common.createSquare("Consultar Proyectos", VaadinIcon.RECORDS);
