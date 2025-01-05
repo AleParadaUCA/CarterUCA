@@ -46,12 +46,12 @@ public class Usuario implements UserDetails {
     @ManyToOne
     private Centro centro;
 
-    @Column(columnDefinition = "VARCHAR(255) DEFAULT 'Solicitante'")
+    @Column(columnDefinition = "ENUM DEFAULT 'Solicitante'")
     @Enumerated(EnumType.STRING)
     private Rol rol = Rol.Solicitante;
 
-    @Column(name = "activo")
-    private boolean activo = false; // con este booleano se vera si se llevo a cabo el registro completo
+    @Column
+    private boolean activo = false; // con este booleano se vera si se llevó a cabo el registro completo
 
     private String codigoRegistro = ""; // codigo generado para el registro en 2 pasos
 
