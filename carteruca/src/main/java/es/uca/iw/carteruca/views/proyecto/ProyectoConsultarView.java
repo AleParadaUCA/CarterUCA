@@ -145,9 +145,16 @@ public class ProyectoConsultarView extends Composite<VerticalLayout> {
                     puntuaciones = puntuaciones.substring(1, puntuaciones.length() - 1);
                 }
                 List<String> puntuacionesList = Arrays.asList(puntuaciones.split(","));
+
                 criteriosGrid.addColumn(criterio -> {
                     int index = criterios.indexOf(criterio);
-                    return puntuacionesList.get(index).trim();
+                    if (index >= 0 && index < puntuacionesList.size()) {
+                        String puntuacion = puntuacionesList.get(index).trim();
+                        // Mostrar solo si la puntuación no está vacía o nula
+                        return puntuacion.isEmpty() ? "No definido" : puntuacion;
+                    } else {
+                        return "No definido";
+                    }
                 }).setHeader("Puntuación");
 
                 criteriosGrid.setItems(criterios);
@@ -169,6 +176,7 @@ public class ProyectoConsultarView extends Composite<VerticalLayout> {
                 criteriosDialog.open();
             });
             verCriteriosButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+
 
 
             Span presupuestoSpan = new Span("Presupuesto");
