@@ -7,7 +7,7 @@
     <groupId>es.uca.iw.carteruca</groupId>
     <artifactId>carteruca</artifactId>
     <name>carteruca</name>
-    <version>3.5</version>
+    <version>3.7.2</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -100,6 +100,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-s3</artifactId>
+            <version>1.12.118</version>
         </dependency>
         <dependency>
             <groupId>com.vaadin</groupId>
