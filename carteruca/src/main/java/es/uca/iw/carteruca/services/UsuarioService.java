@@ -1,5 +1,6 @@
 package es.uca.iw.carteruca.services;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.UUID;
 import java.util.regex.Pattern;
@@ -113,7 +114,7 @@ public class UsuarioService implements UserDetailsService {
             repository.save(nuevoUsuario);
             emailService.enviarCorreoRegistro(nuevoUsuario);
             return "Exito";
-        } catch (DataIntegrityViolationException e) {
+        } catch (DataIntegrityViolationException | IOException | InterruptedException e) {
             return "Error: "+ e;
         }
     }

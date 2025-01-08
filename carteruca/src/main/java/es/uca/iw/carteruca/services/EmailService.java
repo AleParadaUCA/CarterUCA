@@ -1,6 +1,10 @@
 package es.uca.iw.carteruca.services;
 
-import java.net.InetAddress;
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
@@ -28,27 +32,35 @@ public class EmailService {
     }
 
 
-    private String getServerUrl() {
+    private String getServerUrl() throws IOException, InterruptedException {
 
-        // Generate the server URL
-        String serverUrl = "http://";
-        serverUrl += InetAddress.getLoopbackAddress().getHostAddress();
-        serverUrl += ":" + serverPort + "/useractivation";
-        return serverUrl;
+    // Get the public IP address
+    HttpClient client = HttpClient.newHttpClient();
+    HttpRequest request = HttpRequest.newBuilder()
+            .uri(URI.create("http://checkip.amazonaws.com"))
+            .build();
+
+    HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+    String publicIp = response.body().trim(); // Ensure no extra characters
+
+    // Generate the server URL
+    String serverUrl = "http://";
+    serverUrl += publicIp + "/useractivation";
+    return serverUrl;
 
     }
 
 
-    public boolean enviarCorreoRegistro(Usuario user) {
+    public boolean enviarCorreoRegistro(Usuario user) throws IOException, InterruptedException {
 
         MimeMessage message = mailSender.createMimeMessage();
 
         MimeMessageHelper helper = new MimeMessageHelper(message, "utf-8");
 
         String subject = "Validar Correo";
-        String body = "Bienvenido" + user.getNombre()
+        String body = "Bienvenido " + user.getNombre()
                 + ".\n\nPara activar tu cuenta de CarterUCA entra en: " + getServerUrl()
-                + ".\nTu código secreto es: " + user.getCodigoRegistro()
+                + "\nTu código secreto es: " + user.getCodigoRegistro()
                 + "\n\nSaludos,\nEl equipo de Carteruca.";
 
         try {
