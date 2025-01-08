@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,8 @@ import es.uca.iw.carteruca.repository.ProyectoRepository;
 
 @Service
 public class ProyectoService {
+
+    private static final Logger logger = LoggerFactory.getLogger(ProyectoService.class);
 
     private final ProyectoRepository repository;
     private final CriterioRepository criterioRepository;
@@ -41,6 +45,8 @@ public class ProyectoService {
         proyecto.setHoras(0.0f);
         proyecto.setPresupuesto_valor(0.0f);
 
+        logger.info("Creando proyecto para la solicitud: {}", solicitud.getTitulo());
+
         String subject = "Proyecto Aceptado";
         String body = "Hola " + proyecto.getSolicitud().getSolicitante().getNombre() + ",\n\n" +
                 "Mensaje de notificación sobre la aceptación de tu solicitud "+
@@ -48,11 +54,12 @@ public class ProyectoService {
                 ".\n\nSaludos,\nEl equipo de Carteruca.";
 
         repository.save(proyecto);
+        logger.info("Proyecto guardado en la base de datos con ID: {}", proyecto.getId());
         emailService.enviarCorreo(proyecto.getSolicitud().getSolicitante().getEmail(),subject, body);
-
     }
 
     public void changeProyecto(Proyecto proyecto, MultiFileMemoryBuffer presupuesto, MultiFileMemoryBuffer especificacion) {
+        logger.info("Cambiando proyecto con ID: {}", proyecto.getId());
 
         String path = proyecto.getSolicitud().getCartera().getId()+"/proyectos"; //IMPORTANTE cambiar esto en producción
         List<String> presupuestoPath = CommonService.guardarFile(presupuesto, path);
@@ -68,6 +75,7 @@ public class ProyectoService {
                 " ha sido evaluado por el OTP.\n\nSaludos,\nEl equipo de Carteruca.";
 
         repository.save(proyecto);
+        logger.info("Proyecto actualizado en la base de datos con ID: {}", proyecto.getId());
         emailService.enviarCorreo(proyecto.getSolicitud().getSolicitante().getEmail(),subject, body);
     }
 
@@ -79,6 +87,7 @@ public class ProyectoService {
         if (idsCriterios.size() != puntuaciones.size()) {
             throw new IllegalArgumentException("Las listas de IDs y puntuaciones deben tener el mismo tamaño.");
         }
+        logger.info("Puntiando proyecto con ID: {}", proyecto.getId());
 
         // Obtener todos los criterios para calcular el peso
         List<Criterio> criterios = criterioRepository.findAllById(idsCriterios);
@@ -110,6 +119,7 @@ public class ProyectoService {
                 " ha sido puntuado por el CIO.\n\nSaludos,\nEl equipo de Carteruca.";
 
         repository.save(proyecto);
+        logger.info("Proyecto puntuado en la base de datos con ID: {}", proyecto.getId());
         emailService.enviarCorreo(proyecto.getSolicitud().getSolicitante().getEmail(),subject, body);
     }
 

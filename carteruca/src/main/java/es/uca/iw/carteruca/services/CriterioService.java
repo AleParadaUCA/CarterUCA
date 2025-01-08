@@ -1,16 +1,19 @@
 package es.uca.iw.carteruca.services;
 
-import es.uca.iw.carteruca.models.Criterio;
-import es.uca.iw.carteruca.repository.CriterioRepository;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import es.uca.iw.carteruca.models.Criterio;
+import es.uca.iw.carteruca.repository.CriterioRepository;
 
 @Service
 public class CriterioService {
     private final CriterioRepository criterioRepository;
+    private static final Logger logger = LoggerFactory.getLogger(CriterioService.class);
 
     @Autowired
     public CriterioService(CriterioRepository criterioRepository) {
@@ -18,11 +21,13 @@ public class CriterioService {
     }
 
     public List<Criterio> getAllCriterios() {
+        logger.info("Obtener todos los criterios");
         return criterioRepository.findAll();
     }
 
     //Buscar un criterio por su descripcion
     public Criterio getCriterioByDescripcion(String descripcion) {
+        logger.info("Obtener criterio con descripcion: {}", descripcion);
         return criterioRepository.findByDescripcion(descripcion);
     }
 
@@ -34,14 +39,5 @@ public class CriterioService {
     //Actualizar un criterio
     public Criterio updateCriterio(Criterio criterio) {
         return criterioRepository.save(criterio);
-    }
-
-    //Eliminar un criterio
-
-    public void deleteCriterio(Long id) {
-        Optional<Criterio> criterioOptional = criterioRepository.findById(id);
-        if (criterioOptional.isPresent()) {
-            criterioRepository.deleteById(id);
-        }
     }
 }

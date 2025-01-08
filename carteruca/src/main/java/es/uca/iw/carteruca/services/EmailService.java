@@ -11,6 +11,8 @@ import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import es.uca.iw.carteruca.models.Usuario;
 import jakarta.mail.MessagingException;
@@ -19,6 +21,8 @@ import jakarta.mail.internet.MimeMessage;
 
 @Service
 public class EmailService {
+    private static final Logger logger = LoggerFactory.getLogger(EmailService.class);
+
     private final JavaMailSender mailSender;
 
     @Value("${spring.mail.username}")
@@ -50,7 +54,6 @@ public class EmailService {
 
     }
 
-
     public boolean enviarCorreoRegistro(Usuario user) throws IOException, InterruptedException {
 
         MimeMessage message = mailSender.createMimeMessage();
@@ -74,6 +77,7 @@ public class EmailService {
             return false;
         }
 
+        logger.info("Correo de notificación enviado a: {}", user.getEmail());
         return true;
     }
 

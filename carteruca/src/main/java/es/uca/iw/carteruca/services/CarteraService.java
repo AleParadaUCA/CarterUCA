@@ -86,8 +86,10 @@ public class CarteraService {
 
     @Transactional
     public Cartera updateCartera(Long id, Cartera cartera) {
-        // Obtener la cartera original de la base de datos
+        logger.info("Actualizando cartera con ID: {}", id);
+
         Cartera originalCartera = carteraRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Cartera no encontrada"));
+        logger.info("Cartera original obtenida: {}", originalCartera);
 
         // Solo actualizamos los campos si los nuevos valores son diferentes a los actuales
 
@@ -148,15 +150,22 @@ public class CarteraService {
 
     //Eliminar un centro
     public void deleteCartera(Long id) {
+        logger.info("Eliminando cartera con ID: {}", id);
+
         Optional<Cartera> cartera = carteraRepository.findById(id);
         if (cartera.isPresent()) {
+            logger.info("Cartera encontrada: {}", cartera.get());
+
             List<Solicitud> solicitudes = solicitudRepository.findByCartera(cartera.get());
             if (!solicitudes.isEmpty()) {
+                logger.warn("No se puede eliminar la cartera porque tiene solicitudes asociadas.");
                 throw new IllegalArgumentException("No se puede eliminar la cartera porque tiene solicitudes asociadas.");
             }
             carteraRepository.deleteById(id);
+            logger.info("Cartera eliminada exitosamente con ID: {}", id);
         } else {
-            throw new IllegalArgumentException("La cartera no existe.");
+            logger.warn("Cartera no encontrada con ID: {}", id);
+            throw new IllegalArgumentException("Cartera no encontrada");
         }
     }
 
