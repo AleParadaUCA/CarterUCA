@@ -30,7 +30,7 @@ public class SolicitudService {
         //Faltan comprobaciones...
 
         //comprobar ".pdf" if (buffer.endsWith(".pdf"))
-        List<String> memoria = CommonService.guardarFile(buffer, "../archivos/Cartera"+ cartera.getId()); //IMPORTANTE cambiar esto en producción
+        List<String> memoria = CommonService.guardarFile(buffer, cartera.getId().toString()); //IMPORTANTE cambiar esto en producción
 
         Solicitud solicitud = new Solicitud();
         solicitud.setTitulo(titulo);
@@ -64,7 +64,7 @@ public class SolicitudService {
             // Eliminar el archivo anterior
             CommonService.eliminarFile(solicitud.getMemoria());
             // Guardar el nuevo archivo y actualizar la memoria de la solicitud
-            solicitud.setMemoria(CommonService.guardarFile(buffer, "../archivos/Cartera" + solicitud.getCartera().getId()).get(0)); // IMPORTANTE cambiar esto en producción
+            solicitud.setMemoria(CommonService.guardarFile(buffer, solicitud.getCartera().getId().toString()).get(0)); // IMPORTANTE cambiar esto en producción
         }
 
         // Enviar notificación de actualización

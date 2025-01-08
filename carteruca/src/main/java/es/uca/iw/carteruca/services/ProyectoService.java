@@ -54,7 +54,7 @@ public class ProyectoService {
 
     public void changeProyecto(Proyecto proyecto, MultiFileMemoryBuffer presupuesto, MultiFileMemoryBuffer especificacion) {
 
-        String path = "../archivos/Cartera"+proyecto.getSolicitud().getCartera().getId()+"/proyectos"; //IMPORTANTE cambiar esto en producción
+        String path = proyecto.getSolicitud().getCartera().getId()+"/proyectos"; //IMPORTANTE cambiar esto en producción
         List<String> presupuestoPath = CommonService.guardarFile(presupuesto, path);
         List<String> especificacionPath = CommonService.guardarFile(especificacion, path);
 
