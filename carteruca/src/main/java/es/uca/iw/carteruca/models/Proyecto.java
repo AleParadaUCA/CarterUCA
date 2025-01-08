@@ -9,6 +9,10 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table
@@ -52,6 +56,13 @@ public class Proyecto {
     @ManyToOne
     @JoinColumn(name = "jefe_id")
     private Usuario jefe; // FK a usuario OTP, que será el jefe de proyecto.
+
+    @CreationTimestamp
+    @Column(updatable = false)
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
 
     //GETTERS Y SETTERS
     public Long getId() {return id; }

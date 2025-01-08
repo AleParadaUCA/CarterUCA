@@ -1,6 +1,9 @@
 package es.uca.iw.carteruca.models;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -58,6 +61,13 @@ public class Solicitud {
     @OneToOne
     @JoinColumn(name = "cartera_id")// FK hacia cartera
     private Cartera cartera;// referencia a la cartera a la que pertenece
+
+    @CreationTimestamp
+    @Column(updatable = false)
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
 
 //GETTERS Y SETTERS
     public Long getId() {return id;}
