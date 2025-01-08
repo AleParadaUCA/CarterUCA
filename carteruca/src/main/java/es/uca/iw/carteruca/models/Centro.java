@@ -3,6 +3,10 @@ package es.uca.iw.carteruca.models;
 
 import jakarta.persistence.*;
 import org.checkerframework.common.aliasing.qual.Unique;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table
@@ -19,6 +23,13 @@ public class Centro {
     @Column(nullable = false)
     @Unique
     private String acronimo;
+
+    @CreationTimestamp
+    @Column(updatable = false)
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
 
     //Constructor
 
