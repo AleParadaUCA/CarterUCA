@@ -1,9 +1,12 @@
 package es.uca.iw.carteruca.models;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
 import org.checkerframework.common.aliasing.qual.Unique;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -54,6 +57,13 @@ public class Usuario implements UserDetails {
     private boolean activo = false; // con este booleano se vera si se llevó a cabo el registro completo
 
     private String codigoRegistro = ""; // codigo generado para el registro en 2 pasos
+
+    @CreationTimestamp
+    @Column(updatable = false)
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
 
 
     public List<GrantedAuthority> getAuthorities() {
