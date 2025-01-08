@@ -1,6 +1,10 @@
 package es.uca.iw.carteruca.models;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table
@@ -15,6 +19,13 @@ public class Criterio {
 
     @Column(nullable = false)
     private Float peso;
+
+    @CreationTimestamp
+    @Column(updatable = false)
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
 
 //Getter y Setters
     public Long getId() {return id;}
