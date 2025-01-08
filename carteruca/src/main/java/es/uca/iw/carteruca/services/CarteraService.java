@@ -170,6 +170,7 @@ public class CarteraService {
     }
 
     public Optional<Cartera> getCarteraActual() {
+        logger.info("Obtener la cartera actual");
         LocalDateTime now = LocalDateTime.now();
         return carteraRepository.findByFechaInicioLessThanEqualAndFechaFinGreaterThanEqual(now, now);
     }

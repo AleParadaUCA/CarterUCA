@@ -21,7 +21,6 @@ public class CriterioService {
     }
 
     public List<Criterio> getAllCriterios() {
-        logger.info("Obtener todos los criterios");
         return criterioRepository.findAll();
     }
 
@@ -33,11 +32,13 @@ public class CriterioService {
 
     //Agregar un nuevo criterio
     public Criterio addCriterio(Criterio criterio) {
+        logger.info("Guardar criterio: {}", criterio);
         return criterioRepository.save(criterio);
     }
 
     //Actualizar un criterio
     public Criterio updateCriterio(Criterio criterio) {
+        logger.info("Actualizar criterio con descripcion: {}", criterio.getId());
         return criterioRepository.save(criterio);
     }
 }
