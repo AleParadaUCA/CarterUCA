@@ -296,12 +296,12 @@ public class UsuarioService implements UserDetailsService {
         repository.save(currentUser);
     }
 
-        public boolean activateUser(String email, String registerCode) {
+    public boolean activateUser(String email, String registerCode) {
 
         Optional<Usuario> user = repository.findByEmail(email);
 
         if (user.isPresent() && !user.get().isActivo() && user.get().getCodigoRegistro().equals(registerCode)) {
-            logger.info("Cambio de password correctamente del usuario:{}", user.get().getId());
+
             user.get().setActivo(true);
             user.get().setCodigoRegistro(null);
             user.get().setRol( obtenerRol(user.get().getUsername()));
@@ -309,7 +309,7 @@ public class UsuarioService implements UserDetailsService {
             return true;
 
         } else {
-            logger.warn("Intento de cambio de password fallido para el usuario con ID:{}", user.get().getId());
+
             return false;
         }
 
