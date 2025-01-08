@@ -106,11 +106,8 @@ public class PerfilView extends Composite<VerticalLayout> {
         TextField emailFieldDialog = new TextField("Email");
         emailFieldDialog.setValue(currentUser.getEmail());
 
-        TextField usernameFieldDialog = new TextField("Usuario");
-        usernameFieldDialog.setValue(currentUser.getUsername());
 
-
-        formLayout.add(nombreFieldDialog, apellidosFieldDialog, emailFieldDialog, usernameFieldDialog);
+        formLayout.add(nombreFieldDialog, apellidosFieldDialog, emailFieldDialog);
 
         // Botón para guardar los cambios
         Button saveButton = new Button("Guardar", event -> {
@@ -119,7 +116,7 @@ public class PerfilView extends Composite<VerticalLayout> {
                     nombreFieldDialog.getValue(),
                     apellidosFieldDialog.getValue(),
                     emailFieldDialog.getValue(),
-                    usernameFieldDialog.getValue()
+                    currentUser.getUsername()
             );
 
 
@@ -128,7 +125,6 @@ public class PerfilView extends Composite<VerticalLayout> {
                 currentUser.setNombre(nombreFieldDialog.getValue());
                 currentUser.setApellidos(apellidosFieldDialog.getValue());
                 currentUser.setEmail(emailFieldDialog.getValue());
-                currentUser.setUsername(usernameFieldDialog.getValue());
 
                 // **Actualizamos los campos de la vista principal directamente**
                 nombreField.setValue(currentUser.getNombre());
