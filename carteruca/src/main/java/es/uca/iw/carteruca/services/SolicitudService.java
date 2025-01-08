@@ -13,9 +13,12 @@ import es.uca.iw.carteruca.models.Estado;
 import es.uca.iw.carteruca.models.Solicitud;
 import es.uca.iw.carteruca.models.Usuario;
 import es.uca.iw.carteruca.repository.SolicitudRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
 public class SolicitudService {
+    private static final Logger logger = LoggerFactory.getLogger(SolicitudService.class);
     private final SolicitudRepository repository;
     private final EmailService emailService;
 
@@ -26,7 +29,7 @@ public class SolicitudService {
     }
 
     public void crearSolicitud(String titulo, String nombre, LocalDateTime fechaPuesta, String interesados, String alineamiento, String alcance, String normativa, MultiFileMemoryBuffer buffer, Usuario avalador, Usuario solictante, Cartera cartera) {
-        
+
         //Faltan comprobaciones...
 
         //comprobar ".pdf" if (buffer.endsWith(".pdf"))
@@ -55,6 +58,7 @@ public class SolicitudService {
                 "Saludos,\nEl equipo de Carteruca.";
 
         repository.save(solicitud);
+        logger.info("Creado solicitud con ID: {}", solicitud.getId());
         emailService.enviarCorreo(solictante.getEmail(), subject, body);
     }
 
@@ -75,6 +79,7 @@ public class SolicitudService {
                 "El equipo de Carteruca.";
 
         repository.save(solicitud);
+        logger.info("Actualizado solicitud con ID: {}", solicitud.getId());
         emailService.enviarCorreo(solicitud.getSolicitante().getEmail(), subject, body);
     }
 
@@ -104,6 +109,7 @@ public class SolicitudService {
             "\" ha sido " + estadoMensaje + " por el Avalador.\n\nSaludos,\nEl equipo de Carteruca.";
         
         repository.save(solicitud);
+        logger.info("Avalado solicitud con ID: {}", solicitud.getId());
         emailService.enviarCorreo(solicitud.getSolicitante().getEmail(), subject, body);
     }
 
@@ -119,6 +125,7 @@ public class SolicitudService {
             emailService.enviarCorreo(solicitud.getSolicitante().getEmail(), subject, body);
         }
         repository.save(solicitud);
+        logger.info("Cambio de estado en la solicitud con ID: {}", solicitud.getId());
     }
 
     public void CancelarSolicitud(Solicitud solicitud) {
@@ -129,6 +136,7 @@ public class SolicitudService {
                 +"\n\nSaludos,\nEl equipo de Carteruca.";
 
         repository.save(solicitud);
+        logger.info("Cancelado solicitud con ID: {}", solicitud.getId());
         emailService.enviarCorreo(solicitud.getSolicitante().getEmail(), subject, body);
     }
 
@@ -140,6 +148,7 @@ public class SolicitudService {
                 +".\n\nSaludos,\nEl equipo de Carteruca.";
 
         repository.save(solicitud);  // Guarda la solicitud actualizada
+        logger.info("Estado Terminado de la solicitud con ID: {}", solicitud.getId());
         emailService.enviarCorreo(solicitud.getSolicitante().getEmail(), subject, body);
 
     }

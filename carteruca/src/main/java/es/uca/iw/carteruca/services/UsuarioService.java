@@ -34,11 +34,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import es.uca.iw.carteruca.models.Proyecto;
 
 @Service
 public class UsuarioService implements UserDetailsService {
 
+    private static final Logger logger = LoggerFactory.getLogger(UsuarioService.class);
     private final UsuarioRepository repository;
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
@@ -111,10 +115,12 @@ public class UsuarioService implements UserDetailsService {
         nuevoUsuario.setCodigoRegistro(UUID.randomUUID().toString().substring(0, 5));
 
         try {
+            logger.info("Añadido usuario con username: {} ",usuario);
             repository.save(nuevoUsuario);
             emailService.enviarCorreoRegistro(nuevoUsuario);
             return "Exito";
         } catch (DataIntegrityViolationException | IOException | InterruptedException e) {
+            logger.warn("Error al crear usuario  {}",usuario);
             return "Error: "+ e;
         }
     }
@@ -166,14 +172,6 @@ public class UsuarioService implements UserDetailsService {
         );
     }
 
-    public Optional<Usuario> getUserById(Long id) {
-        return repository.findById(id);
-    }
-
-    public Optional<Usuario> getUserByUsername(String username) {
-        return repository.findByUsuario(username);
-    }
-
     public void deleteUser(Long id) {
         Optional<Usuario> userOptional = repository.findById(id);
         if (userOptional.isPresent()) {
@@ -195,9 +193,11 @@ public class UsuarioService implements UserDetailsService {
             }
 
             try {
+                logger.info("Eliminando usuario con ID: {} ", id);
                 repository.deleteById(id);
             } catch (Exception e) {
 
+                logger.warn("Intento fallido al eliminar usuario con ID: {} ",id);
                 // Actualizar los datos del usuario a valores nulos o "usuario eliminado"
                 usuario.setNombre("Cuenta eliminada");
                 usuario.setApellidos("Cuenta eliminada");
@@ -244,9 +244,11 @@ public class UsuarioService implements UserDetailsService {
         usuario.setUsername(username);
 
         try {
+            logger.info("Actualizando usuario con ID: {} ", id);
             repository.save(usuario);
             return "Usuario actualizado correctamente.";
         } catch (DataIntegrityViolationException e) {
+            logger.warn("Intento de actualizacion fallido del usuario con ID: {} ", id);
             return "Error al actualizar el usuario.";
         }
     }
@@ -299,6 +301,7 @@ public class UsuarioService implements UserDetailsService {
         Optional<Usuario> user = repository.findByEmail(email);
 
         if (user.isPresent() && !user.get().isActivo() && user.get().getCodigoRegistro().equals(registerCode)) {
+            logger.info("Cambio de password correctamente del usuario:{}", user.get().getId());
             user.get().setActivo(true);
             user.get().setCodigoRegistro(null);
             user.get().setRol( obtenerRol(user.get().getUsername()));
@@ -306,6 +309,7 @@ public class UsuarioService implements UserDetailsService {
             return true;
 
         } else {
+            logger.warn("Intento de cambio de password fallido para el usuario con ID:{}", user.get().getId());
             return false;
         }
 
