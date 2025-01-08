@@ -12,18 +12,9 @@ import es.uca.iw.carteruca.models.Usuario;
 
 public interface SolicitudRepository extends JpaRepository<Solicitud, Long> {
 
-    List<Solicitud> findBytitulo(String titulo);
-
-    List<Solicitud> findByestadoAndCartera_FechaInicio(Solicitud estado, LocalDateTime fecha);
-
-    List<Solicitud> findByCartera_FechaInicio(LocalDateTime fecha);
-    //Devuelve lista de solicitudes que pertenezcan a la cartera con fecha de inicio dada
-
-    List<Solicitud> findBySolicitante(Usuario solicitante);    //Busca las solicitudes hechas por un usuario
-
     List<Solicitud> findByPromotorAndEstado(Usuario promotor, Estado estado);
 
-    List<Solicitud> findBySolicitanteAndEstadoNot(Usuario solicitante, Estado estado);  // Excluye el estado CANCELADO
+    List<Solicitud> findBySolicitanteAndEstadoNot(Usuario solicitante, Estado estado);
 
     List<Solicitud> findByEstado(Estado estado);
 

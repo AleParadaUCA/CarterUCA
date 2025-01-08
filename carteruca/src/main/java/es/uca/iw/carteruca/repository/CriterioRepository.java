@@ -10,5 +10,4 @@ public interface CriterioRepository extends JpaRepository<Criterio, Long> {
 
     void deleteById(Long id);
 
-
 }

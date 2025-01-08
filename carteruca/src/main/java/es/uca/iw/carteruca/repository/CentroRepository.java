@@ -9,5 +9,4 @@ public interface CentroRepository extends JpaRepository<Centro, Long>{
 
     void deleteById(Long id);
 
-
 }

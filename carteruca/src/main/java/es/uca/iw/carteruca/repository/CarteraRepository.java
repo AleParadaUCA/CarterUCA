@@ -11,8 +11,6 @@ public interface CarteraRepository extends JpaRepository<Cartera, Long> {
 
     Optional<Cartera> findByFechaInicioAndFechaFin(LocalDateTime inicio, LocalDateTime end);
 
-    void deleteByFechaInicio(LocalDateTime fecha_inicio);//Elimina cartera dada una fecha de inicio
-
     Optional<Cartera> findByFechaInicioLessThanEqualAndFechaFinGreaterThanEqual(LocalDateTime start, LocalDateTime end); //escoger la cartera que esta actualmente
     
 }
