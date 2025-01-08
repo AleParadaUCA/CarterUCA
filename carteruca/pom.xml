@@ -7,7 +7,7 @@
     <groupId>es.uca.iw.carteruca</groupId>
     <artifactId>carteruca</artifactId>
     <name>carteruca</name>
-    <version>3.7.2</version>
+    <version>3.8</version>
     <packaging>jar</packaging>
 
     <properties>
