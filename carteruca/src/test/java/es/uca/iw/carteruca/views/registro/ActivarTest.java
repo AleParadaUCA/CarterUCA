@@ -1,11 +1,8 @@
 package es.uca.iw.carteruca.views.registro;
 
-import es.uca.iw.carteruca.CommonObjets;
-import es.uca.iw.carteruca.models.Centro;
-import es.uca.iw.carteruca.models.Usuario;
-import es.uca.iw.carteruca.services.UsuarioService;
-import io.github.bonigarcia.wdm.WebDriverManager;
+import java.time.Duration;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,15 +14,16 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.server.LocalServerPort;
 
-import java.time.Duration;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import org.springframework.boot.test.mock.mockito.MockBean;
-
+import es.uca.iw.carteruca.CommonObjets;
+import es.uca.iw.carteruca.models.Centro;
+import es.uca.iw.carteruca.models.Usuario;
 import es.uca.iw.carteruca.services.CentroService;
 import es.uca.iw.carteruca.services.EmailService;
+import es.uca.iw.carteruca.services.UsuarioService;
+import io.github.bonigarcia.wdm.WebDriverManager;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 //La etiqueta @Transactional no funciona con selenium y hay que restaurar manualmente el estado de la BD
