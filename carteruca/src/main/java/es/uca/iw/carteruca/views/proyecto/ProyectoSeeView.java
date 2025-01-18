@@ -89,6 +89,10 @@ public class ProyectoSeeView extends Composite<VerticalLayout> {
             director.setValue(proyecto.getDirector_de_proyecto());
             director.setReadOnly(true);
 
+            TextField cartera = new TextField("Cartera del Proyecto");
+            cartera.setValue(proyecto.getSolicitud().getCartera().getNombre());
+            cartera.setReadOnly(true);
+
             // Campo: Porcentaje y ProgressBar
             Span porcentaje = new Span("Porcentaje");
             porcentaje.getStyle()
@@ -106,7 +110,7 @@ public class ProyectoSeeView extends Composite<VerticalLayout> {
             porcentajeLayout.getStyle().set("display", "flex").set("align-items", "center");
 
             // Añadir campos al FormLayout
-            formLayout.add(presupuesto, horas, jefe, director, porcentajeLayout);
+            formLayout.add(presupuesto, horas, jefe, director, cartera, porcentajeLayout);
 
             // Configurar distribución en columnas
             formLayout.setColspan(presupuesto, 1);

@@ -121,7 +121,11 @@ public class ProyectoConsultarView extends Composite<VerticalLayout> {
             jefeField.setValue(proyecto.getJefe().getNombre());
             jefeField.setReadOnly(true);
 
-            formLayout.add(presupuestoValorField,horasField,directorField,jefeField);
+            TextField carteraField = new TextField("Cartera del Proyecto");
+            carteraField.setValue(proyecto.getSolicitud().getCartera().getNombre());
+            carteraField.setReadOnly(true);
+
+            formLayout.add(presupuestoValorField,horasField,directorField,jefeField, carteraField);
             formLayout.add(puntuacionTotalField);
 
             Span criterioSpan = new Span("Criterios");

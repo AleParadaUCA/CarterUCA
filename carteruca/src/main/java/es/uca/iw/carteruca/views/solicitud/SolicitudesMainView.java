@@ -39,31 +39,18 @@ public class SolicitudesMainView extends Composite<VerticalLayout> {
         Div add = common.createSquare("Añadir Solicitud", VaadinIcon.PLUS);
         add.addClickListener(e -> UI.getCurrent().navigate(SolicitudAddView.class));
 
-        // Modificar Solicitud
-        Div modificar = common.createSquare("Modificar Solicitud", VaadinIcon.EDIT);
-        modificar.addClickListener(e -> UI.getCurrent().navigate(SolicitudUpdateView.class));
-
-        // Cancelar Solicitud
-        Div cancelar = common.createSquare("Cancelar Solicitud", VaadinIcon.CLOSE);
-        cancelar.addClickListener(e -> UI.getCurrent().navigate(SolicitudDeleteView.class));
-
         // Ver Solicitudes
         Div solicitudes = common.createSquare("Ver Solicitudes", VaadinIcon.SEARCH);
         solicitudes.addClickListener(e -> UI.getCurrent().navigate(SolicitudSeeView.class));
 
         // Agregar elementos a las dos columnas
-        VerticalLayout column1 = new VerticalLayout(add, modificar);
-        column1.setSpacing(false);
-        column1.setPadding(false);
-        column1.setDefaultHorizontalComponentAlignment(FlexComponent.Alignment.CENTER);
-
-        VerticalLayout column2 = new VerticalLayout(cancelar, solicitudes);
-        column2.setSpacing(false);
-        column2.setPadding(false);
-        column2.setDefaultHorizontalComponentAlignment(FlexComponent.Alignment.CENTER);
+        VerticalLayout column1 = new VerticalLayout(add, solicitudes);
+        column1.setSpacing(true);
+        column1.setPadding(true);
+        column1.setDefaultHorizontalComponentAlignment(FlexComponent.Alignment.START);
 
         // Agregar columnas al contenedor
-        twoColumnsLayout.add(column1, column2);
+        twoColumnsLayout.add(column1);
 
 
         // Añadir todo al layout principal

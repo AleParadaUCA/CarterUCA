@@ -219,7 +219,7 @@ public class AvalarAllView extends Composite<VerticalLayout> {
         });
 
         // Botones de acción
-        Button btnSi = new Button("Sí", e -> {
+        Button btnSi = new Button("Avalar", e -> {
             if (importanciaField.isEmpty()) {
                 importanciaField.setInvalid(true);
                 importanciaField.setErrorMessage("La importancia es obligatoria");
@@ -233,9 +233,9 @@ public class AvalarAllView extends Composite<VerticalLayout> {
                 refrescarTabla();
             }
         });
-        btnSi.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        btnSi.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
 
-        Button btnNo = new Button("No", e -> {
+        Button btnNo = new Button("Rechazar", e -> {
             solicitudService.AvalarSolicitud(solicitud, null);
             dialog.close();
             common.showSuccessNotification("Solicitud cancelada");
@@ -243,12 +243,19 @@ public class AvalarAllView extends Composite<VerticalLayout> {
         });
         btnNo.addThemeVariants(ButtonVariant.LUMO_ERROR);
 
-        // Layout de botones
-        HorizontalLayout botonesLayout = new HorizontalLayout(btnSi, btnNo);
-        botonesLayout.setSpacing(true);
-        botonesLayout.setMargin(true);
-        botonesLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
+        Button volver = new Button("Volver", e -> dialog.close());
+        volver.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
+
+        // Layout para los botones "Avalar" y "Rechazar"
+        HorizontalLayout accionesLayout = new HorizontalLayout(btnSi, btnNo);
+        accionesLayout.setSpacing(true); // Espacio entre los botones
+        accionesLayout.setAlignItems(FlexComponent.Alignment.CENTER); // Alinear verticalmente
+
+        // Layout principal con "Volver" a la izquierda y "Avalar" y "Rechazar" a la derecha
+        HorizontalLayout botonesLayout = new HorizontalLayout(volver, accionesLayout);
         botonesLayout.setWidthFull();
+        botonesLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.BETWEEN); // Justificar "Volver" a la izquierda y los demás a la derecha
+        botonesLayout.setAlignItems(FlexComponent.Alignment.CENTER); // Alinear verticalmente
 
 
         // FormLayout para campos
