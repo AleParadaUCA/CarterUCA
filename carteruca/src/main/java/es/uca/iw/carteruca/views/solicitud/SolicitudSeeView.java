@@ -36,7 +36,7 @@ import es.uca.iw.carteruca.views.common.common;
 import es.uca.iw.carteruca.views.layout.MainLayout;
 import jakarta.annotation.security.RolesAllowed;
 
-@PageTitle("Ver Solicitudes")
+@PageTitle("Solicitudes")
 @Route(value = "/solicitudes/all-solicitudes", layout = MainLayout.class)
 @RolesAllowed({"Promotor","CIO","Solicitante", "OTP"})
 public class SolicitudSeeView extends Composite<VerticalLayout> {
