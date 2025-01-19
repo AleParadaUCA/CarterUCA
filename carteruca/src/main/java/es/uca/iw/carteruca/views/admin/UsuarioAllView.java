@@ -133,6 +133,7 @@ public class UsuarioAllView extends Composite<VerticalLayout> {
 
     private void openEditDialog(Usuario usuario) {
         Dialog dialogo = new Dialog();
+        dialogo.setHeaderTitle("Editar Usuario");
         FormLayout contenido = new FormLayout();
 
         // Campos de edición
@@ -182,12 +183,21 @@ public class UsuarioAllView extends Composite<VerticalLayout> {
 
         // Alinear los botones al final
         HorizontalLayout buttonLayout = new HorizontalLayout(saveButton, cancelButton);
-        buttonLayout.setWidthFull();
+        buttonLayout.setSpacing(true);
         buttonLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
         buttonLayout.setAlignItems(FlexComponent.Alignment.END);
 
+        Button volverButton = new Button("Volver", event -> dialogo.close());
+        volverButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
+
+        HorizontalLayout botonesLayout = new HorizontalLayout(volverButton, buttonLayout);
+        botonesLayout.setWidthFull();
+        botonesLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.BETWEEN); // Justificar "Volver" a la izquierda y los demás a la derecha
+        botonesLayout.setAlignItems(FlexComponent.Alignment.CENTER); // Alinear verticalmente
+
+
         // Contenedor principal del diálogo
-        VerticalLayout dialogLayout = new VerticalLayout(contenido, buttonLayout);
+        VerticalLayout dialogLayout = new VerticalLayout(contenido, botonesLayout);
         dialogLayout.setSpacing(true);
         dialogLayout.setPadding(true);
 

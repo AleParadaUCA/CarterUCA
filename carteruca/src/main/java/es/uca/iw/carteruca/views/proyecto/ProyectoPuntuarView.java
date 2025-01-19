@@ -154,14 +154,23 @@ public class ProyectoPuntuarView extends Composite<VerticalLayout> {
         });
 
         guardarButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+
         Button cancelarButton = new Button("Cancelar", e -> dialog.close());
         cancelarButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
+
+        Button volverButton = new Button("Volver", e -> dialog.close());
+        volverButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
+
         HorizontalLayout botones = new HorizontalLayout(guardarButton, cancelarButton);
         botones.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
-        botones.setWidthFull();
         botones.setAlignItems(FlexComponent.Alignment.END);
 
-        dialog.add(gridCriterios, botones);
+        HorizontalLayout botonesLayout = new HorizontalLayout(volverButton, botones);
+        botonesLayout.setWidthFull();
+        botonesLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.BETWEEN); // Justificar "Volver" a la izquierda y los demás a la derecha
+        botonesLayout.setAlignItems(FlexComponent.Alignment.CENTER); // Alinear verticalmente
+
+        dialog.add(gridCriterios, botonesLayout);
         dialog.setWidthFull();
         dialog.open();
     }

@@ -2,6 +2,7 @@ package es.uca.iw.carteruca.views.solicitud;
 
 import java.util.List;
 
+import jakarta.annotation.security.DenyAll;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.vaadin.flow.component.Composite;
@@ -38,6 +39,7 @@ import jakarta.annotation.security.RolesAllowed;
 @PageTitle("Modificar Solicitudes")
 @Route(value = "/solicitudes/update-solicitud", layout = MainLayout.class)
 @RolesAllowed({"Promotor","CIO","Solicitante", "OTP"})
+@DenyAll
 public class SolicitudUpdateView extends Composite<VerticalLayout> {
 
     private final SolicitudService solicitudService;

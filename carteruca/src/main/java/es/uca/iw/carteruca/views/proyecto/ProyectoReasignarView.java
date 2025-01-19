@@ -5,6 +5,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -75,11 +76,17 @@ public class ProyectoReasignarView extends Composite<VerticalLayout> {
         Dialog dialog = new Dialog();
         dialog.setHeaderTitle("Reasignar Jefe");
 
+        FormLayout contenido = new FormLayout();
+
         otp.setLabel("Seleccionar nuevo jefe");
         List<Usuario> usuariosOTP = usuarioService.getOTP();
         otp.setItems(usuariosOTP);
         otp.setItemLabelGenerator(Usuario::getNombre);
         otp.setRequired(true);
+
+        contenido.add(otp);
+        contenido.setColspan(otp, 3);
+
 
         Button guardarButton = new Button("Guardar", event -> {
             Usuario nuevoJefe = otp.getValue();
@@ -97,14 +104,22 @@ public class ProyectoReasignarView extends Composite<VerticalLayout> {
         Button cancelarButton = new Button("Cancelar", event -> dialog.close());
         cancelarButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
 
-        HorizontalLayout buttonsLayout = new HorizontalLayout(guardarButton, cancelarButton);
-        buttonsLayout.setWidthFull();
-        buttonsLayout.setSpacing(true);
-        buttonsLayout.setPadding(true);
-        buttonsLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
-        buttonsLayout.setAlignItems(FlexComponent.Alignment.END);
+        HorizontalLayout botones = new HorizontalLayout(guardarButton, cancelarButton);
+        botones.setSpacing(true);
+        botones.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
+        botones.setAlignItems(FlexComponent.Alignment.END);
 
-        VerticalLayout dialogLayout = new VerticalLayout(otp, buttonsLayout);
+        Button volverButton = new Button("Volver", event -> dialog.close());
+        volverButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
+
+        HorizontalLayout botonesLayout = new HorizontalLayout(volverButton, botones);
+        botonesLayout.setWidthFull();
+        botonesLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.BETWEEN); // Justificar "Volver" a la izquierda y los demás a la derecha
+        botonesLayout.setAlignItems(FlexComponent.Alignment.CENTER); // Alinear verticalmente
+
+
+        VerticalLayout dialogLayout = new VerticalLayout(contenido, botonesLayout);
+        dialogLayout.setWidthFull();
         dialog.add(dialogLayout);
         dialog.open();
 

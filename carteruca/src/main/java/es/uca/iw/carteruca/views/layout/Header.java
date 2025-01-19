@@ -20,6 +20,7 @@ import es.uca.iw.carteruca.models.Rol;
 import es.uca.iw.carteruca.security.AuthenticatedUser;
 import es.uca.iw.carteruca.views.common.common;
 import es.uca.iw.carteruca.views.proyecto.ProyectoAllView;
+import es.uca.iw.carteruca.views.question.QuestionsView;
 
 public class Header extends Composite<VerticalLayout> {
 
@@ -158,6 +159,8 @@ public class Header extends Composite<VerticalLayout> {
                 .getElement().getClassList().add("menu-item");
 
         menuBar.addItem("Cartera", e -> UI.getCurrent().navigate("/cartera"))
+                .getElement().getClassList().add("menu-item");
+        menuBar.addItem("Preguntas Frecuentes", e -> UI.getCurrent().navigate(QuestionsView.class))
                 .getElement().getClassList().add("menu-item");
         
         return menuBar;

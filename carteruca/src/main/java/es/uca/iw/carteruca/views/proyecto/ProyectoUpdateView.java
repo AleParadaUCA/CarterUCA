@@ -123,16 +123,25 @@ public class ProyectoUpdateView extends Composite<VerticalLayout> {
                 common.showErrorNotification("Porcentaje no actualizado: " + ex.getMessage());
             }
         });
+        guardar.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
         Button cancelar = new Button("Cancelar", event -> dialog.close());
         cancelar.addThemeVariants(ButtonVariant.LUMO_ERROR);
+
         HorizontalLayout boton = new HorizontalLayout(guardar, cancelar);
-        boton.setWidthFull();
         boton.setSpacing(true);
         boton.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
         boton.setAlignItems(FlexComponent.Alignment.END);
 
-        dialog.add(formLayout, boton);
+        Button volver = new Button("Volver", e -> dialog.close());
+        volver.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
+
+        HorizontalLayout botonesLayout = new HorizontalLayout(volver, boton);
+        botonesLayout.setWidthFull();
+        botonesLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.BETWEEN); // Justificar "Volver" a la izquierda y los demás a la derecha
+        botonesLayout.setAlignItems(FlexComponent.Alignment.CENTER); // Alinear verticalmente
+
+        dialog.add(formLayout, botonesLayout);
         dialog.open();
     }
 

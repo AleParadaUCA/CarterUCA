@@ -2,6 +2,7 @@ package es.uca.iw.carteruca.views.criterio;
 
 import java.util.List;
 
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.vaadin.flow.component.button.Button;
@@ -68,18 +69,6 @@ public class CriterioAllView extends VerticalLayout {
             return editButton;
         }).setHeader("Editar");
 
-        /*
-        tabla_criterio.addComponentColumn(criterio -> {
-            Icon delete = VaadinIcon.TRASH.create();
-            Button deleteButton = new Button(delete, click -> {
-                showDeleteConfirmationDialog(criterio);
-            });
-            deleteButton.addThemeVariants(ButtonVariant.LUMO_ERROR, ButtonVariant.LUMO_TERTIARY);
-            return deleteButton;
-        }).setHeader("Eliminar");
-
-         */
-
         updateGrid();
     }
 
@@ -90,6 +79,7 @@ public class CriterioAllView extends VerticalLayout {
 
     private void openAddDialog() {
         Dialog dialog = new Dialog();
+        dialog.setHeaderTitle("Crear Criterio");
         FormLayout form = new FormLayout();
 
         TextField descripcion = new TextField("Descripcion");
@@ -134,10 +124,20 @@ public class CriterioAllView extends VerticalLayout {
         Button cancelButton = new Button("Cancelar", event -> dialog.close());
         cancelButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
 
-        layout.add(form, saveButton, cancelButton);
+        Button volverButton = new Button("Volver", event -> dialog.close());
+        volverButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
+
+        layout.add(saveButton, cancelButton);
+        layout.setSpacing(true);
         layout.setJustifyContentMode(JustifyContentMode.END);
 
-        dialog.add(form, layout);
+        HorizontalLayout botonesLayout = new HorizontalLayout(volverButton, layout);
+        botonesLayout.setWidthFull();
+        botonesLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.BETWEEN); // Justificar "Volver" a la izquierda y los demás a la derecha
+        botonesLayout.setAlignItems(FlexComponent.Alignment.CENTER); // Alinear verticalmente
+
+
+        dialog.add(form, botonesLayout);
         dialog.open();
     }
 
@@ -145,6 +145,7 @@ public class CriterioAllView extends VerticalLayout {
     private void openEditDialog(Criterio criterio) {
         // Crear el diálogo y el formulario
         Dialog dialog = new Dialog();
+        dialog.setHeaderTitle("Editar Criterio");
         FormLayout form = new FormLayout();
 
         TextField descripcionField = new TextField("Descripción");
@@ -201,6 +202,9 @@ public class CriterioAllView extends VerticalLayout {
         // Botón de cancelar
         Button cancelButton = new Button("Cancelar", event -> dialog.close());
 
+        Button volver = new Button("Volver", e -> dialog.close());
+        volver.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
+
         // Estilizar botones
         saveButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         cancelButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
@@ -209,42 +213,15 @@ public class CriterioAllView extends VerticalLayout {
         HorizontalLayout buttonLayout = new HorizontalLayout(saveButton, cancelButton);
         buttonLayout.setJustifyContentMode(JustifyContentMode.END);
 
+        HorizontalLayout botonesLayout = new HorizontalLayout(volver, buttonLayout);
+        botonesLayout.setWidthFull();
+        botonesLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.BETWEEN); // Justificar "Volver" a la izquierda y los demás a la derecha
+        botonesLayout.setAlignItems(FlexComponent.Alignment.CENTER); // Alinear verticalmente
+
         // Agregar formulario y botones al diálogo
-        dialog.add(form, buttonLayout);
+        dialog.add(form, botonesLayout);
         dialog.open();
     }
-
-    /*
-    private void showDeleteConfirmationDialog(Criterio criterio) {
-        Dialog dialog = new Dialog();
-        dialog.setCloseOnEsc(false);
-        dialog.setCloseOnOutsideClick(false);
-
-        Span message = new Span("¿Desea eliminar este criterio?");
-        Button confirmButton = new Button("Sí", event -> {
-            criterioService.deleteCriterio(criterio.getId());
-            updateGrid();
-            common.showSuccessNotification("Criterio eliminado con éxito");
-            dialog.close();
-        });
-        confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-
-        Button cancelButton = new Button("No", event -> {
-            dialog.close();
-        });
-        cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-
-        HorizontalLayout buttons = new HorizontalLayout(confirmButton, cancelButton);
-        VerticalLayout dialogLayout = new VerticalLayout(message, buttons);
-        dialogLayout.setSizeFull();
-        dialogLayout.setSpacing(true);
-        dialogLayout.setAlignItems(Alignment.CENTER);
-        dialogLayout.setJustifyContentMode(JustifyContentMode.CENTER);
-        dialog.add(dialogLayout);
-        dialog.open();
-    }
-
-     */
 
 
 }

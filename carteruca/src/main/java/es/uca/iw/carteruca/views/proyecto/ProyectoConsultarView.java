@@ -165,6 +165,7 @@ public class ProyectoConsultarView extends Composite<VerticalLayout> {
                 criteriosGrid.setSizeFull();
 
                 Button cerrarButton = new Button("Cerrar", e -> criteriosDialog.close());
+                cerrarButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
                 HorizontalLayout buttonLayout = new HorizontalLayout(cerrarButton);
                 buttonLayout.setWidthFull();
                 buttonLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.END);

@@ -2,6 +2,7 @@ package es.uca.iw.carteruca.views.proyecto;
 
 import java.util.List;
 
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.shared.Tooltip;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -232,11 +233,20 @@ public class ProyectoConfigureView extends Composite<VerticalLayout> {
         Button cancelButton = new Button("Cancelar", event -> dialog.close());
         cancelButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
 
+        Button volverButton = new Button("Volver", event -> dialog.close());
+        volverButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
+
         HorizontalLayout boton = new HorizontalLayout(guardarButton,cancelButton);
-        boton.setSizeFull();
         boton.setSpacing(true);
         boton.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
         boton.setAlignItems(FlexComponent.Alignment.END);
+
+        HorizontalLayout botonesLayout = new HorizontalLayout(volverButton,boton);
+        botonesLayout.setWidthFull();
+        botonesLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.BETWEEN); // Justificar "Volver" a la izquierda y los demás a la derecha
+        botonesLayout.setAlignItems(FlexComponent.Alignment.CENTER); // Alinear verticalmente
+
+
 
         formulario.add(director, otp, n_horasField, presupuesto_valorField, especificacion, especificacionUpload, presupuesto, presupuestoUpload);
 
@@ -251,7 +261,8 @@ public class ProyectoConfigureView extends Composite<VerticalLayout> {
         formulario.setColspan(presupuestoUpload, 2);
         formulario.setColspan(especificacionUpload, 2);
 
-        VerticalLayout contenido = new VerticalLayout(formulario, boton);
+        // Añadir el espaciador después de botonesLayout en el layout vertical
+        VerticalLayout contenido = new VerticalLayout(formulario, botonesLayout);
         contenido.setPadding(false);
         contenido.setSpacing(false);
         contenido.setSizeFull();

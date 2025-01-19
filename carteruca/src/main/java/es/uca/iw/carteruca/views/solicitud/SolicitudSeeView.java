@@ -275,7 +275,6 @@ public class SolicitudSeeView extends Composite<VerticalLayout> {
         Button volver = new Button("Volver", e -> dialog.close());
         volver.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
 
-        // Layout para los botones "Avalar" y "Rechazar"
         HorizontalLayout accionesLayout = new HorizontalLayout(save, cancel);
         accionesLayout.setSpacing(true);
         accionesLayout.setAlignItems(FlexComponent.Alignment.CENTER);
@@ -334,8 +333,6 @@ public class SolicitudSeeView extends Composite<VerticalLayout> {
         botones.setWidthFull();
         botones.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
         botones.add(Btnsi, BtnNo);
-
-
 
         dialogo.add(titulo, botones);
 

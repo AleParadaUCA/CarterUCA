@@ -233,7 +233,7 @@ public class AvalarAllView extends Composite<VerticalLayout> {
                 refrescarTabla();
             }
         });
-        btnSi.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        btnSi.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
         Button btnNo = new Button("Rechazar", e -> {
             solicitudService.AvalarSolicitud(solicitud, null);
