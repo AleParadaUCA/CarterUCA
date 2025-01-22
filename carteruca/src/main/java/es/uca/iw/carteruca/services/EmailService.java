@@ -5,11 +5,14 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.concurrent.CompletableFuture;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +23,7 @@ import jakarta.mail.internet.MimeMessage;
 
 
 @Service
+@EnableAsync
 public class EmailService {
     private static final Logger logger = LoggerFactory.getLogger(EmailService.class);
 
@@ -54,7 +58,8 @@ public class EmailService {
 
     }
 
-    public boolean enviarCorreoRegistro(Usuario user) throws IOException, InterruptedException {
+    @Async
+    public CompletableFuture<Boolean> enviarCorreoRegistro(Usuario user) throws IOException, InterruptedException {
 
         MimeMessage message = mailSender.createMimeMessage();
 
@@ -74,14 +79,16 @@ public class EmailService {
             this.mailSender.send(message);
         } catch (MailException | MessagingException ex) {
             ex.printStackTrace();
-            return false;
+            logger.info("Correo de notificación no se ha podido enviar");
+            return CompletableFuture.completedFuture(false);
         }
 
-        logger.info("Correo de notificación enviado a: {}", user.getEmail());
-        return true;
+        logger.info("Correo de notificación enviado ");
+        return CompletableFuture.completedFuture(true);
     }
 
-    public boolean enviarCorreo(String to, String subject, String body) {
+    @Async
+    public CompletableFuture<Boolean> enviarCorreo(String to, String subject, String body) {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, "utf-8");
 
@@ -93,9 +100,11 @@ public class EmailService {
             this.mailSender.send(message);
         } catch (MailException | MessagingException ex) {
             ex.printStackTrace();
-            return false;
+            logger.info("Error al enviar correo de notificación");
+            return CompletableFuture.completedFuture(false);
         }
 
-        return true;
+        logger.info("Correo de notificación enviado ");
+        return CompletableFuture.completedFuture(true);
     }
 }
