@@ -9,6 +9,7 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.progressbar.ProgressBar;
+import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.provider.ListDataProvider;
@@ -112,6 +113,10 @@ public class ProyectoSeeView extends Composite<VerticalLayout> {
             jefe.setValue(proyecto.getJefe().getNombre());
             jefe.setReadOnly(true);
 
+            IntegerField n_tecnicosField = new IntegerField("Número de Tecnicos Asignados");
+            n_tecnicosField.setValue(proyecto.getTecnicos_Asignados());
+            n_tecnicosField.setReadOnly(true);
+
             // Campo: Director de Proyecto
             TextField director = new TextField("Director de Proyecto");
             director.setValue(proyecto.getDirector_de_proyecto());
@@ -138,11 +143,12 @@ public class ProyectoSeeView extends Composite<VerticalLayout> {
             porcentajeLayout.getStyle().set("display", "flex").set("align-items", "center");
 
             // Añadir campos al FormLayout
-            formLayout.add(presupuesto, horas, jefe, director, cartera, porcentajeLayout);
+            formLayout.add(presupuesto, horas, n_tecnicosField, jefe, director, cartera, porcentajeLayout);
 
             // Configurar distribución en columnas
             formLayout.setColspan(presupuesto, 1);
             formLayout.setColspan(horas, 1);
+            formLayout.setColspan(n_tecnicosField, 1);
             formLayout.setColspan(jefe, 1);
             formLayout.setColspan(director, 1);
             formLayout.setColspan(porcentajeLayout, 2); // Abarca dos columnas

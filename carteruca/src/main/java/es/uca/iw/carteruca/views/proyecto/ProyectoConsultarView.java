@@ -6,6 +6,7 @@ import java.util.List;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,7 +90,8 @@ public class ProyectoConsultarView extends Composite<VerticalLayout> {
             String search = event.getValue().trim().toLowerCase();
             dataProvider.setFilter(proyecto -> {
                 String titulo = proyecto.getSolicitud().getTitulo().toLowerCase();
-                return titulo.contains(search) || titulo.contains(search.toLowerCase());
+                String cartera = proyecto.getSolicitud().getCartera().getNombre().toLowerCase();
+                return titulo.contains(search) || titulo.contains(search.toLowerCase()) || cartera.contains(search.toLowerCase());
             });
         });
 
@@ -110,6 +112,10 @@ public class ProyectoConsultarView extends Composite<VerticalLayout> {
             TextField puntuacionTotalField = new TextField("Puntuación Total");
             puntuacionTotalField.setValue(proyecto.getPuntuacionTotal().toString());
             puntuacionTotalField.setReadOnly(true);
+
+            IntegerField n_tecnicosField = new IntegerField("Número de Tecnicos Asignados");
+            n_tecnicosField.setValue(proyecto.getTecnicos_Asignados());
+            n_tecnicosField.setReadOnly(true);
 
             Span porcentaje = new Span("Porcentaje");
             porcentaje.getStyle()
@@ -145,7 +151,7 @@ public class ProyectoConsultarView extends Composite<VerticalLayout> {
             carteraField.setValue(proyecto.getSolicitud().getCartera().getNombre());
             carteraField.setReadOnly(true);
 
-            formLayout.add(presupuestoValorField,horasField,directorField,jefeField, carteraField);
+            formLayout.add(presupuestoValorField,horasField,n_tecnicosField, directorField,jefeField, carteraField);
             formLayout.add(puntuacionTotalField);
 
             Span criterioSpan = new Span("Criterios");

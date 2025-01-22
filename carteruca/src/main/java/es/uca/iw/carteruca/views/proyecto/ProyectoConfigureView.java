@@ -6,6 +6,7 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.shared.Tooltip;
+import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +50,7 @@ public class ProyectoConfigureView extends Composite<VerticalLayout> {
     private final TextField director = new TextField();
     private final NumberField n_horasField = new NumberField();
     private final NumberField presupuesto_valorField = new NumberField();
+    private final IntegerField n_tecnicosField = new IntegerField();
     private final Grid<Proyecto> proyectos_tabla = new Grid<>(Proyecto.class);
 
     private final MultiFileMemoryBuffer especificacionBuffer = new MultiFileMemoryBuffer();
@@ -94,7 +96,6 @@ public class ProyectoConfigureView extends Composite<VerticalLayout> {
             configureButton.addClickListener(e -> DialogConfigurar(proyecto));
             return configureButton;
         });
-        //refrescarTabla();
 
         List<Proyecto> lista = proyectoService.getProyectosSinConfigurar();
         proyectos_tabla.setItems(lista);
@@ -155,6 +156,7 @@ public class ProyectoConfigureView extends Composite<VerticalLayout> {
         // Se obtiene el total de horas usadas en la cartera
         float totalHorasCartera = proyectoService.sumarHorasByCarteraAndEstado(proyecto.getSolicitud().getCartera().getId());
         float totalPresupuestoCartera = proyectoService.sumarPresupuestoByCartera(proyecto.getSolicitud().getCartera().getId());
+        Integer totalntecnicos = proyectoService.sumarN_tecnicosByCarteraAndEstado(proyecto.getSolicitud().getCartera().getId());
 
         // Definimos los campos para las horas, validando el máximo permitido
         n_horasField.setLabel("Número de Horas");
@@ -190,6 +192,22 @@ public class ProyectoConfigureView extends Composite<VerticalLayout> {
             }
         });
 
+        n_tecnicosField.setLabel("Número de Téncicos asignados");
+        n_tecnicosField.setMin(1);
+        int tecnicostotales = proyecto.getSolicitud().getCartera().getN_max_tecnicos() - totalntecnicos;
+        n_tecnicosField.setMax(totalntecnicos);
+        n_tecnicosField.getElement().setAttribute("aria-label","Número de Técnicos asignados");
+        n_tecnicosField.setTooltipText("Este campo va en relación al número de técnicos que se deben asignar para realizar el proyecto");
+        n_tecnicosField.setRequiredIndicatorVisible(true);
+
+        Button n_tecnicos_toggleTooltip = new Button("Mostrar/Ocultar Tooltip");
+        n_tecnicos_toggleTooltip.addClickListener(event -> {
+            Tooltip n_tecnicosTooltip = n_tecnicosField.getTooltip();
+            if (n_tecnicosTooltip != null) {
+                n_tecnicosTooltip.setOpened(false);
+            }
+        });
+
         // Configurar los componentes de subida de archivos
         Span especificacion = new Span("Especificación Técnica (20MB)");
         especificacion.getElement().setAttribute("aria-label", "Adjunte la memoria del proyecto");
@@ -222,11 +240,14 @@ public class ProyectoConfigureView extends Composite<VerticalLayout> {
         Button guardarButton = new Button("Guardar", event -> {
             float horasNuevas = n_horasField.getValue().floatValue();
             float presupuestoValor = presupuesto_valorField.getValue().floatValue();
+            int n_tecnicos = n_tecnicosField.getValue().intValue();
             // Si las horas ingresadas exceden el límite, mostramos un mensaje de error
             if (totalHorasCartera + horasNuevas > horasMaximas) {
                 common.showErrorNotification("El número de horas excede el límite permitido en la cartera.");
             } else if (totalPresupuestoCartera + presupuestoValor > presupuestoMaximo) {
                 common.showErrorNotification("El Presupuesto excede el límite de la cartera.");
+            } else if (totalntecnicos +  n_tecnicos > tecnicostotales ) {
+                common.showErrorNotification("El número de técnicos asignados excede el limite de la cartera.");
             } else {
                 try {
                     // Si la validación es exitosa, asignamos los valores al proyecto
@@ -240,6 +261,7 @@ public class ProyectoConfigureView extends Composite<VerticalLayout> {
                     // Asignamos las horas al proyecto
                     proyecto.setHoras(horasNuevas);
                     proyecto.setPresupuesto_valor(presupuestoValor);
+                    proyecto.setTecnicos_Asignados(n_tecnicos);
 
                     // Llamamos al servicio para actualizar el proyecto
                     proyectoService.changeProyecto(proyecto, presupuestoBuffer, especificacionBuffer);
@@ -278,11 +300,12 @@ public class ProyectoConfigureView extends Composite<VerticalLayout> {
 
 
 
-        formulario.add(director, otp, n_horasField, presupuesto_valorField, especificacion, especificacionUpload, presupuesto, presupuestoUpload);
+        formulario.add(director, otp, n_horasField, n_tecnicosField, presupuesto_valorField, especificacion, especificacionUpload, presupuesto, presupuestoUpload);
 
         formulario.setColspan(director,1);
         formulario.setColspan(otp,1);
         formulario.setColspan(n_horasField,1);
+        formulario.setColspan(n_tecnicosField,1);
         formulario.setColspan(especificacion,2);
         formulario.setColspan(presupuesto,2);
 

@@ -44,6 +44,7 @@ public class ProyectoService {
         proyecto.setPorcentaje(0.0f);  // Puedes inicializar el porcentaje si es necesario
         proyecto.setHoras(0.0f);
         proyecto.setPresupuesto_valor(0.0f);
+        proyecto.setTecnicos_Asignados(0);
 
         logger.info("Creando proyecto para la solicitud: {}", solicitud.getTitulo());
 
@@ -135,6 +136,7 @@ public class ProyectoService {
                 .filter(proyecto -> proyecto.getDirector_de_proyecto() != null && !proyecto.getDirector_de_proyecto().isEmpty())  // Verifica que el director esté asignado
                 .filter(proyecto -> proyecto.getJefe() != null)  // Verifica que el jefe esté asignado
                 .filter(proyecto -> proyecto.getPresupuesto_valor() != null && proyecto.getPresupuesto_valor() > 0.0f)
+                .filter(proyecto -> proyecto.getTecnicos_Asignados() > 0)
                 .collect(Collectors.toList());
     }
 
@@ -158,6 +160,7 @@ public class ProyectoService {
                 .filter(proyecto -> proyecto.getJefe() == null)
                 .filter(proyecto -> proyecto.getSolicitud().getEstado() == Estado.ACEPTADO)
                 .filter(proyecto -> proyecto.getPresupuesto_valor() == 0.0f)
+                .filter(proyecto -> proyecto.getTecnicos_Asignados() == 0)
                 .collect(Collectors.toList());
     }
 
@@ -171,6 +174,18 @@ public class ProyectoService {
                 .mapToDouble(Proyecto::getHoras)  // Aquí mapeamos las horas como double
                 .sum();  // Suma de todos los valores y luego convertimos el resultado a float
     }
+
+    public int sumarN_tecnicosByCarteraAndEstado(Long carteraId) {
+        List<Proyecto> proyectos = repository.findBySolicitud_Cartera_IdAndSolicitud_EstadoIn(
+                carteraId, Arrays.asList(Estado.ACEPTADO, Estado.TERMINADO));
+
+        return proyectos.stream()
+                .mapToInt(Proyecto::getTecnicos_Asignados)  // Directly using the int value
+                .sum();
+    }
+
+
+
 
     public float sumarPresupuestoByCartera(Long carteraId) {
         List<Proyecto> proyectos = repository.findBySolicitud_Cartera_IdAndSolicitud_EstadoIn(
@@ -215,6 +230,7 @@ public class ProyectoService {
                 // Filtra proyectos donde jefe no sea nulo
                 .filter(proyecto -> proyecto.getJefe() != null)
                 .filter(proyecto -> proyecto.getPresupuesto_valor() != null && proyecto.getPresupuesto_valor() > 0.0f)
+                .filter(proyecto -> proyecto.getTecnicos_Asignados() > 0)
                 // Recoge los proyectos que cumplen todos los criterios
                 .collect(Collectors.toList());
     }
@@ -249,7 +265,8 @@ public class ProyectoService {
                             !proyecto.getDirector_de_proyecto().isEmpty() &&
                             proyecto.getJefe() != null &&
                             proyecto.getJefe().getNombre() != null &&
-                            !proyecto.getJefe().getNombre().isEmpty();
+                            !proyecto.getJefe().getNombre().isEmpty() &&
+                                    proyecto.getTecnicos_Asignados() > 0;
                     // Nota: No verificamos porcentaje ya que puede ser igual a 0.
                 })
                 .collect(Collectors.toList());
@@ -276,6 +293,7 @@ public class ProyectoService {
                 .filter(proyecto -> proyecto.getDirector_de_proyecto() != null)
                 .filter(proyecto -> proyecto.getPorcentaje() >= 0.0f)
                 .filter(proyecto -> proyecto.getPuntuaciones() != null && !proyecto.getPuntuaciones().isEmpty())
+                .filter(proyecto -> proyecto.getTecnicos_Asignados() > 0)
 
                 .collect(Collectors.toList());
     }

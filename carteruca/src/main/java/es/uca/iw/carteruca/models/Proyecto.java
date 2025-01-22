@@ -54,7 +54,7 @@ public class Proyecto {
     // no tiene porque estar registrada en la aplicacion
 
     @Column
-    private Integer Tecnicos_Asignados;
+    private int Tecnicos_Asignados;
 
     @ManyToOne
     @JoinColumn(name = "jefe_id")
@@ -102,6 +102,6 @@ public class Proyecto {
     }
     public void setPresupuesto_valor( float presupuesto) { this.presupuesto_valor = presupuesto; }
 
-    public Integer getTecnicos_Asignados() {return Tecnicos_Asignados;}
-    public void setTecnicos_Asignados(Integer tecnicos_Asignados) {Tecnicos_Asignados = tecnicos_Asignados;}
+    public int getTecnicos_Asignados() {return Tecnicos_Asignados;}
+    public void setTecnicos_Asignados(int tecnicos_Asignados) {Tecnicos_Asignados = tecnicos_Asignados;}
 }
