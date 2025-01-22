@@ -2,7 +2,11 @@ package es.uca.iw.carteruca.views.question;
 
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.accordion.Accordion;
+import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
@@ -16,6 +20,18 @@ import es.uca.iw.carteruca.views.layout.MainLayout;
 public class QuestionsView extends Composite<VerticalLayout> {
 
     public QuestionsView() {
+
+        H2 title = new H2("Preguntas Frecuentes");
+
+        Icon faqIcon = VaadinIcon.QUESTION_CIRCLE.create();
+        faqIcon.getStyle().set("font-size", "20px");
+
+        HorizontalLayout titulo = new HorizontalLayout();
+        titulo.setWidthFull();
+        titulo.add(title, faqIcon);
+
+        getContent().add(titulo);
+
         Accordion preguntas = new Accordion();
 
         // Adding questions and answers
