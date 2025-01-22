@@ -5,11 +5,16 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.shared.Tooltip;
 import com.vaadin.flow.component.textfield.NumberField;
+import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.provider.ListDataProvider;
+import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.component.dialog.Dialog;
@@ -69,7 +74,28 @@ public class ProyectoUpdateView extends Composite<VerticalLayout> {
 
         List<Proyecto> lista = proyectoService.getProyectosPorJefeYEstado(currentUser);
         proyecto_tabla.setItems(lista);
-        getContent().add(proyecto_tabla);
+
+        ListDataProvider<Proyecto> dataProvider = new ListDataProvider<>(lista);
+        proyecto_tabla.setDataProvider(dataProvider);
+
+        TextField searchField = new TextField();
+        searchField.setPlaceholder("Buscar...");
+        searchField.setWidth("50%");
+        searchField.setPrefixComponent(new Icon(VaadinIcon.SEARCH));
+        searchField.setValueChangeMode(ValueChangeMode.EAGER);
+
+        searchField.addValueChangeListener(event -> {
+            String searchTerm = event.getValue().trim().toLowerCase();
+            dataProvider.setFilter(proyecto -> {
+                // Obtener los campos relevantes
+                String titulo = proyecto.getSolicitud().getTitulo().toLowerCase();
+                // Comprobar si algún campo coincide con el término de búsqueda
+                return titulo.contains(searchTerm) || titulo.contains(searchTerm.toLowerCase());
+            });
+        });
+
+
+        getContent().add(searchField, proyecto_tabla);
 
     }
 

@@ -4,6 +4,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.provider.ListDataProvider;
+import com.vaadin.flow.data.value.ValueChangeMode;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.vaadin.flow.component.Composite;
@@ -86,7 +91,25 @@ public class ProyectoPuntuarView extends Composite<VerticalLayout> {
 
         List<Proyecto> proyectos = proyectoService.getProyectosSinPuntuacion();
         proyecto_tabla.setItems(proyectos);
-        getContent().add(proyecto_tabla);
+
+        ListDataProvider<Proyecto> dataProvider = new ListDataProvider<>(proyectos);
+        proyecto_tabla.setDataProvider(dataProvider);
+
+        TextField searchField = new TextField();
+        searchField.setPlaceholder("Buscar...");
+        searchField.setWidth("50%");
+        searchField.setPrefixComponent(new Icon(VaadinIcon.SEARCH));
+        searchField.setValueChangeMode(ValueChangeMode.EAGER);
+
+        searchField.addValueChangeListener(event -> {
+           String search = searchField.getValue();
+           dataProvider.setFilter(proyecto -> {
+               String titulo = proyecto.getSolicitud().getTitulo().toLowerCase();
+               return titulo.contains(search);
+           });
+        });
+
+        getContent().add(searchField, proyecto_tabla);
     }
 
     private void DialogCriterio(Proyecto proyecto) {

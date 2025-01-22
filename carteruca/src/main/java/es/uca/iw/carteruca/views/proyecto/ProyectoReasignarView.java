@@ -7,9 +7,14 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.provider.ListDataProvider;
+import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import es.uca.iw.carteruca.models.Proyecto;
@@ -68,7 +73,24 @@ public class ProyectoReasignarView extends Composite<VerticalLayout> {
 
         List<Proyecto> lista = proyectoService.getProyectosSinJefeConDirector();
         proyectos_tabla.setItems(lista);
-        getContent().add(proyectos_tabla);
+
+        ListDataProvider<Proyecto> dataProvider = new ListDataProvider<>(lista);
+        proyectos_tabla.setDataProvider(dataProvider);
+
+        TextField searchField = new TextField();
+        searchField.setPlaceholder("Buscar...");
+        searchField.setWidth("50%");
+        searchField.setPrefixComponent(new Icon(VaadinIcon.SEARCH));
+        searchField.setValueChangeMode(ValueChangeMode.EAGER);
+
+        searchField.addValueChangeListener(event -> {
+           String searchTerm = searchField.getValue().trim().toLowerCase();
+           dataProvider.setFilter(proyecto -> {
+                   String titulo = proyecto.getSolicitud().getTitulo().toLowerCase();
+                   return titulo.contains(searchTerm) || titulo.contains(searchTerm.toLowerCase());
+           });
+        });
+        getContent().add(searchField, proyectos_tabla);
     }
 
     private void reasignarJefe(Proyecto proyecto) {

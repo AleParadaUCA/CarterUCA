@@ -4,6 +4,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.data.provider.ListDataProvider;
+import com.vaadin.flow.data.value.ValueChangeMode;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.vaadin.flow.component.Composite;
@@ -69,11 +73,27 @@ public class ProyectoConsultarView extends Composite<VerticalLayout> {
         proyectos_tabla.setItemDetailsRenderer(createStaticDetailsRendererConsulta());
         proyectos_tabla.setDetailsVisibleOnClick(true);  // Hacemos visibles los detalles cuando se hace clic en una fila
 
-
         List<Proyecto> proyectos = proyectoService.getProyectosValidosPorEstadoAceptadoOTerminado();
         proyectos_tabla.setItems(proyectos);
 
-        getContent().add(proyectos_tabla);
+        ListDataProvider<Proyecto> dataProvider = new ListDataProvider<>(proyectos);
+        proyectos_tabla.setDataProvider(dataProvider);
+
+        TextField searchField = new TextField();
+        searchField.setPlaceholder("Buscar...");
+        searchField.setWidth("50%");
+        searchField.setPrefixComponent(new Icon(VaadinIcon.SEARCH));
+        searchField.setValueChangeMode(ValueChangeMode.EAGER);
+
+        searchField.addValueChangeListener(event -> {
+            String search = event.getValue().trim().toLowerCase();
+            dataProvider.setFilter(proyecto -> {
+                String titulo = proyecto.getSolicitud().getTitulo().toLowerCase();
+                return titulo.contains(search) || titulo.contains(search.toLowerCase());
+            });
+        });
+
+        getContent().add(searchField, proyectos_tabla);
     }
 
 

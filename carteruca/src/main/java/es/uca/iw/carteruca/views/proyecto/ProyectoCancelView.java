@@ -2,6 +2,10 @@ package es.uca.iw.carteruca.views.proyecto;
 
 import java.util.List;
 
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.provider.ListDataProvider;
+import com.vaadin.flow.data.value.ValueChangeMode;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.vaadin.flow.component.Composite;
@@ -62,6 +66,9 @@ public class ProyectoCancelView extends Composite<VerticalLayout> {
         proyectos_tabla.addColumn(proyecto ->
                 proyecto.getSolicitud().getTitulo()).setHeader("Título de la Solicitud");
 
+        proyectos_tabla.addColumn(proyecto ->
+            proyecto.getSolicitud().getCartera().getNombre()).setHeader("Cartera");
+
         proyectos_tabla.addComponentColumn(proyecto -> {
             Button cancelarButton = new Button(VaadinIcon.TRASH.create());
             cancelarButton.addThemeVariants(ButtonVariant.LUMO_ERROR, ButtonVariant.LUMO_TERTIARY);
@@ -75,7 +82,25 @@ public class ProyectoCancelView extends Composite<VerticalLayout> {
         List<Proyecto> lista = proyectoService.getProyectosPorEstado();
         proyectos_tabla.setItems(lista);
 
-        getContent().add(proyectos_tabla);
+        ListDataProvider<Proyecto> dataProvider = new ListDataProvider<>(lista);
+        proyectos_tabla.setDataProvider(dataProvider);
+
+        TextField searchField = new TextField();
+        searchField.setPlaceholder("Buscar...");
+        searchField.setWidth("50%");
+        searchField.setPrefixComponent(new Icon(VaadinIcon.SEARCH));
+        searchField.setValueChangeMode(ValueChangeMode.EAGER);
+
+        searchField.addValueChangeListener(event -> {
+            String searchTerm = event.getValue().trim().toLowerCase();
+            dataProvider.setFilter(proyecto -> {
+                String titulo = proyecto.getSolicitud().getTitulo().toLowerCase();
+                String cartera = proyecto.getSolicitud().getCartera().getNombre().toLowerCase();
+                return titulo.contains(searchTerm) || titulo.contains(searchTerm.toLowerCase()) || cartera.contains(searchTerm) || cartera.contains(searchTerm.toLowerCase());
+            });
+        });
+
+        getContent().add(searchField, proyectos_tabla);
 
     }
 

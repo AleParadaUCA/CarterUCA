@@ -3,7 +3,11 @@ package es.uca.iw.carteruca.views.proyecto;
 import java.util.List;
 
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.shared.Tooltip;
+import com.vaadin.flow.data.provider.ListDataProvider;
+import com.vaadin.flow.data.value.ValueChangeMode;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.vaadin.flow.component.Composite;
@@ -63,7 +67,7 @@ public class ProyectoConfigureView extends Composite<VerticalLayout> {
 
         crearTabla();
 
-        getContent().add(common.boton_dinamico(authenticatedUser.get().get()));
+        getContent().add(common.botones_proyecto());
     }
 
     private void crearTabla() {
@@ -76,6 +80,9 @@ public class ProyectoConfigureView extends Composite<VerticalLayout> {
 
         proyectos_tabla.addColumn(proyecto ->
                 proyecto.getSolicitud().getTitulo()).setHeader("Título de la Solicitud");
+
+        proyectos_tabla.addColumn(proyecto ->
+                proyecto.getSolicitud().getCartera().getNombre()).setHeader("Cartera");
 
         proyectos_tabla.addColumn(common.createToggleDetailsRenderer(proyectos_tabla));
         proyectos_tabla.setItemDetailsRenderer(common.createStaticDetailsRendererProyecto());
@@ -91,7 +98,30 @@ public class ProyectoConfigureView extends Composite<VerticalLayout> {
 
         List<Proyecto> lista = proyectoService.getProyectosSinConfigurar();
         proyectos_tabla.setItems(lista);
-        getContent().add(proyectos_tabla);
+
+        ListDataProvider<Proyecto> dataProvider = new ListDataProvider<>(lista);
+        proyectos_tabla.setDataProvider(dataProvider);
+
+        TextField searchField = new TextField();
+        searchField.setPlaceholder("Buscar...");
+        searchField.setWidth("50%");
+        searchField.setPrefixComponent(new Icon(VaadinIcon.SEARCH));
+        searchField.setValueChangeMode(ValueChangeMode.EAGER);
+
+        searchField.addValueChangeListener(event -> {
+            String searchTerm = event.getValue().trim().toLowerCase();
+            dataProvider.setFilter(proyecto -> {
+                // Obtener los campos relevantes
+                String titulo = proyecto.getSolicitud().getTitulo().toLowerCase();
+                String cartera = proyecto.getSolicitud().getCartera().getNombre().toLowerCase();
+                String nombreCartera = proyecto.getSolicitud().getCartera().getNombre().toLowerCase();
+
+                // Comprobar si algún campo coincide con el término de búsqueda
+                return titulo.contains(searchTerm) || cartera.contains(searchTerm) || nombreCartera.contains(searchTerm);
+            });
+        });
+
+        getContent().add(searchField, proyectos_tabla);
     }
 
     private void DialogConfigurar(Proyecto proyecto) {
