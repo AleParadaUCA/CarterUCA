@@ -56,15 +56,4 @@ public class CentroService {
         return centroRepository.save(centro);
     }
 
-    // Eliminar un centro por su ID
-    public void deleteCentro(Long id) {
-        Optional<Centro> centroOpt = centroRepository.findById(id);
-        if (centroOpt.isPresent()) {
-            logger.info("Eliminando centro con ID: {} y nombre: {}", id, centroOpt.get().getNombre());
-            centroRepository.deleteById(id);
-        } else {
-            logger.warn("Intento de eliminar un centro con ID inexistente: {}", id);
-            throw new IllegalArgumentException("El centro con ID " + id + " no existe.");
-        }
-    }
 }

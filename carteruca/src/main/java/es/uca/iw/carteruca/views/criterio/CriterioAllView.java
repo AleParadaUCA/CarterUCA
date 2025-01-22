@@ -2,7 +2,10 @@ package es.uca.iw.carteruca.views.criterio;
 
 import java.util.List;
 
+import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
+import com.vaadin.flow.data.provider.ListDataProvider;
+import com.vaadin.flow.data.value.ValueChangeMode;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.vaadin.flow.component.button.Button;
@@ -44,33 +47,58 @@ public class CriterioAllView extends VerticalLayout {
         common.crearTitulo("Criterios",this);
         configurartabla();
 
-        HorizontalLayout add = new HorizontalLayout();
+        HorizontalLayout add_criterio = new HorizontalLayout();
         Button addButton = new Button("Agregar Criterio",click -> openAddDialog());
         addButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        add.add(addButton);
-        add.setWidthFull();
-        add.setJustifyContentMode(JustifyContentMode.CENTER);
+        add_criterio.add(addButton);
+        add_criterio.setWidthFull();
+        add_criterio.setJustifyContentMode(JustifyContentMode.CENTER);
 
-        add(tabla_criterio, add);
+        add(add_criterio);
 
         add(common.botones_Admin());
 
     }
 
 
-    private void configurartabla(){
+    private void configurartabla() {
         tabla_criterio.removeAllColumns();
-        tabla_criterio.addColumn(Criterio::getDescripcion).setHeader("Descripcion").setSortable(true);
+        tabla_criterio.addColumn(Criterio::getDescripcion).setHeader("Descripción").setSortable(true);
         tabla_criterio.addColumn(Criterio::getPeso).setHeader("Peso").setSortable(true);
 
+        // Agregar columna con botón para editar
         tabla_criterio.addComponentColumn(criterio -> {
             Button editButton = new Button(VaadinIcon.EDIT.create(), click -> openEditDialog(criterio));
             editButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             return editButton;
         }).setHeader("Editar");
 
-        updateGrid();
+        // Crear el campo de búsqueda
+        TextField searchField = new TextField();
+        searchField.setPlaceholder("Buscar...");
+        searchField.setPrefixComponent(new Icon(VaadinIcon.SEARCH));
+        searchField.setWidth("50%");
+        searchField.setValueChangeMode(ValueChangeMode.EAGER);
+
+        // Inicializar el ListDataProvider con los datos
+        List<Criterio> criterios = criterioService.getAllCriterios();
+        ListDataProvider<Criterio> dataProvider = new ListDataProvider<>(criterios);
+        tabla_criterio.setDataProvider(dataProvider);
+
+        // Agregar el filtro al campo de búsqueda
+        searchField.addValueChangeListener(event -> {
+            String searchTerm = event.getValue().trim().toLowerCase();
+            dataProvider.setFilter(criterio -> {
+                String descripcion = criterio.getDescripcion() != null ? criterio.getDescripcion().toLowerCase() : "";
+                String peso = criterio.getPeso() != null ? criterio.getPeso().toString() : "";
+                return descripcion.contains(searchTerm) || peso.contains(searchTerm);
+            });
+        });
+
+        // Agregar los componentes a la vista
+        add(searchField, tabla_criterio);
     }
+
 
     private void updateGrid() {
         List<Criterio> criterios = criterioService.getAllCriterios();

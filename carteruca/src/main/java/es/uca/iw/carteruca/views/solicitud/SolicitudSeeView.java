@@ -10,6 +10,7 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.H4;
 import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -17,6 +18,8 @@ import com.vaadin.flow.component.shared.Tooltip;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer;
+import com.vaadin.flow.data.provider.ListDataProvider;
+import com.vaadin.flow.data.value.ValueChangeMode;
 import es.uca.iw.carteruca.models.Estado;
 import es.uca.iw.carteruca.services.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -111,7 +114,27 @@ public class SolicitudSeeView extends Composite<VerticalLayout> {
         // Obtener todas las solicitudes asociadas al usuario
         List<Solicitud> solicitudesList = solicitudService.getSolicitudesByUsuario(usuario);
         solicitudes.setItems(solicitudesList); // Establecer los datos al grid
-        getContent().add(solicitudes);  // Cambiar add() por getContent().add()
+
+        ListDataProvider<Solicitud> dataProvider = new ListDataProvider<>(solicitudesList);
+        solicitudes.setDataProvider(dataProvider);
+
+        TextField searchField = new TextField();
+        searchField.setPlaceholder("Buscar...");
+        searchField.setWidth("50%");
+        searchField.setPrefixComponent(new Icon(VaadinIcon.SEARCH));
+        searchField.setValueChangeMode(ValueChangeMode.EAGER);
+
+        searchField.addValueChangeListener(event -> {
+            String searchTerm = searchField.getValue().trim().toLowerCase();
+
+            dataProvider.setFilter(solicitud -> {
+                String titulo = solicitud.getTitulo().toLowerCase();
+                String estado = solicitud.getEstado().name().toLowerCase();
+
+                return titulo.contains(searchTerm) || estado.contains(searchTerm);
+            });
+        });
+        getContent().add(searchField, solicitudes);  // Cambiar add() por getContent().add()
     }
 
     private void EditDialog(Solicitud solicitud) {
@@ -177,7 +200,6 @@ public class SolicitudSeeView extends Composite<VerticalLayout> {
                 alcanceTooltip.setOpened(!alcanceTooltip.isOpened());
             }
         });
-
 
         normativa.setLabel("Normativa");
         normativa.getElement().setAttribute("aria-label", "Normativa");

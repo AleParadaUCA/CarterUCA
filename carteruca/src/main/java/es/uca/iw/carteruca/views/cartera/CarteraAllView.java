@@ -3,6 +3,8 @@ package es.uca.iw.carteruca.views.cartera;
 import java.util.List;
 
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
+import com.vaadin.flow.data.provider.ListDataProvider;
+import com.vaadin.flow.data.value.ValueChangeMode;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.vaadin.flow.component.button.Button;
@@ -55,7 +57,7 @@ public class CarteraAllView extends VerticalLayout {
         boton_agregar.setWidthFull();
         boton_agregar.setJustifyContentMode(JustifyContentMode.CENTER);
 
-        add(tablaCarteras, boton_agregar);
+        add(boton_agregar);
 
         add(common.botones_Admin());
     }
@@ -82,7 +84,30 @@ public class CarteraAllView extends VerticalLayout {
             return deleteButton;
         }).setHeader("Eliminar");
 
-        updateGrid();
+        List<Cartera> carteras = carteraService.getAllCarteras();
+        tablaCarteras.setItems(carteras);
+
+        ListDataProvider<Cartera> dataProvider = new ListDataProvider<>(carteras);
+        tablaCarteras.setDataProvider(dataProvider);
+
+        TextField searchField = new TextField();
+        searchField.setPlaceholder("Buscar...");
+        searchField.setWidth("50%");
+        searchField.setPrefixComponent(new Icon(VaadinIcon.SEARCH));
+        searchField.setValueChangeMode(ValueChangeMode.EAGER);
+
+        searchField.addValueChangeListener(event -> {
+            String searchTerm = event.getValue().trim().toLowerCase();
+
+            dataProvider.setFilter(cartera -> {
+                String nombre = cartera.getNombre() != null ? cartera.getNombre().toLowerCase() : "";
+                return nombre.contains(searchTerm);
+            });
+        });
+
+        // Agregar componentes al diseño
+        add(searchField, tablaCarteras);
+
     }
 
     private void openAddDialog() {

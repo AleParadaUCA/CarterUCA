@@ -8,6 +8,7 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
@@ -16,6 +17,8 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.provider.ListDataProvider;
+import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
@@ -46,8 +49,6 @@ public class UsuarioAllView extends Composite<VerticalLayout> {
         // Configurar la tabla
         configurarGrid();
 
-        // Añadir componentes al layout
-        getContent().add(tablaUsuarios);
         getContent().add(common.botones_Admin());
     }
 
@@ -92,6 +93,29 @@ public class UsuarioAllView extends Composite<VerticalLayout> {
         // Filtrar usuarios con roles distintos a Admin
         List<Usuario> usuarios = usuarioService.findAllUsuariosExcludingAdmin();
         tablaUsuarios.setItems(usuarios);
+
+        ListDataProvider<Usuario> dataProvider = new ListDataProvider<>(usuarios);
+        tablaUsuarios.setDataProvider(dataProvider);
+
+        TextField searchField = new TextField();
+        searchField.setPlaceholder("Buscar...");
+        searchField.setWidth("50%");
+        searchField.setPrefixComponent(new Icon(VaadinIcon.SEARCH));
+        searchField.setValueChangeMode(ValueChangeMode.EAGER);
+
+        searchField.addValueChangeListener(event -> {
+            String searchTerm = event.getValue().trim().toLowerCase();
+            dataProvider.setFilter(usuario -> {
+                String username = usuario.getUsername().toLowerCase();
+                String nombre = usuario.getNombre().toLowerCase();
+                String email = usuario.getEmail().toLowerCase();
+                String rol = usuario.getRol().name().toLowerCase();
+                return username.contains(searchTerm) || nombre.contains(searchTerm) || email.contains(searchTerm) || rol.contains(searchTerm);
+            });
+        });
+
+        // Añadir componentes al layout
+        getContent().add(searchField, tablaUsuarios);
     }
 
     private void mostrarDialogoConfirmacion(Usuario usuario, Rol nuevoRol) {
