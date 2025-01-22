@@ -126,7 +126,7 @@ public class ProyectoService {
 
     public List<Proyecto> getProyectosFinalizadosPorCartera(Long carteraId) {
         List<Estado> estadosPermitidos = List.of(Estado.ACEPTADO, Estado.TERMINADO);
-        return repository.findBySolicitud_Cartera_IdAndSolicitud_EstadoIn(carteraId, estadosPermitidos).stream()
+        return repository.findBySolicitud_Cartera_IdAndSolicitud_EstadoInOrderByPuntuacionTotalDesc(carteraId, estadosPermitidos).stream()
                 // Filtrar proyectos donde todos los campos necesarios están completos
                 .filter(proyecto -> proyecto.getHoras() > 0.0f)  // Verifica que las horas estén completas
                 .filter(proyecto -> proyecto.getPresupuesto() != null && !proyecto.getPresupuesto().isEmpty())  // Verifica que el presupuesto no esté vacío
