@@ -1,20 +1,25 @@
-name: Java CI with Maven and SonarQube
+name: Java CI with Maven, SonarQube, and AWS
 
 on:
   push:
     branches: [ "main", "Ale" ]
   pull_request:
-    branches: [ "main", "Ale"  ]
+    branches: [ "main", "Ale" ]
     types: [opened, synchronize, reopened]
 
 jobs:
   build:
-    name: Build and Analyze
+    name: Build, Analyze, and Deploy
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
 
     steps:
       # Checkout the code
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0  # Importante para análisis relevantes de SonarQube
 
@@ -51,3 +56,22 @@ jobs:
           cd carteruca  # Cambiar al directorio donde está el archivo pom.xml
           mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
             -Dsonar.projectKey=AleParadaUCA_iw2024-2025-CarterUCA
+
+      # Rename the JAR file
+      - name: Rename JAR file
+        run: mv carteruca/target/*.jar carteruca/target/webapp.jar
+
+      # Deploy to AWS Elastic Beanstalk
+      - name: Deploy to AWS Elastic Beanstalk
+        uses: einaregilsson/beanstalk-deploy@v21
+        with:
+          application_name: iw2024uca          # Cambiar al nombre de la app en Elastic Beanstalk
+          environment_name: iw2024uca-env     # Cambiar al nombre del entorno en Elastic Beanstalk
+          region: us-east-1                   # Cambiar a la región de AWS
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws_session_token: ${{ secrets.AWS_SESSION_TOKEN }}
+          version_label: CarterUCA-${{ github.run_id }}  # Etiqueta única basada en el ID de la ejecución
+          version_description: Build-${{ github.sha }}   # Descripción basada en el commit
+          deployment_package: carteruca/target/webapp.jar
+          use_existing_version_if_available: true
