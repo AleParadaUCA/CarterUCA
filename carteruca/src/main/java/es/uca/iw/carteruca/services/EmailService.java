@@ -39,7 +39,13 @@ public class EmailService {
         this.mailSender = mailSender;
     }
 
-
+    /**
+     * Obtiene la URL pública del servidor.
+     *
+     * @return la URL pública del servidor, incluyendo la dirección IP pública y el endpoint `/useractivation`.
+     * @throws IOException si ocurre un error al realizar la solicitud HTTP para obtener la IP pública.
+     * @throws InterruptedException si el subproceso que realiza la solicitud HTTP es interrumpido.
+     */
     private String getServerUrl() throws IOException, InterruptedException {
 
     // Get the public IP address
@@ -58,6 +64,15 @@ public class EmailService {
 
     }
 
+    /**
+     * Envía un correo de registro para activar la cuenta de un usuario.
+     * Este metodo se ejecuta de forma asíncrona.
+     *
+     * @param user el usuario al que se enviará el correo de registro.
+     * @return un {@link CompletableFuture} que indica si el correo fue enviado con éxito (true) o no (false).
+     * @throws IOException si ocurre un error al construir la URL del servidor.
+     * @throws InterruptedException si el subproceso que construye la URL del servidor es interrumpido.
+     */
     @Async
     public CompletableFuture<Boolean> enviarCorreoRegistro(Usuario user) throws IOException, InterruptedException {
 
@@ -87,6 +102,15 @@ public class EmailService {
         return CompletableFuture.completedFuture(true);
     }
 
+    /**
+     * Envía un correo electrónico con un asunto y cuerpo especificados a un destinatario.
+     * Este metodo se ejecuta de forma asíncrona.
+     *
+     * @param to la dirección de correo del destinatario.
+     * @param subject el asunto del correo.
+     * @param body el cuerpo del correo.
+     * @return un {@link CompletableFuture} que indica si el correo fue enviado con éxito (true) o no (false).
+     */
     @Async
     public CompletableFuture<Boolean> enviarCorreo(String to, String subject, String body) {
         MimeMessage message = mailSender.createMimeMessage();
