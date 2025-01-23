@@ -75,3 +75,4 @@ jobs:
           version_description: Build-${{ github.sha }}   # Descripción basada en el commit
           deployment_package: carteruca/target/webapp.jar
           use_existing_version_if_available: true
+          existing_bucket_name: carteruca
