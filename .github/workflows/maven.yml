@@ -76,8 +76,3 @@ jobs:
           deployment_package: carteruca/target/webapp.jar
           use_existing_version_if_available: true
           existing_bucket_name: elasticbeanstalk-us-east-1-269310250036
-    
-      # Restart nginx
-      - name: Restart nginx
-        run: |
-          ssh -o StrictHostKeyChecking=no -i ${{ secrets.SSH_PRIVATE_KEY }} ec2-user@your-ec2-instance-public-dns 'sudo systemctl restart nginx'
