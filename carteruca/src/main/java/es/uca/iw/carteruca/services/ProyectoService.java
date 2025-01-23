@@ -59,24 +59,38 @@ public class ProyectoService {
         emailService.enviarCorreo(proyecto.getSolicitud().getSolicitante().getEmail(),subject, body);
     }
 
+    /**
+     * Actualiza un proyecto con los nuevos archivos de presupuesto y especificación técnica,
+     * y envía una notificación al solicitante del proyecto.
+     *
+     * @param proyecto        El proyecto que será actualizado.
+     * @param presupuesto     Archivo del presupuesto cargado como un buffer en memoria.
+     * @param especificacion  Archivo de la especificación técnica cargado como un buffer en memoria.
+     */
     public void changeProyecto(Proyecto proyecto, MultiFileMemoryBuffer presupuesto, MultiFileMemoryBuffer especificacion) {
         logger.info("Cambiando proyecto con ID: {}", proyecto.getId());
 
+        // Definir el directorio donde se guardarán los archivos
         String path = proyecto.getSolicitud().getCartera().getId()+"/proyectos"; //IMPORTANTE cambiar esto en producción
         List<String> presupuestoPath = CommonService.guardarFile(presupuesto, path);
         List<String> especificacionPath = CommonService.guardarFile(especificacion, path);
 
+        // Actualizar el proyecto con las rutas de los nuevos archivos
         proyecto.setPresupuesto(presupuestoPath.get(0));
         proyecto.setEspecificacion_tecnica(especificacionPath.get(0));
 
+        // Preparar el asunto y cuerpo del correo
         String subject = "Proyecto Configurado";
         String body = "Hola " + proyecto.getSolicitud().getSolicitante().getNombre() + ",\n\n" +
                 "Le comunicamos que el proyecto con título "+
                 proyecto.getSolicitud().getTitulo() +
                 " ha sido evaluado por el OTP.\n\nSaludos,\nEl equipo de Carteruca.";
 
+        //Guardar cambios en la BD
         repository.save(proyecto);
         logger.info("Proyecto actualizado en la base de datos con ID: {}", proyecto.getId());
+
+        //Enviar correo al solicitante
         emailService.enviarCorreo(proyecto.getSolicitud().getSolicitante().getEmail(),subject, body);
     }
 
@@ -84,6 +98,16 @@ public class ProyectoService {
         repository.save(proyecto);
     }
 
+    /**
+     * Guarda las puntuaciones asignadas a un proyecto, calcula la puntuación total ponderada y
+     * envía una notificación al solicitante del proyecto.
+     *
+     * @param proyecto       El proyecto al que se asignarán las puntuaciones.
+     * @param idsCriterios   Lista de IDs de los criterios utilizados para la puntuación.
+     * @param puntuaciones   Lista de puntuaciones asignadas a los criterios correspondientes.
+     * @throws IllegalArgumentException Si las listas de IDs y puntuaciones no tienen el mismo tamaño,
+     *                                  o si algún criterio no se encuentra en la base de datos.
+     */
     public void guardarPuntuaciones(Proyecto proyecto, List<Long> idsCriterios, List<Float> puntuaciones) {
         if (idsCriterios.size() != puntuaciones.size()) {
             throw new IllegalArgumentException("Las listas de IDs y puntuaciones deben tener el mismo tamaño.");
@@ -183,8 +207,6 @@ public class ProyectoService {
                 .mapToInt(Proyecto::getTecnicos_Asignados)  // Directly using the int value
                 .sum();
     }
-
-
 
 
     public float sumarPresupuestoByCartera(Long carteraId) {

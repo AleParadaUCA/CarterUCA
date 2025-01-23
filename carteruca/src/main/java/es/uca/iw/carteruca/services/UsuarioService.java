@@ -125,12 +125,18 @@ public class UsuarioService implements UserDetailsService {
         }
     }
 
+    /**
+     * Obtiene el rol de un usuario consultando un servicio externo.
+     *
+     * @param usuario El ID del usuario cuyo rol se desea determinar.
+     * @return El rol del usuario, ya sea {@link Rol#Solicitante} o {@link Rol#Promotor}.
+     */
     private Rol obtenerRol(String usuario) {
         final String url = "https://e608f590-1a0b-43c5-b363-e5a883961765.mock.pstmn.io/sponsors";
         Rol rol = Rol.Solicitante;
         WebClient webClient = WebClient.create();
 
-        // Realizar la solicitud
+        // Realizar la solicitud al servicio externo
         String response = webClient.get()
             .uri(url)
             .retrieve()
@@ -150,6 +156,15 @@ public class UsuarioService implements UserDetailsService {
         return rol;
     }
 
+    /**
+     * Carga un usuario por su nombre de usuario desde la base de datos y construye un objeto {@link UserDetails}
+     * para su uso en el sistema de autenticación de Spring Security.
+     *
+     * @param username El nombre de usuario del usuario que se desea cargar.
+     * @return Un objeto {@link UserDetails} que representa al usuario autenticado, incluyendo su nombre de usuario,
+     *         contraseña, estado de habilitación y roles.
+     * @throws UsernameNotFoundException Si no se encuentra un usuario con el nombre de usuario proporcionado.
+     */
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
