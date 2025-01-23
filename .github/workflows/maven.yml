@@ -65,9 +65,9 @@ jobs:
       - name: Deploy to AWS Elastic Beanstalk
         uses: einaregilsson/beanstalk-deploy@v21
         with:
-          application_name: iw2024uca          # Cambiar al nombre de la app en Elastic Beanstalk
-          environment_name: iw2024uca-env     # Cambiar al nombre del entorno en Elastic Beanstalk
-          region: us-east-1                   # Cambiar a la región de AWS
+          application_name: CarterUCA        # Cambiar al nombre de la app en Elastic Beanstalk
+          environment_name: CarterUCA-env    # Cambiar al nombre del entorno en Elastic Beanstalk
+          region: us-east-1                  # Cambiar a la región de AWS
           aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws_session_token: ${{ secrets.AWS_SESSION_TOKEN }}
