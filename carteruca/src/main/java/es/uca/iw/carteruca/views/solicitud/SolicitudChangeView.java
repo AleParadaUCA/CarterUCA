@@ -6,9 +6,14 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.provider.ListDataProvider;
+import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import es.uca.iw.carteruca.models.Estado;
@@ -67,7 +72,26 @@ public class SolicitudChangeView extends Composite<VerticalLayout> {
         List<Solicitud> lista_solicitudes = solicitudService.getSolicitudByEstado(Estado.EN_TRAMITE_AVALADO);
         solicitud_tabla.setItems(lista_solicitudes);
 
-        getContent().add(solicitud_tabla);
+        ListDataProvider<Solicitud> dataProvider = new ListDataProvider<>(lista_solicitudes);
+        solicitud_tabla.setDataProvider(dataProvider);
+
+        TextField searchField = new TextField();
+        searchField.setPlaceholder("Buscar...");
+        searchField.setWidth("50%");
+        searchField.setPrefixComponent(new Icon(VaadinIcon.SEARCH));
+        searchField.setValueChangeMode(ValueChangeMode.EAGER);
+
+        searchField.addValueChangeListener(event -> {
+            String texto = searchField.getValue().trim().toLowerCase();
+            dataProvider.setFilter(solicitud -> {
+                String titulo = solicitud.getTitulo().toLowerCase();
+                String nombre = solicitud.getNombre().toLowerCase();
+                String cartera = solicitud.getCartera().getNombre().toLowerCase();
+                return titulo.contains(texto) || nombre.contains(texto) || cartera.contains(texto);
+            });
+        });
+
+        getContent().add(searchField, solicitud_tabla);
 
     }
 

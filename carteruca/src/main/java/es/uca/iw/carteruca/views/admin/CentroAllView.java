@@ -2,6 +2,8 @@ package es.uca.iw.carteruca.views.admin;
 
 import com.vaadin.flow.component.html.H4;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
+import com.vaadin.flow.data.provider.ListDataProvider;
+import com.vaadin.flow.data.value.ValueChangeMode;
 import es.uca.iw.carteruca.models.Centro;
 import es.uca.iw.carteruca.services.CentroService;
 import com.vaadin.flow.component.Composite;
@@ -45,7 +47,7 @@ public class CentroAllView extends Composite<VerticalLayout> {
         add_button.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         add_button.getElement().setAttribute("aria-label", "Agregar Centro");
 
-        layout.add(tabla_centros, add_button);
+        layout.add(add_button);
         layout.setSpacing(true);
 
         getContent().add(layout);
@@ -65,15 +67,29 @@ public class CentroAllView extends Composite<VerticalLayout> {
             return boton_editar;
         }).setHeader("Editar");
 
-        tabla_centros.addComponentColumn(centro -> {
-            Icon eliminar_icono = VaadinIcon.TRASH.create();
-            Button eliminar = new Button(eliminar_icono, click -> openDeleteDialog(centro));
-            eliminar.getElement().setAttribute("aria-label", "Eliminar");
-            eliminar.addThemeVariants(ButtonVariant.LUMO_ERROR, ButtonVariant.LUMO_TERTIARY);
-            return eliminar;
-        }).setHeader("Eliminar");
+        List<Centro> centros = centroService.getAllCentros();
+        tabla_centros.setItems(centros);
 
-        updateGrid();
+        ListDataProvider<Centro> dataProvider =  new ListDataProvider<>(centros);
+        tabla_centros.setDataProvider(dataProvider);
+
+        TextField searchField = new TextField();
+        searchField.setPlaceholder("Buscar...");
+        searchField.setWidth("50%");
+        searchField.setPrefixComponent(new Icon(VaadinIcon.SEARCH));
+        searchField.setValueChangeMode(ValueChangeMode.EAGER);
+
+        searchField.addValueChangeListener(event -> {
+            String searchTerm = searchField.getValue().trim().toLowerCase();
+            dataProvider.setFilter(centro -> {
+                String nombre = centro.getNombre().toLowerCase();
+                String acronimo = centro.getAcronimo().toLowerCase();
+                return nombre.contains(searchTerm) || acronimo.contains(searchTerm);
+            });
+        });
+
+        getContent().add(searchField, tabla_centros);
+
     }
 
     private void openAddDialog() {
@@ -164,31 +180,6 @@ public class CentroAllView extends Composite<VerticalLayout> {
         dialog.open();
     }
 
-
-    private void openDeleteDialog(Centro centro) {
-        Dialog dialog = new Dialog();
-
-        VerticalLayout dialogLayout = new VerticalLayout();
-        dialogLayout.add("¿Está seguro de que desea eliminar el centro?");
-        dialogLayout.setAlignItems(FlexComponent.Alignment.CENTER);
-
-        Button confirmar = new Button("Sí", event -> {
-            centroService.deleteCentro(centro.getId());
-            common.showSuccessNotification("Centro eliminado con éxito");
-            updateGrid();
-            dialog.close();
-        });
-        confirmar.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-
-        Button cancelar = new Button("No", event -> dialog.close());
-        cancelar.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-
-        HorizontalLayout botones = new HorizontalLayout(confirmar, cancelar);
-        dialogLayout.add(botones);
-
-        dialog.add(dialogLayout);
-        dialog.open();
-    }
 
     private void updateGrid() {
         List<Centro> centros = centroService.getAllCentros();

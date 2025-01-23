@@ -5,6 +5,8 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.shared.Tooltip;
 import com.vaadin.flow.component.dialog.Dialog;
@@ -16,7 +18,9 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
+import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import es.uca.iw.carteruca.models.*;
@@ -101,7 +105,25 @@ public class AvalarAllView extends Composite<VerticalLayout> {
         List<Solicitud> lista = solicitudService.getSolicitudesByPromotor(currentUser);
         solicitudes_tabla.setItems(lista);
 
-        getContent().add(solicitudes_tabla);
+        ListDataProvider<Solicitud> dataProvider = new ListDataProvider<>(lista);
+        solicitudes_tabla.setDataProvider(dataProvider);
+
+        TextField searchField = new TextField();
+        searchField.setPlaceholder("Buscar...");
+        searchField.setWidth("50%");
+        searchField.setPrefixComponent(new Icon(VaadinIcon.SEARCH));
+        searchField.setValueChangeMode(ValueChangeMode.EAGER);
+
+        searchField.addValueChangeListener(event -> {
+            String searchTerm = searchField.getValue().trim().toLowerCase();
+            dataProvider.setFilter(solicitud -> {
+                String titulo = solicitud.getTitulo().toLowerCase();
+                String nombre = solicitud.getNombre().toLowerCase();
+                return titulo.contains(searchTerm) || nombre.contains(searchTerm);
+            });
+        });
+
+        getContent().add(searchField, solicitudes_tabla);
     }
 
 
@@ -219,7 +241,7 @@ public class AvalarAllView extends Composite<VerticalLayout> {
         });
 
         // Botones de acción
-        Button btnSi = new Button("Sí", e -> {
+        Button btnSi = new Button("Avalar", e -> {
             if (importanciaField.isEmpty()) {
                 importanciaField.setInvalid(true);
                 importanciaField.setErrorMessage("La importancia es obligatoria");
@@ -235,7 +257,7 @@ public class AvalarAllView extends Composite<VerticalLayout> {
         });
         btnSi.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
-        Button btnNo = new Button("No", e -> {
+        Button btnNo = new Button("Rechazar", e -> {
             solicitudService.AvalarSolicitud(solicitud, null);
             dialog.close();
             common.showSuccessNotification("Solicitud cancelada");
@@ -243,13 +265,19 @@ public class AvalarAllView extends Composite<VerticalLayout> {
         });
         btnNo.addThemeVariants(ButtonVariant.LUMO_ERROR);
 
-        // Layout de botones
-        HorizontalLayout botonesLayout = new HorizontalLayout(btnSi, btnNo);
-        botonesLayout.setSpacing(true);
-        botonesLayout.setMargin(true);
-        botonesLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
-        botonesLayout.setWidthFull();
+        Button volver = new Button("Volver", e -> dialog.close());
+        volver.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
 
+        // Layout para los botones "Avalar" y "Rechazar"
+        HorizontalLayout accionesLayout = new HorizontalLayout(btnSi, btnNo);
+        accionesLayout.setSpacing(true); // Espacio entre los botones
+        accionesLayout.setAlignItems(FlexComponent.Alignment.CENTER); // Alinear verticalmente
+
+        // Layout principal con "Volver" a la izquierda y "Avalar" y "Rechazar" a la derecha
+        HorizontalLayout botonesLayout = new HorizontalLayout(volver, accionesLayout);
+        botonesLayout.setWidthFull();
+        botonesLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.BETWEEN); // Justificar "Volver" a la izquierda y los demás a la derecha
+        botonesLayout.setAlignItems(FlexComponent.Alignment.CENTER); // Alinear verticalmente
 
         // FormLayout para campos
         importancia.add(importanciaField);

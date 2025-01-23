@@ -2,6 +2,10 @@ package es.uca.iw.carteruca.views.criterio;
 
 import java.util.List;
 
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
+import com.vaadin.flow.data.provider.ListDataProvider;
+import com.vaadin.flow.data.value.ValueChangeMode;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.vaadin.flow.component.button.Button;
@@ -43,45 +47,58 @@ public class CriterioAllView extends VerticalLayout {
         common.crearTitulo("Criterios",this);
         configurartabla();
 
-        HorizontalLayout add = new HorizontalLayout();
+        HorizontalLayout add_criterio = new HorizontalLayout();
         Button addButton = new Button("Agregar Criterio",click -> openAddDialog());
         addButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        add.add(addButton);
-        add.setWidthFull();
-        add.setJustifyContentMode(JustifyContentMode.CENTER);
+        add_criterio.add(addButton);
+        add_criterio.setWidthFull();
+        add_criterio.setJustifyContentMode(JustifyContentMode.CENTER);
 
-        add(tabla_criterio, add);
+        add(add_criterio);
 
         add(common.botones_Admin());
 
     }
 
 
-    private void configurartabla(){
+    private void configurartabla() {
         tabla_criterio.removeAllColumns();
-        tabla_criterio.addColumn(Criterio::getDescripcion).setHeader("Descripcion").setSortable(true);
+        tabla_criterio.addColumn(Criterio::getDescripcion).setHeader("Descripción").setSortable(true);
         tabla_criterio.addColumn(Criterio::getPeso).setHeader("Peso").setSortable(true);
 
+        // Agregar columna con botón para editar
         tabla_criterio.addComponentColumn(criterio -> {
             Button editButton = new Button(VaadinIcon.EDIT.create(), click -> openEditDialog(criterio));
             editButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             return editButton;
         }).setHeader("Editar");
 
-        /*
-        tabla_criterio.addComponentColumn(criterio -> {
-            Icon delete = VaadinIcon.TRASH.create();
-            Button deleteButton = new Button(delete, click -> {
-                showDeleteConfirmationDialog(criterio);
+        // Crear el campo de búsqueda
+        TextField searchField = new TextField();
+        searchField.setPlaceholder("Buscar...");
+        searchField.setPrefixComponent(new Icon(VaadinIcon.SEARCH));
+        searchField.setWidth("50%");
+        searchField.setValueChangeMode(ValueChangeMode.EAGER);
+
+        // Inicializar el ListDataProvider con los datos
+        List<Criterio> criterios = criterioService.getAllCriterios();
+        ListDataProvider<Criterio> dataProvider = new ListDataProvider<>(criterios);
+        tabla_criterio.setDataProvider(dataProvider);
+
+        // Agregar el filtro al campo de búsqueda
+        searchField.addValueChangeListener(event -> {
+            String searchTerm = event.getValue().trim().toLowerCase();
+            dataProvider.setFilter(criterio -> {
+                String descripcion = criterio.getDescripcion() != null ? criterio.getDescripcion().toLowerCase() : "";
+                String peso = criterio.getPeso() != null ? criterio.getPeso().toString() : "";
+                return descripcion.contains(searchTerm) || peso.contains(searchTerm);
             });
-            deleteButton.addThemeVariants(ButtonVariant.LUMO_ERROR, ButtonVariant.LUMO_TERTIARY);
-            return deleteButton;
-        }).setHeader("Eliminar");
+        });
 
-         */
-
-        updateGrid();
+        // Agregar los componentes a la vista
+        add(searchField, tabla_criterio);
     }
+
 
     private void updateGrid() {
         List<Criterio> criterios = criterioService.getAllCriterios();
@@ -90,6 +107,7 @@ public class CriterioAllView extends VerticalLayout {
 
     private void openAddDialog() {
         Dialog dialog = new Dialog();
+        dialog.setHeaderTitle("Crear Criterio");
         FormLayout form = new FormLayout();
 
         TextField descripcion = new TextField("Descripcion");
@@ -134,10 +152,20 @@ public class CriterioAllView extends VerticalLayout {
         Button cancelButton = new Button("Cancelar", event -> dialog.close());
         cancelButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
 
-        layout.add(form, saveButton, cancelButton);
+        Button volverButton = new Button("Volver", event -> dialog.close());
+        volverButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
+
+        layout.add(saveButton, cancelButton);
+        layout.setSpacing(true);
         layout.setJustifyContentMode(JustifyContentMode.END);
 
-        dialog.add(form, layout);
+        HorizontalLayout botonesLayout = new HorizontalLayout(volverButton, layout);
+        botonesLayout.setWidthFull();
+        botonesLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.BETWEEN); // Justificar "Volver" a la izquierda y los demás a la derecha
+        botonesLayout.setAlignItems(FlexComponent.Alignment.CENTER); // Alinear verticalmente
+
+
+        dialog.add(form, botonesLayout);
         dialog.open();
     }
 
@@ -145,6 +173,7 @@ public class CriterioAllView extends VerticalLayout {
     private void openEditDialog(Criterio criterio) {
         // Crear el diálogo y el formulario
         Dialog dialog = new Dialog();
+        dialog.setHeaderTitle("Editar Criterio");
         FormLayout form = new FormLayout();
 
         TextField descripcionField = new TextField("Descripción");
@@ -201,6 +230,9 @@ public class CriterioAllView extends VerticalLayout {
         // Botón de cancelar
         Button cancelButton = new Button("Cancelar", event -> dialog.close());
 
+        Button volver = new Button("Volver", e -> dialog.close());
+        volver.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
+
         // Estilizar botones
         saveButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         cancelButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
@@ -209,42 +241,15 @@ public class CriterioAllView extends VerticalLayout {
         HorizontalLayout buttonLayout = new HorizontalLayout(saveButton, cancelButton);
         buttonLayout.setJustifyContentMode(JustifyContentMode.END);
 
+        HorizontalLayout botonesLayout = new HorizontalLayout(volver, buttonLayout);
+        botonesLayout.setWidthFull();
+        botonesLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.BETWEEN); // Justificar "Volver" a la izquierda y los demás a la derecha
+        botonesLayout.setAlignItems(FlexComponent.Alignment.CENTER); // Alinear verticalmente
+
         // Agregar formulario y botones al diálogo
-        dialog.add(form, buttonLayout);
+        dialog.add(form, botonesLayout);
         dialog.open();
     }
-
-    /*
-    private void showDeleteConfirmationDialog(Criterio criterio) {
-        Dialog dialog = new Dialog();
-        dialog.setCloseOnEsc(false);
-        dialog.setCloseOnOutsideClick(false);
-
-        Span message = new Span("¿Desea eliminar este criterio?");
-        Button confirmButton = new Button("Sí", event -> {
-            criterioService.deleteCriterio(criterio.getId());
-            updateGrid();
-            common.showSuccessNotification("Criterio eliminado con éxito");
-            dialog.close();
-        });
-        confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-
-        Button cancelButton = new Button("No", event -> {
-            dialog.close();
-        });
-        cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-
-        HorizontalLayout buttons = new HorizontalLayout(confirmButton, cancelButton);
-        VerticalLayout dialogLayout = new VerticalLayout(message, buttons);
-        dialogLayout.setSizeFull();
-        dialogLayout.setSpacing(true);
-        dialogLayout.setAlignItems(Alignment.CENTER);
-        dialogLayout.setJustifyContentMode(JustifyContentMode.CENTER);
-        dialog.add(dialogLayout);
-        dialog.open();
-    }
-
-     */
 
 
 }

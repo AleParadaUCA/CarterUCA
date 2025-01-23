@@ -18,6 +18,7 @@ import es.uca.iw.carteruca.security.AuthenticatedUser;
 import es.uca.iw.carteruca.services.SolicitudService;
 import es.uca.iw.carteruca.views.common.common;
 import es.uca.iw.carteruca.views.layout.MainLayout;
+import jakarta.annotation.security.DenyAll;
 import jakarta.annotation.security.RolesAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -25,7 +26,8 @@ import java.util.List;
 
 @PageTitle("Eliminar Solicitudes")
 @Route(value = "/solicitudes/delete-solicitud", layout = MainLayout.class)
-@RolesAllowed({"Promotor","CIO","Solicitante", "OTP"})
+//@RolesAllowed({"Promotor","CIO","Solicitante", "OTP"})
+@DenyAll
 public class SolicitudDeleteView extends Composite<VerticalLayout> {
 
     private final SolicitudService solicitudService;

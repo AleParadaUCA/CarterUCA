@@ -54,7 +54,7 @@ public class ProyectoMainView extends Composite<VerticalLayout> {
 
         if(currentUser.getRol() == Rol.OTP){
 
-            Div configure = common.createSquare("Configurar Proyectos", VaadinIcon.COG);
+            Div configure = common.createSquare("Evaluar Proyectos", VaadinIcon.COG);
             configure.getElement().setAttribute("aria-label", "Configurar Proyectos");
             configure.addClickListener(event -> UI.getCurrent().navigate(ProyectoConfigureView.class));
             getContent().add(configure);

@@ -5,11 +5,16 @@ import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.progressbar.ProgressBar;
+import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
+import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import es.uca.iw.carteruca.models.Proyecto;
@@ -56,13 +61,37 @@ public class ProyectoSeeView extends Composite<VerticalLayout> {
 
         proyectos_tabla.addColumn(proyecto -> proyecto.getSolicitud().getTitulo()).setHeader("Titulo");
 
+        proyectos_tabla.addColumn(proyecto -> proyecto.getSolicitud().getCartera().getNombre()).setHeader("Cartera");
+
         proyectos_tabla.addColumn(common.createToggleDetailsRenderer(proyectos_tabla));
         proyectos_tabla.setItemDetailsRenderer(createStaticDetailsRendererSee());
         proyectos_tabla.setDetailsVisibleOnClick(true);
 
         List<Proyecto> proyectoList = proyectoService.findAllByEstadoAndSolicitante(currentUser);
         proyectos_tabla.setItems(proyectoList);
-        getContent().add(proyectos_tabla);
+
+        ListDataProvider<Proyecto> dataProvider = new ListDataProvider<>(proyectoList);
+        proyectos_tabla.setDataProvider(dataProvider);
+
+        TextField searchField = new TextField();
+        searchField.setPlaceholder("Buscar...");
+        searchField.setWidth("50%");
+        searchField.setPrefixComponent(new Icon(VaadinIcon.SEARCH));
+        searchField.setValueChangeMode(ValueChangeMode.EAGER);
+
+        searchField.addValueChangeListener(event -> {
+            String searchTerm = event.getValue().trim().toLowerCase();
+            dataProvider.setFilter(proyecto -> {
+                // Obtener los campos relevantes
+                String titulo = proyecto.getSolicitud().getTitulo().toLowerCase();
+                String cartera = proyecto.getSolicitud().getCartera().getNombre().toLowerCase();
+                String nombreCartera = proyecto.getSolicitud().getCartera().getNombre().toLowerCase();
+
+                // Comprobar si algún campo coincide con el término de búsqueda
+                return titulo.contains(searchTerm) || cartera.contains(searchTerm) || nombreCartera.contains(searchTerm);
+            });
+        });
+        getContent().add(searchField, proyectos_tabla);
     }
 
     private ComponentRenderer<Div, Proyecto> createStaticDetailsRendererSee() {
@@ -84,10 +113,18 @@ public class ProyectoSeeView extends Composite<VerticalLayout> {
             jefe.setValue(proyecto.getJefe().getNombre());
             jefe.setReadOnly(true);
 
+            IntegerField n_tecnicosField = new IntegerField("Número de Tecnicos Asignados");
+            n_tecnicosField.setValue(proyecto.getTecnicos_Asignados());
+            n_tecnicosField.setReadOnly(true);
+
             // Campo: Director de Proyecto
             TextField director = new TextField("Director de Proyecto");
             director.setValue(proyecto.getDirector_de_proyecto());
             director.setReadOnly(true);
+
+            TextField cartera = new TextField("Cartera del Proyecto");
+            cartera.setValue(proyecto.getSolicitud().getCartera().getNombre());
+            cartera.setReadOnly(true);
 
             // Campo: Porcentaje y ProgressBar
             Span porcentaje = new Span("Porcentaje");
@@ -106,11 +143,12 @@ public class ProyectoSeeView extends Composite<VerticalLayout> {
             porcentajeLayout.getStyle().set("display", "flex").set("align-items", "center");
 
             // Añadir campos al FormLayout
-            formLayout.add(presupuesto, horas, jefe, director, porcentajeLayout);
+            formLayout.add(presupuesto, horas, n_tecnicosField, jefe, director, cartera, porcentajeLayout);
 
             // Configurar distribución en columnas
             formLayout.setColspan(presupuesto, 1);
             formLayout.setColspan(horas, 1);
+            formLayout.setColspan(n_tecnicosField, 1);
             formLayout.setColspan(jefe, 1);
             formLayout.setColspan(director, 1);
             formLayout.setColspan(porcentajeLayout, 2); // Abarca dos columnas

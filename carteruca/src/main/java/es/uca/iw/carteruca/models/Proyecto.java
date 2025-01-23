@@ -53,6 +53,9 @@ public class Proyecto {
     private String director_de_proyecto;// persona que sera el director de proyecto,
     // no tiene porque estar registrada en la aplicacion
 
+    @Column
+    private int Tecnicos_Asignados;
+
     @ManyToOne
     @JoinColumn(name = "jefe_id")
     private Usuario jefe; // FK a usuario OTP, que será el jefe de proyecto.
@@ -98,4 +101,7 @@ public class Proyecto {
         return presupuesto_valor;
     }
     public void setPresupuesto_valor( float presupuesto) { this.presupuesto_valor = presupuesto; }
+
+    public int getTecnicos_Asignados() {return Tecnicos_Asignados;}
+    public void setTecnicos_Asignados(int tecnicos_Asignados) {Tecnicos_Asignados = tecnicos_Asignados;}
 }
