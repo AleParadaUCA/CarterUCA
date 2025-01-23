@@ -27,6 +27,13 @@ import es.uca.iw.carteruca.views.common.common;
 public class CommonService {
 
 
+    /**
+     * Guarda múltiples archivos en un directorio específico.
+     *
+     * @param buffer el buffer que contiene los archivos cargados.
+     * @param id identificador que se usa para determinar la ruta del directorio destino.
+     * @return una lista con las rutas de los archivos guardados.
+     */
     public static List<String> guardarFile(MultiFileMemoryBuffer buffer, String id) {
 
         String targetDirPath = "/home/ubuntu/archivos/cartera" + id;
@@ -66,6 +73,13 @@ public class CommonService {
         return filePaths;
     }
 
+    /**
+     * Genera un componente de anclaje para descargar un archivo.
+     *
+     * @param filePath la ruta del archivo que se descargará.
+     * @param buttonText el texto que se mostrará en el botón de descarga.
+     * @return un objeto {@link Anchor} configurado para descargar el archivo.
+     */
     public static Anchor descargarFile(String filePath, String buttonText) {
         Button downloadButton = new Button(buttonText);
         downloadButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
@@ -88,6 +102,11 @@ public class CommonService {
         return anchor;
     }
 
+    /**
+     * Elimina un archivo especificado por su ruta.
+     *
+     * @param filePath la ruta del archivo que se eliminará.
+     */
     public static void eliminarFile(String filePath) {
         try {
             Path path = Paths.get(filePath);

@@ -126,7 +126,13 @@ public class AvalarAllView extends Composite<VerticalLayout> {
         getContent().add(searchField, solicitudes_tabla);
     }
 
-
+    /**
+     * Crea un renderer estático que genera una vista detallada de los datos de una solicitud en un formulario de solo lectura.
+     * Este renderer incluye información como el título, nombre del proyecto, solicitante, fecha de solicitud,
+     * objetivos, alcance, normativa, y proporciona un enlace para descargar la memoria del proyecto si está disponible.
+     *
+     * @return Un {@link ComponentRenderer} que renderiza un componente {@link Div} con los detalles de la solicitud.
+     */
     private ComponentRenderer<Div, Solicitud> createStaticDetailsRenderer() {
         return new ComponentRenderer<>(solicitud -> {
             FormLayout formLayout = new FormLayout();

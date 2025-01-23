@@ -298,8 +298,6 @@ public class ProyectoConfigureView extends Composite<VerticalLayout> {
         botonesLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.BETWEEN); // Justificar "Volver" a la izquierda y los demás a la derecha
         botonesLayout.setAlignItems(FlexComponent.Alignment.CENTER); // Alinear verticalmente
 
-
-
         formulario.add(director, otp, n_horasField, n_tecnicosField, presupuesto_valorField, especificacion, especificacionUpload, presupuesto, presupuestoUpload);
 
         formulario.setColspan(director,1);

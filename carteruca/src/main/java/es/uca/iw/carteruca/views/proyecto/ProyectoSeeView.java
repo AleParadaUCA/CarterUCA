@@ -94,6 +94,14 @@ public class ProyectoSeeView extends Composite<VerticalLayout> {
         getContent().add(searchField, proyectos_tabla);
     }
 
+    /**
+     * Crea un {@link ComponentRenderer} que renderiza los detalles de un proyecto en un {@link FormLayout}.
+     * Muestra campos con la información del proyecto como presupuesto, horas, jefe de proyecto, técnicos asignados,
+     * director de proyecto, cartera del proyecto y el porcentaje de avance en el proyecto junto con una barra de progreso.
+     * Los campos son de solo lectura y se organizan en columnas para una mejor presentación.
+     *
+     * @return {@link ComponentRenderer} que renderiza un contenedor {@link Div} con la información del proyecto.
+     */
     private ComponentRenderer<Div, Proyecto> createStaticDetailsRendererSee() {
         return new ComponentRenderer<>(proyecto -> {
             FormLayout formLayout = new FormLayout();
