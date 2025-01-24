@@ -5,6 +5,8 @@ import java.util.List;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.value.ValueChangeMode;
+import es.uca.iw.carteruca.models.Usuario;
+import es.uca.iw.carteruca.security.AuthenticatedUser;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.vaadin.flow.component.button.Button;
@@ -40,9 +42,15 @@ public class CarteraAllView extends VerticalLayout {
     private final CarteraService carteraService;
 
     private final Grid<Cartera> tablaCarteras = new Grid<>(Cartera.class);
+    @Autowired
+    private AuthenticatedUser authenticatedUser;
+    private Usuario usuario;
 
-    public CarteraAllView(CarteraService carteraService) {
+    public CarteraAllView(CarteraService carteraService,
+                          AuthenticatedUser authenticatedUser) {
         this.carteraService = carteraService;
+        this.authenticatedUser = authenticatedUser;
+        this.usuario = authenticatedUser.get().get();
 
         setWidthFull();
         setSpacing(true);
@@ -59,7 +67,7 @@ public class CarteraAllView extends VerticalLayout {
 
         add(boton_agregar);
 
-        add(common.botones_Admin());
+        add(common.boton_dinamico(usuario));
     }
 
 
